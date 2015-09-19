@@ -1,0 +1,26 @@
+#
+# generated on 2015/07/19 07:12:22
+#
+# --table-start--
+dataClass=com.example.model.QRUser
+tableName=qrusers
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=firstName
+# --field-end--
+# --field-start--
+fieldName=lastName
+# --field-end--
+# --field-start--
+fieldName=registrationDate
+# --field-end--
+# --field-start--
+fieldName=anonymous
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

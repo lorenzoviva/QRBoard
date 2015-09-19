@@ -1,0 +1,88 @@
+package com.ogc.model;
+
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class QRUser {
+
+
+	public QRUser() {
+	}
+
+	private long id;
+	private String firstName;
+	private String lastName;
+	private Date registrationDate;
+	boolean anonymous;
+
+	public long getId() {
+		return id;
+	}
+
+	public QRUser(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		registrationDate = new Date();
+	}
+	public QRUser(boolean anonymous) {
+		this.anonymous = anonymous;
+		registrationDate = new Date();
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String param) {
+		this.firstName = param;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String param) {
+		this.lastName = param;
+	}
+
+	public void setRegistrationDate(Date date) {
+		this.registrationDate = date;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public boolean isAnonymous() {
+		return anonymous;
+	}
+
+	public void setAnonymous(boolean anonymous) {
+		this.anonymous = anonymous;
+	}
+	public JSONObject toJSON() throws JSONException{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("id", id);
+		jsonObject.put("firstName", firstName);
+		jsonObject.put("lastName", lastName);
+		jsonObject.put("registrationDate", registrationDate);
+		jsonObject.put("anonymous", anonymous);
+		return jsonObject;
+	}
+
+	@Override
+	public String toString() {
+		return "QRUser [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", registrationDate=" + registrationDate + ", anonymous=" + anonymous + "]";
+	}
+
+
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/signupfirstnametextview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+
+        android:text="@string/signupfirstnametext" />
+ 	<EditText 
+ 	    android:id="@+id/signupfirstnameedittext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+ 
+        android:inputType="textPersonName"
+         android:layout_below="@+id/signupfirstnametextview"/>
+ 	 <TextView
+        android:id="@+id/signuplastnametextview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signuplastnametext"
+         android:layout_below="@+id/signupfirstnameedittext" />
+ 	<EditText 
+ 	    android:id="@+id/signuplastnameedittext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+
+        android:inputType="textPersonName"
+         android:layout_below="@+id/signuplastnametextview"/>
+     <Button
+        android:id="@+id/signupokbutton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/button_ok"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/signuplastnameedittext"
+        />
+     
+</RelativeLayout>
