@@ -7,26 +7,14 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.UserMenagerWebView;
+import com.example.qrboard.InternalWebView;
 
-public class QRUserMenager extends QRInternalWebPage {
+public class QRInternalWebPage extends QRWebPage{
 
-	public String password;
-
-	public QRUserMenager(String text, String html, String password) {
+	public QRInternalWebPage(String text, String html) {
 		super(text, html);
-		this.password = password;
+		// TODO Auto-generated constructor stub
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-
 	@Override
 	public void draw(Canvas canvas, ARLayerView arview) {
 //		super.draw(canvas, arview);
@@ -34,7 +22,7 @@ public class QRUserMenager extends QRInternalWebPage {
 		paint.setColor(Color.BLACK);
 
 		if (webview == null) {
-			webview = new UserMenagerWebView(arview, this, 500, 500);
+			webview = new InternalWebView(arview, this, 500, 500);
 
 		} else {
 

@@ -166,7 +166,7 @@ public class ARLayerView extends SurfaceView {
 	}
 
 	public void prepareAction(String action) {
-		argui.prepareAction(action, getContext());
+		argui.performAction(action, getContext());
 	}
 
 	public LinearLayout.LayoutParams getButtonViewLayoutParams() {

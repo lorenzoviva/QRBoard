@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 
 import com.example.qrboard.ARGUI;
+import com.ogc.model.QRInternalWebPage;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUserMenager;
 
@@ -13,14 +14,14 @@ public class Logout extends Action{
 
 	@Override
 	public void execute() {
-		setState(2);
+		super.execute();
 		argui.finishAction("Successfully logged out");
 		
 	}
 
 	@Override
 	public void perform(ARGUI argui, Context context) {
-		setState(1);
+		super.perform(argui, context);
 		argui.setUser(null);
 		argui.setQRSquare(null, true);
 		this.argui = argui;
@@ -36,7 +37,7 @@ public class Logout extends Action{
 	public void prepare(ARGUI argui) {
 		QRUserMenager qrUserMenager = (QRUserMenager) argui.getQRSquare();
 		qrUserMenager.setPassword("");
-		argui.setQRSquare(qrUserMenager, true);
+		argui.setQRSquare((QRInternalWebPage)qrUserMenager, true);
 	}
 	@Override
 	public int getColor(ARGUI argui) {
