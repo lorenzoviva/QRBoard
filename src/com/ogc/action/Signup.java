@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import com.google.gson.JsonSyntaxException;
 import com.ogc.dbutility.DBConst;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.ACL;
+import com.ogc.model.QRInternalWebPage;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
@@ -38,12 +40,13 @@ public class Signup extends Action {
 	ARGUI argui;
 	@Override
 	public void execute() {
+		super.execute();
 		new QRSquareAction().execute();
-		setState(2);
 	}
 
 	@Override
 	public void perform(ARGUI argui, Context context) {
+		super.perform(argui, context);
 		QRSquare qrSquare = argui.getQRSquare();
 		usersquare = new QRSignupPasswordPage(qrSquare);
 		usersquare.setOne(qrSquare.getOne());
@@ -54,8 +57,6 @@ public class Signup extends Action {
 		argui.setUsersquare(usersquare);
 		DialogBuilder.createSignupDialog(context, this);
 		this.argui = argui;
-		setState(1);
-
 	}
 
 	@Override
@@ -96,11 +97,12 @@ public class Signup extends Action {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("json", json.toString()));
-			JSONObject jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "POST", params);
-			boolean s = false;
-
-			Log.d("Msg", jsonresponse.toString());
+			
 			try {
+				JSONObject jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "POST", params);
+				boolean s = false;
+
+				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
 					Gson gson = new Gson();
@@ -115,7 +117,7 @@ public class Signup extends Action {
 					argui.finishAction("Unable to signup");
 
 				}
-			} catch (JSONException e) {
+			} catch (JSONException | HttpHostConnectException e) {
 				argui.finishAction("Unable to signup");
 			}
 
@@ -127,7 +129,7 @@ public class Signup extends Action {
 	@Override
 	public void prepare(ARGUI argui) {
 		QRSignupPage signupPage = new QRSignupPage(argui.getQRSquare());
-		argui.setQRSquare(signupPage, true);
+		argui.setQRSquare((QRInternalWebPage)signupPage, true);
 		
 	}
 

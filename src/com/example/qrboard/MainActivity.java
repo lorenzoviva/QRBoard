@@ -48,37 +48,6 @@ public class MainActivity extends Activity {
 		startActivityForResult(intent, 0);
 	}
 
-	private class Login extends AsyncTask<String, String, String> {
-		@Override
-		protected String doInBackground(String... args) {
-			// Getting username and password from user inpu
-			String username = fn.getText().toString();
-			String pass = ln.getText().toString();
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("lel", "ohohoh");
-			JSONObject json = new JSONObject(map);
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("firstName", username));
-			params.add(new BasicNameValuePair("lastName", pass));
-			params.add(new BasicNameValuePair("json",json.toString()));
-			json = jParser.makeHttpRequest(url_signup, "GET", params);
-			boolean s = false;
-
-			try {
-				
-				Log.d("Msg", json.toString());
-				s = json.getBoolean("success");
-				if (s) {
-					
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-	}
+	
 
 }

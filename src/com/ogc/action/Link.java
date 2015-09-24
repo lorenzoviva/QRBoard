@@ -13,14 +13,14 @@ public class Link extends Action{
 	
 	@Override
 	public void execute() {
-		setState(2);
+		super.execute();
 		argui.finishAction("Back");
 		
 	}
 
 	@Override
 	public void perform(ARGUI argui, Context context) {
-		setState(1);
+		super.perform(argui, context);
 		QRSquare qrsquare = argui.getQRSquare();
 		QRWebPage qrwebpage = new QRWebPage(qrsquare.getText(), qrsquare.getText());
 		qrwebpage.setOne(qrsquare.getOne());

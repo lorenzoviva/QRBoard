@@ -108,6 +108,12 @@ public class ARGUI {
 			// && !lastqrsquare.equals(qrsquare) && (lastactions == null ||
 			// !lastactions.equals(action))
 			if (lastqrsquare != null) {
+				lastqrsquare.setOne(this.qrsquare.getOne());
+				lastqrsquare.setTwo(this.qrsquare.getTwo());
+				lastqrsquare.setThree(this.qrsquare.getThree());
+				lastqrsquare.setFour(this.qrsquare.getFour());
+			}
+			if (lastqrsquare != null) {
 				String lastactions = "";
 				for (int i = 0; i < actions.size(); i++) {
 					lastactions += actions.get(i) + ",";
@@ -121,8 +127,15 @@ public class ARGUI {
 					this.lastactions = lastactions;
 				}
 			}
+			if(qrsquare == null){
+				Log.d("EXCEPTION", "qrsquare is null");
+			}
 			this.qrsquare = qrsquare;
 		} else {
+//			if(qrsquare == null){
+				Log.d("EXCEPTION", "not forced, action:" + action.getClass().getSimpleName());
+//			}
+			
 			action.addQRParameter(qrsquare);
 			this.qrsquare = qrsquare;
 		}
@@ -134,8 +147,12 @@ public class ARGUI {
 	}
 
 	public void setShape(Result rawResult) {
+		if (lastqrsquare != null && result != null) {
+			lastqrsquare.setShape(result.getResultPoints(), ((android.graphics.Point) (result.getResultMetadata().get(ResultMetadataType.OTHER))).y);
+		}
 		this.result = rawResult;
 		qrsquare.setShape(result.getResultPoints(), ((android.graphics.Point) (rawResult.getResultMetadata().get(ResultMetadataType.OTHER))).y);
+
 	}
 
 	public Result getResult() {
@@ -144,14 +161,26 @@ public class ARGUI {
 
 	public void setActions(String action) {
 		if (this.action == null) {
-
-
+			if (lastqrsquare != null) {
+				String lastactions = "";
+				for (int i = 0; i < actions.size(); i++) {
+					lastactions += actions.get(i) + ",";
+				}
+				if (lastactions != null && lastactions.endsWith(",")) {
+					lastactions = lastactions.substring(0, lastactions.length() - 1);
+				}
+				if (lastactions != null) {// && this.lastactions != null &&
+											// !lastactions.equals(this.lastactions))
+											// {
+					this.lastactions = lastactions;
+				}
+			}
 			this.actions = new ArrayList<String>();
 			String[] actions = action.split(",");
 			for (int i = 0; i < actions.length; i++) {
 				Action realAction;
 				try {
-					realAction = (Action) Class.forName("com.ogc.action."+Action.correctActionName(actions[i])).newInstance();
+					realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(actions[i])).newInstance();
 					realAction.prepare(this);
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 					Log.d("ERROR", "unable to prepare action :" + actions[i]);
@@ -171,10 +200,10 @@ public class ARGUI {
 			realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
 			return realAction.getColor(this);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-//			Log.d("ERROR", "cannot get color from action: " + action);
+			// Log.d("ERROR", "cannot get color from action: " + action);
 			return Color.GRAY;
 		}
-		
+
 	}
 
 	public void goToLastQRSquare() {
@@ -207,7 +236,7 @@ public class ARGUI {
 						} else if (event.getAction() == MotionEvent.ACTION_UP) {
 							if (hover != -1) {
 								hover = -1;
-								prepareAction(clickedaction, context);
+								performAction(clickedaction, context);
 							}
 						}
 					}
@@ -230,7 +259,7 @@ public class ARGUI {
 		}
 	}
 
-	public void prepareAction(String action, Context context) {
+	public void performAction(String action, Context context) {
 		try {
 			this.action = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
 			this.action.perform(this, context);

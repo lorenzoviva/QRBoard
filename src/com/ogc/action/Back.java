@@ -2,10 +2,12 @@ package com.ogc.action;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.example.qrboard.ARGUI;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.ogc.action.Request.QRSquareAction;
 import com.ogc.model.QRSquare;
 
 public class Back extends Action{
@@ -13,15 +15,15 @@ public class Back extends Action{
 	
 	@Override
 	public void execute() {
-		setState(2);
+		super.execute();
 		argui.goToLastQRSquare();
 		argui.finishAction(argui.getLastactions());
 	}
 
 	@Override
 	public void perform(ARGUI argui, Context context) {
+		super.perform(argui, context);
 		this.argui = argui;
-		setState(1);
 		execute();
 		
 	}

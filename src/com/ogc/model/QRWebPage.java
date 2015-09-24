@@ -20,7 +20,9 @@ public class QRWebPage extends QRSquare {
 	private transient float ty;
 	private transient float dx;
 	private transient float dy;
-
+	public QRWebPage(){
+		
+	}
 	public String getHtml() {
 		return html;
 	}
@@ -141,5 +143,10 @@ public class QRWebPage extends QRSquare {
 	@Override 
 	public String toString() {
 		return super.toString() + ", html= " + html + "]";
+	}
+	
+	@Override
+	public String getCreationChoiseHtml() {
+		return "<td height='25%' width='25%' bgcolor='#FFF000' style=\"word-wrap:break-word;\"><div align='center'>"+this.getClass().getSimpleName()+"</div><br><div align='center'><i class='fa fa-file'></div></i></td>";
 	}
 }

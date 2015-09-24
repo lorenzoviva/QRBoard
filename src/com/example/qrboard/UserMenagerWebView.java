@@ -5,7 +5,7 @@ import android.util.Log;
 import com.ogc.model.QRUserMenager;
 import com.ogc.model.RoleType;
 
-public class UserMenagerWebView extends LWebView{
+public class UserMenagerWebView extends InternalWebView{
 
 	public RoleType role;
 	
@@ -14,50 +14,7 @@ public class UserMenagerWebView extends LWebView{
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {
-		String js = "javascript:(function() { " 
-				//	scroll the window
-				+"	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
-				//	get the clicked object
-				+"	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" 
-				+"	var parents = '';"
-				//	Throws a click event
-				+"	if (obj.fireEvent) {"
-				+"		obj.fireEvent('onclick');"
- 				+"	} else {"
-   				+"		var evObj = document.createEvent('Events');"
-   				+"		evObj.initEvent('click', true, false);"
-   				+"		obj.dispatchEvent(evObj);"
-   				+"	}" 
-   				//	find a parent object with an id
-				+"	while(obj.parentNode!=null && !obj.hasAttribute('id')){"
-				//		add the courrent object tagName to 'parents' (eg: DIV)
-				+"		parents += obj.tagName + ' ';" 
-				//		add all attributes of parent to 'parents' (eg: color<black>)
-				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}"
-				+"		}"
-				+"		parents += ' ';" 
-				+"		obj = obj.parentNode;" 
-				+"	} " 
-				+"	if(obj!=null) {"
-				+"		var att = '';"
-				//		add all attributes to the attribute list
-				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}" 
-				+"		}"
-				+"		window.clickInterface.onclick(obj.tagName,att,parents);"
-				+"	}" 
-				+"})()";
-		loadUrl(js);
-		
-	}
-
+	
 	@Override
 	public void onElementTouched(String tagname, String attributes, String parents) {
 		if (attributes.contains("id<")) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,16 +32,17 @@ public class Request extends Action {
 	
 	@Override
 	public void execute() {
+		super.execute();
 		new QRSquareAction().execute();
-		setState(2);
+		
 	}
 
 	@Override
 	public void perform(ARGUI argui, Context context) {
+		super.perform(argui, context);
 		qrSquare = argui.getQRSquare();
 		qrUser = argui.getUser();
-		this.argui = argui;
-		setState(1);
+		this.argui = argui;		
 		execute();
 	}
 
@@ -69,11 +71,12 @@ public class Request extends Action {
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("json", json.toString()));
-			JSONObject jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "POST", params);
-			boolean s = false;
-
-			Log.d("Msg", jsonresponse.toString());
+			
 			try {
+				JSONObject jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "POST", params);
+				boolean s = false;
+
+				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
 					argui.finishAction("Successfully requested");
@@ -81,7 +84,7 @@ public class Request extends Action {
 					argui.finishAction("Unable to request");
 
 				}
-			} catch (JSONException e) {
+			} catch (JSONException | HttpHostConnectException e) {
 				Log.d("ERROR", e.getMessage());
 				argui.finishAction("Unable to request");
 			}

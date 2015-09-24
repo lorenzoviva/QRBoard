@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import com.example.qrboard.ARLayerView;
 import com.example.qrboard.UserMenagerWebView;
 
-public class QRUserMenager extends QRWebPage {
+public class QRUserMenager extends QRInternalWebPage {
 
 	public String password;
 

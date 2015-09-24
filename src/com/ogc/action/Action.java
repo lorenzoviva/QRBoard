@@ -12,12 +12,16 @@ import com.ogc.dbutility.JSONParser;
 import com.ogc.model.QRSquare;
 
 public abstract class Action {
-	private int state = 0;// 0 : null , 1 : preparing , 2 : performing
+	private int state = 0;// 0 : null , 1 : performing , 2 : executing
 	protected JSONParser jParser = new JSONParser();
 	
 	public abstract int getColor(ARGUI argui);
-	public abstract void execute();
-	public abstract void perform(ARGUI argui, Context context);
+	public void execute(){
+		setState(2);
+	}
+	public void perform(ARGUI argui, Context context){
+		setState(1);
+	}
 	public abstract void prepare(ARGUI argui);
 	public static String correctActionName(String string) {
 		if (string.length() > 1) {

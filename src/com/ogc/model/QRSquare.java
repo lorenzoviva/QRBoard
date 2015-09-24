@@ -191,4 +191,7 @@ public class QRSquare {
 			return false;
 		return true;
 	}
+	public String getCreationChoiseHtml() {
+		return "<td>"+this.getClass().getSimpleName()+"</td>";
+	}
 }

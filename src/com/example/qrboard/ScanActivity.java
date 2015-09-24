@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -133,6 +134,7 @@ public class ScanActivity extends CaptureActivity {
 
 	public class QRSquareLoader extends AsyncTask<String, String, String> {
 
+		@SuppressWarnings("deprecation")
 		@Override
 		protected String doInBackground(String... args) {
 			// Getting username and password from user inpu
@@ -152,11 +154,11 @@ public class ScanActivity extends CaptureActivity {
 				Log.d("request:", json.toString());
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("json", json.toString()));
-				JSONObject jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "GET", params);
-				boolean s = false;
-
+			
+				JSONObject jsonresponse = null;
 				try {
-
+					jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "GET", params);
+					boolean s = false;
 					Log.d("Msg", jsonresponse.toString());
 					s = jsonresponse.getBoolean("success");
 					if (s) {
@@ -188,9 +190,12 @@ public class ScanActivity extends CaptureActivity {
 							// state = 2;
 						}
 					}
-				} catch (ClassNotFoundException e) {
+				} catch ( HttpHostConnectException | ClassNotFoundException e) {
 					createErrorDialog("The servers are down! please try again later");
-				} catch (JSONException | NullPointerException e) {
+				} catch (JSONException  | NullPointerException e) {
+					if(jsonresponse == null){
+						createErrorDialog("The servers are down! please try again later");
+					}
 					Log.d("WARNING", "there is some missing information in this qr :" + e.getMessage());
 				}
 			}
