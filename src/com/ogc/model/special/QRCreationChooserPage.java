@@ -37,8 +37,8 @@ public class QRCreationChooserPage extends QRInternalWebPage {
 							html += "</tr><tr height='25%'>";
 						}
 						html += qrSquare.getCreationChoiseHtml();
-					} catch (ReflectiveOperationException  e) {
-						
+					} catch (Exception  e) {
+						e.printStackTrace();
 					}
 				}else{
 					if(i != 0 && i%4 == 0){
