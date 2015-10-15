@@ -1,11 +1,7 @@
 package com.example.qrboard;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -26,8 +22,6 @@ import com.ogc.graphics.Utility;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 
-import dalvik.system.DexFile;
-
 public class ARGUI {
 
 	private Result result;
@@ -43,6 +37,7 @@ public class ARGUI {
 	private QRUser user = null;
 	private Action action = null;
 	private List<Action> allActions = new ArrayList<Action>();
+	private String actionContext = "";
 
 	public QRUser getUser() {
 		return user;
@@ -127,15 +122,15 @@ public class ARGUI {
 					this.lastactions = lastactions;
 				}
 			}
-			if(qrsquare == null){
+			if (qrsquare == null) {
 				Log.d("EXCEPTION", "qrsquare is null");
 			}
 			this.qrsquare = qrsquare;
 		} else {
-//			if(qrsquare == null){
-				Log.d("EXCEPTION", "not forced, action:" + action.getClass().getSimpleName());
-//			}
-			
+			// if(qrsquare == null){
+			Log.d("EXCEPTION", "not forced, action:" + action.getClass().getSimpleName());
+			// }
+
 			action.addQRParameter(qrsquare);
 			this.qrsquare = qrsquare;
 		}
@@ -180,7 +175,7 @@ public class ARGUI {
 			for (int i = 0; i < actions.length; i++) {
 				Action realAction;
 				try {
-					realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(actions[i])).newInstance();
+					realAction = getRealAction(actions[i]);
 					realAction.prepare(this);
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 					Log.d("ERROR", "unable to prepare action :" + actions[i]);
@@ -194,10 +189,20 @@ public class ARGUI {
 		}
 	}
 
+	public Action getRealAction(String action) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Action realAction;
+		if (!actionContext.equals("")) {
+			realAction = (Action) Class.forName("com.ogc.action." + actionContext + "." + Action.correctActionName(action)).newInstance();
+		} else {
+			realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
+		}
+		return realAction;
+	}
+
 	public int getColor(String action) {
 		Action realAction;
 		try {
-			realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
+			realAction = getRealAction(action);
 			return realAction.getColor(this);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// Log.d("ERROR", "cannot get color from action: " + action);
@@ -261,7 +266,8 @@ public class ARGUI {
 
 	public void performAction(String action, Context context) {
 		try {
-			this.action = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
+			this.action = getRealAction(action);
+			Log.d("ACTION", "performing:"+action);
 			this.action.perform(this, context);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			Log.d("ERROR", "unable to perform action :" + clickedaction);
@@ -338,6 +344,14 @@ public class ARGUI {
 
 	public void setLastqrsquare(QRSquare lastqrsquare) {
 		this.lastqrsquare = lastqrsquare;
+	}
+
+	public String getActionContext() {
+		return actionContext;
+	}
+
+	public void setActionContext(String actionContext) {
+		this.actionContext = actionContext;
 	}
 
 }

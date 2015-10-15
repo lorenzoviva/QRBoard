@@ -1,4 +1,4 @@
-package com.ogc.action;
+package com.ogc.action.create;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,39 +12,36 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.qrboard.ARGUI;
-import com.ogc.action.Request.QRSquareAction;
+import com.google.gson.Gson;
+import com.ogc.action.Action;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
-import com.ogc.model.QRUserMenager;
-import com.ogc.model.special.QRCreationChooserPage;
-import com.ogc.model.special.QRFreePage;
-import com.ogc.model.special.QRSignupPage;
+import com.ogc.model.QRWebPage;
+import com.ogc.model.QRWebPageEditor;
 
-
-public class Create extends Action {
-	private QRSquare qrSquare = null;
-	private QRUser qrUser = null;
-	private ARGUI argui;
+public class Qrwebpage extends Action{
+	ARGUI argui;
+	QRSquare qrSquare;
+	QRUser qrUser;
+	
 	@Override
 	public void execute() {
 		super.execute();
 		new QRSquareAction().execute();
-		
 	}
 
 	@Override
 	public void perform(ARGUI argui, Context context) {
 		super.perform(argui, context);
-		qrSquare = argui.getQRSquare();
-		qrUser = argui.getUser();
 		this.argui = argui;
+		qrUser = argui.getUser();
+		qrSquare = argui.getQRSquare();
 		execute();
 		
 	}
@@ -57,16 +54,14 @@ public class Create extends Action {
 
 	@Override
 	public void prepare(ARGUI argui) {
-		if(!(argui.getQRSquare() instanceof QRSignupPage)){
-			QRFreePage freeQRWebPage = new QRFreePage(argui.getQRSquare());
-			argui.setQRSquare(freeQRWebPage, true);
-		}
+		
 	}
+
 	@Override
 	public int getColor(ARGUI argui) {
-		return Color.MAGENTA;
+		return 0;
 	}
-	
+
 	public class QRSquareAction extends AsyncTask<String, String, String> {
 
 		@Override
@@ -75,16 +70,21 @@ public class Create extends Action {
 
 			Map<String, Object> paramap = new HashMap<String, Object>();
 			ACL acl = new ACL(true, true);
-			paramap.put("from", "create");
+			paramap.put("html", "new page");
 			paramap.put("text", qrSquare.getText());
+			paramap.put("classname", "QRWebPage");
+			paramap.put("acl", acl.toJSON());
 			if(qrUser!=null){
 				paramap.put("user", qrUser.getId());
+				paramap.put("owner", qrUser.getId());
+				
 			}
+			
 
 			JSONObject paramjson = new JSONObject(paramap);
 
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("action", "choice");
+			map.put("action", "create");
 			map.put("parameters", paramjson);
 			JSONObject json = new JSONObject(map);
 
@@ -98,10 +98,11 @@ public class Create extends Action {
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					QRCreationChooserPage qrChooser = new QRCreationChooserPage(qrSquare,jsonresponse.getString("choises"));
+					QRWebPage newsquare = (new Gson()).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRWebPage.class);
+					QRWebPageEditor qrChooser = new QRWebPageEditor(newsquare);
 					argui.setQRSquare(qrChooser, false);
-					argui.setActionContext("create");
-					argui.finishAction(jsonresponse.getString("action"));
+					argui.setActionContext("create.qrwebpage");
+					argui.finishAction("save,access,add,edit,remove,exit,");
 				} else {
 					argui.finishAction("Unable to request choises ");
 
@@ -115,4 +116,5 @@ public class Create extends Action {
 		}
 
 	}
+	
 }

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.qrboard.ARLayerView;
+import com.example.qrboard.LWebView;
 import com.google.zxing.ResultPoint;
 
 public class QRSquare {
@@ -192,6 +193,6 @@ public class QRSquare {
 		return true;
 	}
 	public String getCreationChoiseHtml() {
-		return "<td>"+this.getClass().getSimpleName()+"</td>";
+		return "<td id='"+LWebView.applicationid + "create" + this.getClass().getSimpleName()+"' >"+this.getClass().getSimpleName()+"</td>";
 	}
 }

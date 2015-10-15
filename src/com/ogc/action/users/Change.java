@@ -1,24 +1,18 @@
-package com.ogc.action;
+package com.ogc.action.users;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.example.qrboard.ARGUI;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.ogc.action.Request.QRSquareAction;
+import com.ogc.action.Action;
 import com.ogc.model.QRSquare;
 
-public class Back extends Action{
-	ARGUI argui;
+public class Change extends Action{
+ARGUI argui;
 	
 	@Override
 	public void execute() {
 		super.execute();
-		argui.goToLastQRSquare();
-		argui.setActionContext("");
-		argui.finishAction(argui.getLastactions());
 	}
 
 	@Override
@@ -42,13 +36,6 @@ public class Back extends Action{
 
 	@Override
 	public int getColor(ARGUI argui) {
-		if(argui.getQRSquare()!=null && argui.getLastqrsquare()!=null){
-			return Color.GRAY;
-		}else{
-			return Color.rgb(112, 21, 54);
-		}
+		return Color.BLUE;
 	}
-
-	
-	
 }
