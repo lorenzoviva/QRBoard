@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.CaptureActivity;
 import com.ogc.action.Action;

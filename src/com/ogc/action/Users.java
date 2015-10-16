@@ -101,6 +101,7 @@ public class Users extends Action {
 						argui.setQRSquare(usersquare, true);
 						Log.d("FROM JSON", fromJson.toString());
 						if(jsonresponse.has("action")){
+							argui.setActionContext("users");
 							argui.finishAction(jsonresponse.getString("action"));
 						}else{
 							argui.finishAction("Unable to load users");

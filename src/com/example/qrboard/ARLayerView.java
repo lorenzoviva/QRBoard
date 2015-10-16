@@ -165,7 +165,7 @@ public class ARLayerView extends SurfaceView {
 		argui.showUsers(width,height);
 	}
 
-	public void prepareAction(String action) {
+	public void performAction(String action) {
 		argui.performAction(action, getContext());
 	}
 

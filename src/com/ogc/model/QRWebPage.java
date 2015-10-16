@@ -147,6 +147,6 @@ public class QRWebPage extends QRSquare {
 	
 	@Override
 	public String getCreationChoiseHtml() {
-		return "<td height='25%' width='25%' bgcolor='#FFF000' style=\"word-wrap:break-word;\"><div align='center'>"+this.getClass().getSimpleName()+"</div><br><div align='center'><i class='fa fa-file'></div></i></td>";
+		return "<td height='25%' id='"+LWebView.applicationid + ".create." + this.getClass().getSimpleName()+"'  width='25%' bgcolor='#FFF000' style=\"word-wrap:break-word;\"><div align='center'>"+this.getClass().getSimpleName()+"</div><br><div align='center'><i class='fa fa-file'></div></i></td>";
 	}
 }

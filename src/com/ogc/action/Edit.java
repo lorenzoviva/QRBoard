@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 
 import com.example.qrboard.ARGUI;
-import com.ogc.action.Create.QRSquareAction;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 

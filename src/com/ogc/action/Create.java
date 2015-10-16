@@ -100,6 +100,7 @@ public class Create extends Action {
 				if (s) {
 					QRCreationChooserPage qrChooser = new QRCreationChooserPage(qrSquare,jsonresponse.getString("choises"));
 					argui.setQRSquare(qrChooser, false);
+					argui.setActionContext("create");
 					argui.finishAction(jsonresponse.getString("action"));
 				} else {
 					argui.finishAction("Unable to request choises ");
