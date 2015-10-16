@@ -125,9 +125,9 @@ public class Users extends Action {
 
 	@Override
 	public void prepare(ARGUI argui) {
-		QRUserMenager qrUserMenager = (QRUserMenager) argui.getQRSquare();
-		qrUserMenager.setPassword("");
-		argui.setQRSquare((QRInternalWebPage)qrUserMenager, true);
+//	QRUserMenager qrUserMenager = (QRUserMenager) argui.getQRSquare();
+////		qrUserMenager.setPassword("");
+//		argui.setQRSquare((QRInternalWebPage)qrUserMenager, true);
 
 	}
 

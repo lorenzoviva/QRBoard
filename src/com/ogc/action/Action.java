@@ -5,6 +5,8 @@ import java.util.Locale;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
 import com.google.gson.JsonObject;
@@ -21,6 +23,9 @@ public abstract class Action {
 	}
 	public void perform(ARGUI argui, Context context){
 		setState(1);
+	}
+	public Bitmap getIcon(View view){
+		return null;
 	}
 	public abstract void prepare(ARGUI argui);
 	public static String correctActionName(String string) {

@@ -17,6 +17,7 @@ public class QRWebPageEditor extends QRWebPage{
 	}
 	public QRWebPageEditor(QRWebPage qrSquare) {
 		super(qrSquare.getText(),qrSquare.getHtml());
+		
 	}
 	@Override
 	public void draw(Canvas canvas, ARLayerView arview) {

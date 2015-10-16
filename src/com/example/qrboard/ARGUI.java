@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +13,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.google.zxing.Result;
 import com.google.zxing.ResultMetadataType;
@@ -53,13 +55,13 @@ public class ARGUI {
 
 	public void draw(Canvas canvas, ARLayerView arview) {
 		if (qrsquare != null) {
-			drawCircle(canvas);
+			drawCircle(canvas,arview);
 			qrsquare.draw(canvas, arview);
 		}
 
 	}
 
-	public void drawCircle(Canvas canvas) {
+	public void drawCircle(Canvas canvas,View view) {
 
 		float cx = (qrsquare.getOne().x + qrsquare.getTwo().x + qrsquare.getThree().x + qrsquare.getFour().x) / 4;
 		float cy = (qrsquare.getOne().y + qrsquare.getTwo().y + qrsquare.getThree().y + qrsquare.getFour().y) / 4;
@@ -93,6 +95,22 @@ public class ARGUI {
 			paint.setTextSize(textSize);
 			canvas.drawTextOnPath(actions.get(i), path, 0, textSize, paint);
 			canvas.drawPath(path, paint);
+			
+			Action realaction = null;
+			try {
+				realaction = getRealAction(actions.get(i));
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				/*
+				 * non è un vero errore
+				 */
+//				Log.d("ERROR", "unable to get icon from action :" + actions.get(i));
+			}
+			if(realaction!=null && realaction.getIcon(view)!=null){
+				Bitmap icon = realaction.getIcon(view);
+				float ty = (float) (cy + radius * Math.cos((angle*i) + (angle/2)) - (icon.getHeight()/2));
+				float lx = (float) (cx + radius * Math.sin((angle*i) + (angle/2)) - (icon.getWidth()/2));
+				canvas.drawBitmap(icon, lx, ty, new Paint());
+			}
 		}
 
 	}
@@ -178,6 +196,9 @@ public class ARGUI {
 					realAction = getRealAction(actions[i]);
 					realAction.prepare(this);
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					/*
+					 * non è un vero errore
+					 */
 					Log.d("ERROR", "unable to prepare action :" + actions[i]);
 				}
 				this.actions.add(actions[i]);
@@ -205,6 +226,9 @@ public class ARGUI {
 			realAction = getRealAction(action);
 			return realAction.getColor(this);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			/*
+			 * non è un vero errore
+			 */
 			// Log.d("ERROR", "cannot get color from action: " + action);
 			return Color.GRAY;
 		}
@@ -270,6 +294,9 @@ public class ARGUI {
 			Log.d("ACTION", "performing:"+action);
 			this.action.perform(this, context);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			/*
+			 * non è un vero errore
+			 */
 			Log.d("ERROR", "unable to perform action :" + clickedaction);
 		}
 

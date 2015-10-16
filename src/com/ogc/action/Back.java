@@ -1,13 +1,12 @@
 package com.ogc.action;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.ogc.action.Request.QRSquareAction;
 import com.ogc.model.QRSquare;
 
 public class Back extends Action{
@@ -48,6 +47,11 @@ public class Back extends Action{
 			return Color.rgb(112, 21, 54);
 		}
 	}
+
+//	@Override
+//	public Bitmap getIcon(View view) {
+//		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.icon_back);;
+//	}
 
 	
 	

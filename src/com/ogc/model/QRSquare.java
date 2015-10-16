@@ -35,6 +35,12 @@ public class QRSquare {
 	public QRSquare() {
 		
 	}
+	public void setShape(QRSquare qrSquare){
+		setOne(qrSquare.getOne());
+		setTwo(qrSquare.getTwo());
+		setThree(qrSquare.getThree());
+		setFour(qrSquare.getFour());
+	}
 	public void setShape(ResultPoint[] resultPoints, int qrsize){
 		this.qrsize = qrsize;
 		this.one = new PointF(resultPoints[0].getX(),resultPoints[0].getY());
