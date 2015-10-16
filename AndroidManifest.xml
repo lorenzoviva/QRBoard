@@ -40,6 +40,14 @@
             android:name=".ScanActivity"
             android:label="@string/title_activity_scan" >
         </activity>
+        <activity
+            android:name=".FreeDraw"
+            android:label="@string/title_activity_free_draw"
+            android:parentActivityName=".DecoderActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.qr_readerexample.DecoderActivity" />
+        </activity>
     </application>
 
 </manifest>
