@@ -100,12 +100,12 @@ public class Qrwebpage extends Action{
 				if (s) {
 					QRWebPage newsquare = (new Gson()).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRWebPage.class);
 					QRWebPageEditor qrChooser = new QRWebPageEditor(newsquare);
+					qrChooser.setShape(qrSquare);
 					argui.setQRSquare(qrChooser, false);
 					argui.setActionContext("create.qrwebpage");
 					argui.finishAction("save,access,add,edit,remove,exit,");
 				} else {
 					argui.finishAction("Unable to request choises ");
-
 				}
 			} catch (JSONException | HttpHostConnectException e) {
 				Log.d("ERROR", e.getMessage());
