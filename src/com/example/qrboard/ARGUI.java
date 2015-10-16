@@ -1,13 +1,10 @@
 package com.example.qrboard;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Locale;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +13,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.google.zxing.Result;
 import com.google.zxing.ResultMetadataType;
@@ -25,8 +23,6 @@ import com.ogc.graphics.Quadrilateral;
 import com.ogc.graphics.Utility;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
-
-import dalvik.system.DexFile;
 
 public class ARGUI {
 
@@ -43,6 +39,7 @@ public class ARGUI {
 	private QRUser user = null;
 	private Action action = null;
 	private List<Action> allActions = new ArrayList<Action>();
+	private String actionContext = "";
 
 	public QRUser getUser() {
 		return user;
@@ -58,13 +55,13 @@ public class ARGUI {
 
 	public void draw(Canvas canvas, ARLayerView arview) {
 		if (qrsquare != null) {
-			drawCircle(canvas);
+			drawCircle(canvas,arview);
 			qrsquare.draw(canvas, arview);
 		}
 
 	}
 
-	public void drawCircle(Canvas canvas) {
+	public void drawCircle(Canvas canvas,View view) {
 
 		float cx = (qrsquare.getOne().x + qrsquare.getTwo().x + qrsquare.getThree().x + qrsquare.getFour().x) / 4;
 		float cy = (qrsquare.getOne().y + qrsquare.getTwo().y + qrsquare.getThree().y + qrsquare.getFour().y) / 4;
@@ -98,6 +95,22 @@ public class ARGUI {
 			paint.setTextSize(textSize);
 			canvas.drawTextOnPath(actions.get(i), path, 0, textSize, paint);
 			canvas.drawPath(path, paint);
+			
+			Action realaction = null;
+			try {
+				realaction = getRealAction(actions.get(i));
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				/*
+				 * non è un vero errore
+				 */
+//				Log.d("ERROR", "unable to get icon from action :" + actions.get(i));
+			}
+			if(realaction!=null && realaction.getIcon(view)!=null){
+				Bitmap icon = realaction.getIcon(view);
+				float ty = (float) (cy + radius * Math.cos((angle*i) + (angle/2)) - (icon.getHeight()/2));
+				float lx = (float) (cx + radius * Math.sin((angle*i) + (angle/2)) - (icon.getWidth()/2));
+				canvas.drawBitmap(icon, lx, ty, new Paint());
+			}
 		}
 
 	}
@@ -127,15 +140,15 @@ public class ARGUI {
 					this.lastactions = lastactions;
 				}
 			}
-			if(qrsquare == null){
+			if (qrsquare == null) {
 				Log.d("EXCEPTION", "qrsquare is null");
 			}
 			this.qrsquare = qrsquare;
 		} else {
-//			if(qrsquare == null){
-				Log.d("EXCEPTION", "not forced, action:" + action.getClass().getSimpleName());
-//			}
-			
+			// if(qrsquare == null){
+			Log.d("EXCEPTION", "not forced, action:" + action.getClass().getSimpleName());
+			// }
+
 			action.addQRParameter(qrsquare);
 			this.qrsquare = qrsquare;
 		}
@@ -180,9 +193,12 @@ public class ARGUI {
 			for (int i = 0; i < actions.length; i++) {
 				Action realAction;
 				try {
-					realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(actions[i])).newInstance();
+					realAction = getRealAction(actions[i]);
 					realAction.prepare(this);
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					/*
+					 * non è un vero errore
+					 */
 					Log.d("ERROR", "unable to prepare action :" + actions[i]);
 				}
 				this.actions.add(actions[i]);
@@ -194,12 +210,25 @@ public class ARGUI {
 		}
 	}
 
+	public Action getRealAction(String action) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Action realAction;
+		if (!actionContext.equals("")) {
+			realAction = (Action) Class.forName("com.ogc.action." + actionContext + "." + Action.correctActionName(action)).newInstance();
+		} else {
+			realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
+		}
+		return realAction;
+	}
+
 	public int getColor(String action) {
 		Action realAction;
 		try {
-			realAction = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
+			realAction = getRealAction(action);
 			return realAction.getColor(this);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			/*
+			 * non è un vero errore
+			 */
 			// Log.d("ERROR", "cannot get color from action: " + action);
 			return Color.GRAY;
 		}
@@ -261,9 +290,13 @@ public class ARGUI {
 
 	public void performAction(String action, Context context) {
 		try {
-			this.action = (Action) Class.forName("com.ogc.action." + Action.correctActionName(action)).newInstance();
+			this.action = getRealAction(action);
+			Log.d("ACTION", "performing:"+action);
 			this.action.perform(this, context);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			/*
+			 * non è un vero errore
+			 */
 			Log.d("ERROR", "unable to perform action :" + clickedaction);
 		}
 
@@ -338,6 +371,14 @@ public class ARGUI {
 
 	public void setLastqrsquare(QRSquare lastqrsquare) {
 		this.lastqrsquare = lastqrsquare;
+	}
+
+	public String getActionContext() {
+		return actionContext;
+	}
+
+	public void setActionContext(String actionContext) {
+		this.actionContext = actionContext;
 	}
 
 }
