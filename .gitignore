@@ -12,6 +12,7 @@
 bin/
 gen/
 
+
 # Gradle files
 .gradle/
 build/
@@ -31,4 +32,6 @@ proguard/
 # Android Studio captures folder
 captures/
 
-
+.classpath
+/libs/
+libs/

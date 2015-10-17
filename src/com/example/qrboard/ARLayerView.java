@@ -71,7 +71,7 @@ public class ARLayerView extends SurfaceView {
 	public boolean onTouchEvent(MotionEvent event) {
 		argui.onTouch(event, this.getContext());
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-			performClick();settings
+			performClick();
 		}
 		invalidate();
 		return true;
