@@ -3,7 +3,10 @@ package com.example.qrboard;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -41,6 +44,9 @@ public class ARGUI {
 	private List<Action> allActions = new ArrayList<Action>();
 	private String actionContext = "";
 
+	private Context context;
+	
+	
 	public QRUser getUser() {
 		return user;
 	}
@@ -49,8 +55,14 @@ public class ARGUI {
 		this.user = user;
 	}
 
-	public ARGUI() {
-
+	public ARGUI(Context context) {
+		this.context = context;
+	}
+	
+	public void openFreeDrawActivity(JSONObject jsonObject){
+		Intent intent = new Intent(context, ScanActivity.class);
+		intent.putExtra("jsonFreeDraw", jsonObject.toString());
+		context.startActivity(intent);
 	}
 
 	public void draw(Canvas canvas, ARLayerView arview) {

@@ -68,7 +68,7 @@ public class TextDrawer {
         return y;
     }
    
-    protected void onDraw(Canvas canvas, float xtras, float ytras, float zoom) {
+    public void onDraw(Canvas canvas, float xtras, float ytras, float zoom) {
         this.zoom = zoom;
         redrawTextFrame();
         canvas.translate(xtras + x * zoom, ytras + y * zoom);

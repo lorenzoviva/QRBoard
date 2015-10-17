@@ -30,7 +30,7 @@ public class ARLayerView extends SurfaceView {
 	public ARLayerView(Context context) {
 		super(context);
 		setWillNotDraw(false);
-		argui = new ARGUI();
+		argui = new ARGUI(this.getContext());
 
 		// TODO Auto-generated constructor stub
 	}
@@ -38,7 +38,7 @@ public class ARLayerView extends SurfaceView {
 	public ARLayerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		setWillNotDraw(false);
-		argui = new ARGUI();
+		argui = new ARGUI(this.getContext());
 
 		// TODO Auto-generated constructor stub
 	}
@@ -46,7 +46,7 @@ public class ARLayerView extends SurfaceView {
 	public ARLayerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setWillNotDraw(false);
-		argui = new ARGUI();
+		argui = new ARGUI(this.getContext());
 
 		// TODO Auto-generated constructor stub
 	}
