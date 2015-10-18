@@ -173,6 +173,7 @@ public class ScanActivity extends CaptureActivity {
 							// result.getResultPoints()[0].toString());
 							state = 2;
 							arview.setQRSquare(fromJson);
+							arview.setActionContext("");
 							arview.setActions(actions);
 							arview.drawCodeResult(result);
 							Log.d("FROM JSON", fromJson.toString());
@@ -184,6 +185,7 @@ public class ScanActivity extends CaptureActivity {
 							state = 2;
 							Log.d("result:", result.getResultPoints()[0].toString());
 							arview.setQRSquare(newsquare);
+							arview.setActionContext("");
 							arview.setActions(actions);
 							arview.drawCodeResult(result);
 							// state = 2;
