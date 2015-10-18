@@ -8,11 +8,12 @@ import com.ogc.model.RoleType;
 
 public class InternalWebView extends LWebView{
 
-		public RoleType role;
+		private RoleType role;
+		protected ARLayerView arview;
 		
 		public InternalWebView(ARLayerView arview, QRInternalWebPage qrsquare, int width, int height) {
 			super(arview, qrsquare, width, height);
-			// TODO Auto-generated constructor stub
+			this.arview = arview;
 		}
 
 		@Override
@@ -69,15 +70,23 @@ public class InternalWebView extends LWebView{
 				id = idattributes[1].substring(0, idattributes[1].indexOf(">"));
 				Log.d("CLICKED ON ID:", id);
 				if (id.startsWith(applicationid)) {
-					String js = "";
-					if (lastid == null) {
-						js = "javascript:(function(){" + "var  obj=document.getElementById(\'" + id + "\'); " + "if(obj!=null)" + " {obj.style.backgroundColor='#FF0000';}" + "})()";
-					} else {
-						js = "javascript:(function(){" + "var  obj=document.getElementById(\'" + id + "\'); var lastobj=document.getElementById(\'" + lastid + "\'); " + "if(obj!=null && lastobj!=null)" + " {obj.style.backgroundColor='#FF0000';lastobj.style.backgroundColor='#FFFFFF';}" + "})()";
-					}
+					String[] splitid = id.split("\\.");
+			
+					if(id.startsWith(applicationid +".") && splitid.length>2){//do action
+						arview.setActionContext(splitid[1]);
+						arview.performAction((splitid[2]));											
+					}else if(id.startsWith(applicationid+":")){//select from a list
+						String js = "";
+						if (lastid == null) {
+							js = "javascript:(function(){" + "var  obj=document.getElementById(\'" + id + "\'); " + "if(obj!=null)" + " {obj.style.backgroundColor='#FF0000';}" + "})()";
+						} else {
+							js = "javascript:(function(){" + "var  obj=document.getElementById(\'" + id + "\'); var lastobj=document.getElementById(\'" + lastid + "\'); " + "if(obj!=null && lastobj!=null)" + " {obj.style.backgroundColor='#FF0000';lastobj.style.backgroundColor='#FFFFFF';}" + "})()";
+						}
 
-					loadUrl(js);
-					arview.invalidate();
+						loadUrl(js);
+						arview.invalidate();
+					}
+					
 				}
 			}
 			

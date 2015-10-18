@@ -80,7 +80,7 @@ public class DrawingView extends View {
     //un valore positivo rappresenta una traslazione verso destra
     //ytras : idem con eccezione per la traslazione verticale, un valore positivo rappresenta una traslazione verso il basso
     //zoom : rappresenta il coefficente di ridimensionamento, se l'immagine iniziale ha dimensione 10x10 e 'zoom' vale 2
-    //l'immagine rappresentata nell'Activity avrà una dimensione 20x20 (zoom*larghezza,zoom*altezza)
+    //l'immagine rappresentata nell'Activity avrï¿½ una dimensione 20x20 (zoom*larghezza,zoom*altezza)
     private float xtras=0,ytras=0,zoom=1;
 
     public void setTool(int tool){
@@ -127,7 +127,8 @@ public class DrawingView extends View {
         //view given size
         super.onSizeChanged(w, h, oldw, oldh);
         if(bitmap!= null){
-            canvasBitmap = convertToMutable(Bitmap.createBitmap(bitmap,0, 0, w,h));
+//        	Log.d("onSizeChanged", "(" + bitmap.getWidth()+","+bitmap.getHeight() + ")" + "("+w+"," + h+")");
+            canvasBitmap = convertToMutable(Bitmap.createBitmap(bitmap,0, 0, bitmap.getWidth(),bitmap.getHeight()));
             centerImage();
         }else{
             canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -351,14 +352,16 @@ public class DrawingView extends View {
         this.bitmap = bitmap;
         int h = this.getHeight();
         int w = this.getWidth();
-        if(h>bitmap.getHeight()){
+//    	Log.d("setup", "(" + bitmap.getWidth()+","+bitmap.getHeight() + ")" + "("+w+"," + h+")");
+        if(h>bitmap.getHeight() || h==0){
             h = bitmap.getHeight();
         }
-        if(w>bitmap.getWidth()){
+        if(w>bitmap.getWidth() || w==0){
             w = bitmap.getWidth();
         }
 
         redrawBitmap(0, 0, w, h);
+//        Log.d("SUCCESS", "setup compleated");
     }
     /**
      * Converts a immutable bitmap to a mutable bitmap. This operation doesn't allocates
@@ -421,6 +424,7 @@ public class DrawingView extends View {
     	canvasBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
     	byte[] byteArray = stream.toByteArray();
         qrEntity.setImg(byteArray);
+        new QRSquareSaver().execute();
 
     }
     

@@ -72,10 +72,12 @@ public class FreeDraw extends Activity {
 		discardTextButton = (ImageButton) findViewById(R.id.discard_btn);
 		Intent intent = getIntent();
 		String json = intent.getStringExtra("jsonFreeDraw");
-		Gson gson = new Gson();
+		Gson gson = com.google.gson.GsonHelper.customGson;
 		qrEntity = gson.fromJson(json, QRFreeDraw.class);
 		Bitmap bitmap = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0,
 				qrEntity.getImg().length);
+		Log.d("BITMAP DECODED", bitmap.getWidth() + "," + bitmap.getHeight());
+		drawView.requestLayout();
 		drawView.setup(bitmap, qrEntity);
 		drawView.requestLayout();
 		resetAllButtonsColors();

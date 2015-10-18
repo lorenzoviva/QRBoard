@@ -11,7 +11,6 @@ public class UserMenagerWebView extends InternalWebView{
 	
 	public UserMenagerWebView(ARLayerView arview, QRUserMenager qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
-		// TODO Auto-generated constructor stub
 	}
 
 	

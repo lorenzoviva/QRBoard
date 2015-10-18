@@ -30,7 +30,7 @@ public class ARLayerView extends SurfaceView {
 	public ARLayerView(Context context) {
 		super(context);
 		setWillNotDraw(false);
-		argui = new ARGUI(this.getContext());
+		argui = new ARGUI();
 
 		// TODO Auto-generated constructor stub
 	}
@@ -38,7 +38,7 @@ public class ARLayerView extends SurfaceView {
 	public ARLayerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		setWillNotDraw(false);
-		argui = new ARGUI(this.getContext());
+		argui = new ARGUI();
 
 		// TODO Auto-generated constructor stub
 	}
@@ -46,7 +46,7 @@ public class ARLayerView extends SurfaceView {
 	public ARLayerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setWillNotDraw(false);
-		argui = new ARGUI(this.getContext());
+		argui = new ARGUI();
 
 		// TODO Auto-generated constructor stub
 	}
@@ -127,9 +127,9 @@ public class ARLayerView extends SurfaceView {
 	public void removeSquare() {
 		argui.setQRSquare(null, true);
 		if (argui.getAction() != null) {
-			String actionName = argui.getAction().getClass().getSimpleName();
-			argui.finishAction(actionName + " cancelled");
+			argui.finishAction("");
 		}
+		argui.setActionContext("");
 		invalidate();
 	}
 
@@ -173,6 +173,10 @@ public class ARLayerView extends SurfaceView {
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(100, 100, 100, 100);
 		return layoutParams;
+	}
+
+	public void setActionContext(String actionContext) {
+		argui.setActionContext(actionContext);
 	}
 
 }

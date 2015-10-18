@@ -26,7 +26,7 @@ public class QRCreationChooserPage extends QRInternalWebPage {
 			String[] choisesArray = choises.split(",");
 			for (int i = 0; i < 16; i++) {
 				if (choisesArray.length > i) {
-					String qrType = Action.correctActionName(choisesArray[i]);
+					String qrType = choisesArray[i];
 					Log.d("qrType", qrType);
 					try {
 						QRSquare qrSquare = (QRSquare) Class.forName("com.ogc.model." + qrType).newInstance();

@@ -44,7 +44,6 @@ public class ARGUI {
 	private List<Action> allActions = new ArrayList<Action>();
 	private String actionContext = "";
 
-	private Context context;
 	
 	
 	public QRUser getUser() {
@@ -55,18 +54,18 @@ public class ARGUI {
 		this.user = user;
 	}
 
-	public ARGUI(Context context) {
-		this.context = context;
+	public ARGUI() {
+		
 	}
 	
-	public void openFreeDrawActivity(JSONObject jsonObject){
-		Intent intent = new Intent(context, ScanActivity.class);
+	public void openFreeDrawActivity(JSONObject jsonObject, Context context){
+		Intent intent = new Intent(context, FreeDraw.class);
 		intent.putExtra("jsonFreeDraw", jsonObject.toString());
 		context.startActivity(intent);
 	}
 
 	public void draw(Canvas canvas, ARLayerView arview) {
-		if (qrsquare != null) {
+		if (qrsquare != null && (!actions.isEmpty() && actions.size()>0)) {
 			drawCircle(canvas,arview);
 			qrsquare.draw(canvas, arview);
 		}
@@ -74,7 +73,7 @@ public class ARGUI {
 	}
 
 	public void drawCircle(Canvas canvas,View view) {
-
+		
 		float cx = (qrsquare.getOne().x + qrsquare.getTwo().x + qrsquare.getThree().x + qrsquare.getFour().x) / 4;
 		float cy = (qrsquare.getOne().y + qrsquare.getTwo().y + qrsquare.getThree().y + qrsquare.getFour().y) / 4;
 		float radius = (float) (1.618d * Math.max(Math.max(Math.sqrt(Math.pow(cx - qrsquare.getOne().x, 2) + Math.pow(cy - qrsquare.getOne().y, 2)), Math.sqrt(Math.pow(cx - qrsquare.getTwo().x, 2) + Math.pow(cy - qrsquare.getTwo().y, 2))), Math.max(Math.sqrt(Math.pow(cx - qrsquare.getThree().x, 2) + Math.pow(cy - qrsquare.getThree().y, 2)), Math.sqrt(Math.pow(cx - qrsquare.getFour().x, 2) + Math.pow(cy - qrsquare.getFour().y, 2)))));
@@ -124,7 +123,7 @@ public class ARGUI {
 				canvas.drawBitmap(icon, lx, ty, new Paint());
 			}
 		}
-
+		
 	}
 
 	public void setQRSquare(QRSquare qrsquare, boolean forced) {
@@ -364,8 +363,9 @@ public class ARGUI {
 		qrsquare.setThree(new PointF(width - ((width - (height / 2)) / 2), height / 4));
 		qrsquare.setFour(new PointF(width - ((width - (height / 2)) / 2), 3 * height / 4));
 		qrsquare.setOne(new PointF((width - (height / 2)) / 2, 3 * height / 4));
-
+		setActionContext("");
 		setActions(useractions);
+		
 
 	}
 
@@ -392,5 +392,4 @@ public class ARGUI {
 	public void setActionContext(String actionContext) {
 		this.actionContext = actionContext;
 	}
-
 }

@@ -30,7 +30,7 @@ public abstract class Action {
 	public abstract void prepare(ARGUI argui);
 	public static String correctActionName(String string) {
 		if (string.length() > 1) {
-			return string.substring(0, 1).toUpperCase(Locale.ROOT).concat(string.substring(1, string.length()));
+			return string.substring(0, 1).toUpperCase(Locale.ROOT).concat(string.substring(1, string.length()).toLowerCase());
 		} else {
 			return string.toUpperCase(Locale.ROOT);
 
