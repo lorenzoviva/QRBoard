@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -80,12 +80,20 @@ public class QRMessage {
 			return false;
 		return true;
 	}
+	
+	public QRMessage(JSONObject jobj) throws JSONException {
+		this.setText(jobj.getString("text"));
+		this.setDate(new Gson().fromJson(jobj.getString("date"), Date.class));
+		this.setSender(new Gson().fromJson(jobj.getString("sender"), QRUser.class));
+		this.setId(jobj.getLong("id"));
+	}
+	
 	public JSONObject toJSONObject(){
 		Map<String, Object> jsonMap = new HashMap<String,Object>();
 		jsonMap.put("text", this.getText());
 		jsonMap.put("date", (new Gson()).toJson(this.getDate(),Date.class));
 		jsonMap.put("id", this.getId());
-		jsonMap.put("sender", (new Gson()).toJson(this.getSender(),QRUser.class));
+		jsonMap.put("sender", (new Gson()).toJsonTree(this.getSender(),QRUser.class));
 		return new JSONObject(jsonMap);
 	}
 }
