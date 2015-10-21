@@ -7,18 +7,16 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 
 import com.example.qrboard.ARLayerView;
+import com.example.qrboard.ChatPageWebView;
 import com.example.qrboard.InternalWebView;
 import com.example.qrboard.PageEditorWebView;
+import com.ogc.dbutility.DBConst;
 
-public class QRWebPageEditor extends QRWebPage{
+public class QRChatWebPage extends QRWebPage{
+	QRChat chat;
 	
-	
-	public QRWebPageEditor(String text, String html) {
-		super(text, html);
-		// TODO Auto-generated constructor stub
-	}
-	public QRWebPageEditor(QRWebPage qrSquare) {
-		super(qrSquare.getText(),qrSquare.getHtml());
+	public QRChatWebPage(QRChat qrSquare) {
+		super(qrSquare.getText(),DBConst.url+"chat.html");
 		
 	}
 	@Override
@@ -28,21 +26,14 @@ public class QRWebPageEditor extends QRWebPage{
 		paint.setColor(Color.BLACK);
 
 		if (webview == null) {
-			webview = new PageEditorWebView(arview, this, 500, 500);
+			webview = new ChatPageWebView(arview, this, 500, 500);
 
 		} else {
-
-			// webview.layout(0, 0, 500, 500);
 			int w = webview.getMeasuredWidth();
 			int h = webview.getMeasuredHeight();
-			// Log.d("page dimension:", w + "," + h );
 			if (getHorizontalScroll() != webview.getScrollX()) {
 				webview.setScrollX(getHorizontalScroll());
 			}
-			// Log.d("Scroll", "scroll (x:" + getHorizontalScroll() + ",y:" +
-			// getVerticalScroll() + ") webview.Scroll (x:" +
-			// webview.getScrollX() + ",y:" + webview.getScrollY() + ") max:" +
-			// webview.getScrollBarSize());
 			if (getVerticalScroll() != webview.getScrollY()) {
 
 				webview.setScrollY(getVerticalScroll());
@@ -63,7 +54,6 @@ public class QRWebPageEditor extends QRWebPage{
 			}
 		}
 
-		// canvas.drawText(html, one.x, one.y, paint);
 
 	}
 }

@@ -17,11 +17,16 @@ public class QRChat extends QRSquare {
 	
 	private List<QRMessage> messages;
 	
+	
+	
 	@Override
 	public String getCreationChoiseHtml() {
-		return "<td height='25%' width='25%' id='"+LWebView.applicationid + "create" + this.getClass().getSimpleName()+"'  bgcolor='#FF0000' style=\"word-wrap:break-word;\"><div align='center'>"+this.getClass().getSimpleName()+"</div><br><div align='center'><i  class='fa fa-comment'></div></i></td>";
+		return "<td height='25%' width='25%' id='"+LWebView.applicationid + ".create." + this.getClass().getSimpleName()+"'  bgcolor='#FF0000' style=\"word-wrap:break-word;\"><div align='center'>"+this.getClass().getSimpleName()+"</div><br><div align='center'><i  class='fa fa-comment'></div></i></td>";
 	}
 
+	public QRChat() {
+		super();
+	}
 	public List<QRMessage> getMessages() {
 		return messages;
 	}
@@ -42,6 +47,11 @@ public class QRChat extends QRSquare {
 		}
 	}
 	
+	public QRChat(String text, List<QRMessage> messages) {
+		super(text);
+		setMessages(messages);
+	}
+
 	public JSONObject toJSONObject(){
 		Map<String, Object> jsonMap = new HashMap<String,Object>();
 		jsonMap.put("text", this.getText());

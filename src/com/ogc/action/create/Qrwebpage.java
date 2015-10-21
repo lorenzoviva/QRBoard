@@ -105,11 +105,11 @@ public class Qrwebpage extends Action{
 					argui.setActionContext("create.qrwebpage");
 					argui.finishAction("save,access,add,edit,remove,exit,");
 				} else {
-					argui.finishAction("Unable to request choises ");
+					argui.finishAction("Unable to create a web page");
 				}
 			} catch (JSONException | HttpHostConnectException e) {
 				Log.d("ERROR", e.getMessage());
-				argui.finishAction("Unable to request");
+				argui.finishAction("Unable to create a web page");
 			}
 
 			return null;

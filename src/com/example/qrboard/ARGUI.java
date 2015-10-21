@@ -44,8 +44,6 @@ public class ARGUI {
 	private List<Action> allActions = new ArrayList<Action>();
 	private String actionContext = "";
 
-	
-	
 	public QRUser getUser() {
 		return user;
 	}
@@ -55,25 +53,25 @@ public class ARGUI {
 	}
 
 	public ARGUI() {
-		
+
 	}
-	
-	public void openFreeDrawActivity(JSONObject jsonObject, Context context){
+
+	public void openFreeDrawActivity(JSONObject jsonObject, Context context) {
 		Intent intent = new Intent(context, FreeDraw.class);
 		intent.putExtra("jsonFreeDraw", jsonObject.toString());
 		context.startActivity(intent);
 	}
 
 	public void draw(Canvas canvas, ARLayerView arview) {
-		if (qrsquare != null && (!actions.isEmpty() && actions.size()>0)) {
-			drawCircle(canvas,arview);
+		if (qrsquare != null && (!actions.isEmpty() && actions.size() > 0)) {
+			drawCircle(canvas, arview);
 			qrsquare.draw(canvas, arview);
 		}
 
 	}
 
-	public void drawCircle(Canvas canvas,View view) {
-		
+	public void drawCircle(Canvas canvas, View view) {
+
 		float cx = (qrsquare.getOne().x + qrsquare.getTwo().x + qrsquare.getThree().x + qrsquare.getFour().x) / 4;
 		float cy = (qrsquare.getOne().y + qrsquare.getTwo().y + qrsquare.getThree().y + qrsquare.getFour().y) / 4;
 		float radius = (float) (1.618d * Math.max(Math.max(Math.sqrt(Math.pow(cx - qrsquare.getOne().x, 2) + Math.pow(cy - qrsquare.getOne().y, 2)), Math.sqrt(Math.pow(cx - qrsquare.getTwo().x, 2) + Math.pow(cy - qrsquare.getTwo().y, 2))), Math.max(Math.sqrt(Math.pow(cx - qrsquare.getThree().x, 2) + Math.pow(cy - qrsquare.getThree().y, 2)), Math.sqrt(Math.pow(cx - qrsquare.getFour().x, 2) + Math.pow(cy - qrsquare.getFour().y, 2)))));
@@ -104,9 +102,11 @@ public class ARGUI {
 			paint.setColor(Color.BLACK);
 			float textSize = (float) (radius * 0.2);
 			paint.setTextSize(textSize);
-			canvas.drawTextOnPath(actions.get(i), path, 0, textSize, paint);
+			if (!actions.isEmpty() && actions.size() > 0) {
+				canvas.drawTextOnPath(actions.get(i), path, 0, textSize, paint);
+			}
 			canvas.drawPath(path, paint);
-			
+
 			Action realaction = null;
 			try {
 				realaction = getRealAction(actions.get(i));
@@ -114,16 +114,17 @@ public class ARGUI {
 				/*
 				 * non è un vero errore
 				 */
-//				Log.d("ERROR", "unable to get icon from action :" + actions.get(i));
+				// Log.d("ERROR", "unable to get icon from action :" +
+				// actions.get(i));
 			}
-			if(realaction!=null && realaction.getIcon(view)!=null){
+			if (realaction != null && realaction.getIcon(view) != null) {
 				Bitmap icon = realaction.getIcon(view);
-				float ty = (float) (cy + radius * Math.cos((angle*i) + (angle/2)) - (icon.getHeight()/2));
-				float lx = (float) (cx + radius * Math.sin((angle*i) + (angle/2)) - (icon.getWidth()/2));
+				float ty = (float) (cy + radius * Math.cos((angle * i) + (angle / 2)) - (icon.getHeight() / 2));
+				float lx = (float) (cx + radius * Math.sin((angle * i) + (angle / 2)) - (icon.getWidth() / 2));
 				canvas.drawBitmap(icon, lx, ty, new Paint());
 			}
 		}
-		
+
 	}
 
 	public void setQRSquare(QRSquare qrsquare, boolean forced) {
@@ -302,7 +303,7 @@ public class ARGUI {
 	public void performAction(String action, Context context) {
 		try {
 			this.action = getRealAction(action);
-			Log.d("ACTION", "performing:"+action);
+			Log.d("ACTION", "performing:" + action);
 			this.action.perform(this, context);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			/*
@@ -365,7 +366,6 @@ public class ARGUI {
 		qrsquare.setOne(new PointF((width - (height / 2)) / 2, 3 * height / 4));
 		setActionContext("");
 		setActions(useractions);
-		
 
 	}
 

@@ -19,12 +19,18 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.qrboard.ARGUI;
+import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.ogc.action.Action;
+import com.ogc.action.create.Qrwebpage.QRSquareAction;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
+import com.ogc.model.QRChat;
+import com.ogc.model.QRChatWebPage;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
+import com.ogc.model.QRWebPage;
+import com.ogc.model.QRWebPageEditor;
 
 public class Qrchat extends Action{
 
@@ -34,7 +40,11 @@ public class Qrchat extends Action{
 	private QRUser user;
 	private Context context;
 	
-	
+	@Override
+	public void execute() {
+		super.execute();
+		new QRSquareAction().execute();
+	}
 	@Override
 	public int getColor(ARGUI argui) {
 		return 0;
@@ -103,10 +113,14 @@ public class Qrchat extends Action{
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					
-					argui.openFreeDrawActivity(jsonresponse.getJSONObject("QRSquare"),context);
+					QRChat newsquare = (new Gson()).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRChat.class);
+					QRChatWebPage qrChooser = new QRChatWebPage(newsquare);
+					qrChooser.setShape(qrSquare);
+					argui.setQRSquare(qrChooser, false);
+					argui.setActionContext("");
+					argui.finishAction("users,links,");
 				} else {
-					argui.finishAction("Unable to create a chat page ");
+					argui.finishAction("Unable to create a chat page");
 				}
 			} catch (JSONException | HttpHostConnectException e) {
 				Log.d("ERROR", e.getMessage());
