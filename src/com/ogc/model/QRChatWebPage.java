@@ -13,10 +13,17 @@ import com.example.qrboard.PageEditorWebView;
 import com.ogc.dbutility.DBConst;
 
 public class QRChatWebPage extends QRWebPage{
-	QRChat chat;
+	private QRChat chat;
 	
+	public QRChat getChat() {
+		return chat;
+	}
+	public void setChat(QRChat chat) {
+		this.chat = chat;
+	}
 	public QRChatWebPage(QRChat qrSquare) {
 		super(qrSquare.getText(),DBConst.url+"chat.html");
+		this.chat=qrSquare;
 		
 	}
 	@Override

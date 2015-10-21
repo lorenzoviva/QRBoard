@@ -1,6 +1,6 @@
 package com.ogc.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +55,16 @@ public class QRChat extends QRSquare {
 	public JSONObject toJSONObject(){
 		Map<String, Object> jsonMap = new HashMap<String,Object>();
 		jsonMap.put("text", this.getText());
-		jsonMap.put("creationDate", (new Gson()).toJson(this.getCreationDate(),Date.class));
+		String jsonDate = (new Gson()).toJson(this.getCreationDate(),Date.class);
+		jsonDate.replace("\"", "");
+		jsonMap.put("creationDate", jsonDate);
 		jsonMap.put("visit", this.getVisit());
 		jsonMap.put("acl", this.getAcl().toJSON());
 		JSONArray array = new JSONArray();
-		for(int i = 0 ; i < messages.size();i++){
-			array.put(messages.get(i).toJSONObject());
+		if (messages!=null && messages.isEmpty()) {
+			for(int i = 0 ; i < messages.size();i++){
+				array.put(messages.get(i).toJSONObject());
+			}
 		}
 		jsonMap.put("messages", array);
 		return new JSONObject(jsonMap);

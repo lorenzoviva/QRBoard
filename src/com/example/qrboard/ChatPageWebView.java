@@ -5,14 +5,16 @@ import java.net.URL;
 
 import android.util.Log;
 
+import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
-import com.ogc.model.QRWebPageEditor;
 
 public class ChatPageWebView extends LWebView{
 
+	private QRChat chat;
+	
 	public ChatPageWebView(ARLayerView arview, QRChatWebPage qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
-		// TODO Auto-generated constructor stub
+		this.chat=qrsquare.getChat();
 	}
 
 	@Override
@@ -143,7 +145,8 @@ public class ChatPageWebView extends LWebView{
 			arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
 			arview.invalidate();
 			ringProgressDialog.dismiss();
-			String js = "javascript:(openSocket("+((QRChatWebPage)qrsquare).getText()+"))()";
+			String js = "javascript:(function() {window.join('"+chat.toJSONObject().toString()+"')})()";
+			Log.d("messaggio nome",chat.toJSONObject().toString());
 			loadUrl(js);
 		} else {
 			width = maxwidth;
