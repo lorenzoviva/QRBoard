@@ -93,12 +93,14 @@ public class ChatPageWebView extends LWebView{
 
 	@Override
 	public void calculate() {
-		measure(View.MeasureSpec.makeMeasureSpec(250, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(250, View.MeasureSpec.EXACTLY));// View.MeasureSpec.makeMeasureSpec(5000,
+		width = 500;
+		height = 500;
+		measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));// View.MeasureSpec.makeMeasureSpec(5000,
 																																						// //
 																																						// View.MeasureSpec.AT_MOST));
 		// Log.d("calculate page dimension:", getMeasuredWidth() + "," +
 		// getMeasuredHeight() ); // //
-		layout(0, 0, 250, 250);
+		layout(0, 0, width, height);
 	}
 	@Override
 	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {

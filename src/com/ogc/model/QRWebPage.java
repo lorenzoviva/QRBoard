@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -124,6 +125,23 @@ public class QRWebPage extends QRSquare {
 				dy += Math.abs(ddy);
 
 				if (tx != -1) {
+					PointF normalvector = new PointF();
+					normalvector.x = (float)(getFour().x-getOne().x);
+					normalvector.y = (float)(getFour().y-getOne().y);
+					float normalnorm = (float) Math.sqrt(Math.pow(normalvector.x,2)+Math.pow(normalvector.y,2));
+					float ddnorm =  (float) Math.sqrt(Math.pow(ddx,2)+Math.pow(ddy,2));
+					float theta = (float) Math.acos(((float)(normalvector.x*ddx)+(normalvector.y*ddy))/(normalnorm*ddnorm));
+					
+					PointF perpendicularvector = new PointF();
+					perpendicularvector.x = (float)(getTwo().x-getOne().x);
+					perpendicularvector.y = (float)(getTwo().y-getOne().y);
+					float perpendiculnorm = (float) Math.sqrt(Math.pow(perpendicularvector.x,2)+Math.pow(perpendicularvector.y,2));
+					float beta = (float) Math.acos(((float)(perpendicularvector.x*ddx)+(perpendicularvector.y*ddy))/(perpendiculnorm*ddnorm));
+				
+					
+					
+					ddy = (float) -(ddnorm * (float)Math.cos(beta));
+					ddx = (float) -(ddnorm * (float)Math.cos(theta));
 					if (getHorizontalScroll() + ddx < getMaxHorizontalScroll() && getHorizontalScroll() + ddx > 0) {
 						setHorizontalScroll((int) (getHorizontalScroll() + ddx));
 					}
