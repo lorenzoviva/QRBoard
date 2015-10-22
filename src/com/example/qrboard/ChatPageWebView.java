@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.util.Log;
+import android.view.View;
 
 import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
@@ -90,6 +91,15 @@ public class ChatPageWebView extends LWebView{
 		}
 	}
 
+	@Override
+	public void calculate() {
+		measure(View.MeasureSpec.makeMeasureSpec(250, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(250, View.MeasureSpec.EXACTLY));// View.MeasureSpec.makeMeasureSpec(5000,
+																																						// //
+																																						// View.MeasureSpec.AT_MOST));
+		// Log.d("calculate page dimension:", getMeasuredWidth() + "," +
+		// getMeasuredHeight() ); // //
+		layout(0, 0, 250, 250);
+	}
 	@Override
 	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {
 
