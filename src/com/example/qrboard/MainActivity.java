@@ -43,8 +43,11 @@ public class MainActivity extends Activity {
 
 	public void scanNow(View view) {
 //		new Login().execute();
-		Intent intent = new Intent(getApplicationContext(), ScanActivity.class);
-		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
+//		Intent intent = new Intent(getApplicationContext(), ScanActivity.class);
+//		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
+//		startActivityForResult(intent, 0);
+		Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+		intent.putExtra("qrchat", "{\"creationDate\":\"Oct 22, 2015 2:31:47 PM\",\"text\":\"dggdgddgdgdgdgdgcscdcdscdcddscs\",\"visit\":1,\"acl\":{\"write\":false,\"read\":true},\"messages\":[]}");
 		startActivityForResult(intent, 0);
 	}
 

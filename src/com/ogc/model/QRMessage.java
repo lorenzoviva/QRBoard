@@ -96,4 +96,11 @@ public class QRMessage {
 		jsonMap.put("sender", (new Gson()).toJsonTree(this.getSender(),QRUser.class));
 		return new JSONObject(jsonMap);
 	}
+	
+	public boolean isSelf(QRUser sender) {
+		if (sender!=null)
+			return (this.sender.getId() == sender.getId());
+		else
+			return false;
+	}
 }

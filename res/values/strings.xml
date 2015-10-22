@@ -141,5 +141,8 @@
     <string name="confirm">Conferma</string>
     <string name="paint">Dipingi</string>
     <string name="edittextsize">ModificaGrandezzaTesto</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    
+    <string name="btn_send">Send</string>
 
 </resources>
