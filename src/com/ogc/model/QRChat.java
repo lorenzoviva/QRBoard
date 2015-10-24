@@ -11,18 +11,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.graphics.Canvas;
+
 import java.text.DateFormat;
+
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.qrboard.ARLayerView;
 import com.example.qrboard.LWebView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.GsonHelper;
 
 public class QRChat extends QRSquare {
 	
 	private List<QRMessage> messages;
 	
+
+	private transient QRChatWebPage page;
 	
 	
 	@Override
@@ -32,6 +40,8 @@ public class QRChat extends QRSquare {
 
 	public QRChat() {
 		super();
+		page = new QRChatWebPage(this);
+		setShape(this);
 	}
 	public List<QRMessage> getMessages() {
 		return messages;
@@ -44,8 +54,7 @@ public class QRChat extends QRSquare {
 	
 	public QRChat(JSONObject jobj) throws JSONException {
 		this.setText(jobj.getString("text"));
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,DateFormat.FULL).create();
-		this.setCreationDate(gson.fromJson(jobj.getString("creationDate"), Date.class));
+		this.setCreationDate(GsonHelper.customGson.fromJson(jobj.getString("creationDate"), Date.class));
 		this.setVisit(jobj.getLong("visit"));
 		this.setAcl(new ACL(jobj.getJSONObject("acl")));
 		JSONArray jsonarray = jobj.getJSONArray("messages");
@@ -63,8 +72,7 @@ public class QRChat extends QRSquare {
 	public JSONObject toJSONObject(){
 		Map<String, Object> jsonMap = new HashMap<String,Object>();
 		jsonMap.put("text", this.getText());
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,DateFormat.FULL).create();
-		String jsonDate = gson.toJson(this.getCreationDate(),Date.class);
+		String jsonDate = GsonHelper.customGson.toJson(this.getCreationDate(),Date.class);
 		jsonDate=jsonDate.substring(1,jsonDate.length()-1);
 		jsonMap.put("creationDate", jsonDate);
 		jsonMap.put("visit", this.getVisit());
@@ -95,4 +103,15 @@ public class QRChat extends QRSquare {
 			messages = new ArrayList<QRMessage>();
 		messages.add(m);
 	}
+
+	@Override
+	public void draw(Canvas canvas, ARLayerView arview) {
+		setShape(this);
+		page.draw(canvas, arview);
+	}
+	@Override
+	public void onTouch(MotionEvent event) {
+		page.onTouch(event);
+	}
+	
 }

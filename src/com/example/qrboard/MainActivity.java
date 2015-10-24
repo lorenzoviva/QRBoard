@@ -29,7 +29,6 @@ public class MainActivity extends Activity {
 	EditText ln;
 	JSONParser jParser = new JSONParser();
 	JSONObject json;
-	private static String url_signup = "http://192.168.42.222:8080/QRWebService/createQR";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,12 +42,10 @@ public class MainActivity extends Activity {
 
 	public void scanNow(View view) {
 //		new Login().execute();
-//		Intent intent = new Intent(getApplicationContext(), ScanActivity.class);
-//		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
-//		startActivityForResult(intent, 0);
-		Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-		intent.putExtra("qrchat", "{\"creationDate\":\"Oct 22, 2015 2:31:47 PM\",\"text\":\"dggdgddgdgdgdgdgcscdcdscdcddscs\",\"visit\":1,\"acl\":{\"write\":false,\"read\":true},\"messages\":[]}");
+		Intent intent = new Intent(getApplicationContext(), ScanActivity.class);
+		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
 		startActivityForResult(intent, 0);
+		
 	}
 
 	

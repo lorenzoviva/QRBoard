@@ -107,7 +107,7 @@ public class ChatPageWebView extends LWebView{
 
 		String js = "javascript:(function() { " 
 				//	scroll the window
-				+"	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
+				+"	document.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
 				//	get the clicked object
 				+"	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" 
 				+"	var parents = '';"

@@ -48,6 +48,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.qr_readerexample.DecoderActivity" />
         </activity>
+         <activity
+            android:name=".ChatActivity" >
+        </activity>
     </application>
 
 </manifest>
