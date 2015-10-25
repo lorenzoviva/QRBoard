@@ -72,6 +72,7 @@ public class FreeDraw extends Activity {
 		discardTextButton = (ImageButton) findViewById(R.id.discard_btn);
 		Intent intent = getIntent();
 		String json = intent.getStringExtra("jsonFreeDraw");
+		Log.e("JSONNNN",json);
 		Gson gson = com.google.gson.GsonHelper.customGson;
 		qrEntity = gson.fromJson(json, QRFreeDraw.class);
 		Bitmap bitmap = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0,

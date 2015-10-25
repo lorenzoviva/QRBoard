@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.GsonHelper;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.CaptureActivity;
 import com.ogc.action.Action;
@@ -163,7 +165,7 @@ public class ScanActivity extends CaptureActivity {
 					if (s) {
 						boolean free = jsonresponse.getBoolean("free");
 						if (!free) {
-							Gson gson = new Gson();
+							Gson gson = GsonHelper.customGson;
 
 							String type = jsonresponse.getString("type");
 							String jsonstring = jsonresponse.getJSONObject("QRSquare").toString();

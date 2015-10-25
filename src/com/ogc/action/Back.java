@@ -11,21 +11,28 @@ import com.ogc.model.QRSquare;
 
 public class Back extends Action{
 	ARGUI argui;
-	
+	QRSquare square;
+
 	@Override
 	public void execute() {
 		super.execute();
-		argui.goToLastQRSquare();
-		argui.setActionContext("");
-		argui.finishAction(argui.getLastactions());
+
+		if (square != null && argui.getLastqrsquare() != null) {
+			square.onClose();
+			argui.goToLastQRSquare();
+			argui.setActionContext("");
+			argui.finishAction(argui.getLastactions());
+		}
+
 	}
 
 	@Override
 	public void perform(ARGUI argui, Context context) {
 		super.perform(argui, context);
 		this.argui = argui;
+		this.square = argui.getQRSquare();
 		execute();
-		
+
 	}
 
 	@Override
@@ -44,7 +51,7 @@ public class Back extends Action{
 		if(argui.getQRSquare()!=null && argui.getLastqrsquare()!=null){
 			return Color.GRAY;
 		}else{
-			return Color.rgb(112, 21, 54);
+			return Color.rgb(112, 21, 34);
 		}
 	}
 

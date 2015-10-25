@@ -18,13 +18,12 @@ import android.util.Log;
 
 import com.example.qrboard.ARGUI;
 import com.google.gson.Gson;
-import com.ogc.action.Signup.QRSquareAction;
+import com.google.gson.GsonHelper;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
 import com.ogc.model.QRInternalWebPage;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
-import com.ogc.model.QRUserMenager;
 import com.ogc.model.QRWebPage;
 import com.ogc.model.special.QRLoginPage;
 import com.ogc.model.special.QRLoginPasswordPage;
@@ -91,7 +90,7 @@ public class Login extends Action {
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					Gson gson = new Gson();
+					Gson gson = GsonHelper.customGson;
 
 					String jsonstring = jsonresponse.getJSONObject("QRUser").toString();
 					QRUser fromJson = (QRUser) gson.fromJson(jsonstring, QRUser.class);

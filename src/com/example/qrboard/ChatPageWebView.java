@@ -8,14 +8,17 @@ import android.view.View;
 
 import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
+import com.ogc.model.QRUser;
 
 public class ChatPageWebView extends LWebView{
 
 	private QRChat chat;
+	private QRUser user;
 	
 	public ChatPageWebView(ARLayerView arview, QRChatWebPage qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 		this.chat=qrsquare.getChat();
+		this.user = arview.getUser();
 	}
 
 	@Override
@@ -148,6 +151,11 @@ public class ChatPageWebView extends LWebView{
 				+"})()";
 		loadUrl(js);
 	}
+	
+	public void onClose(){
+		String js = "javascript:(function() {window.closeSocket();})()";
+		loadUrl(js);
+	}
 	@Override
 	public void finished() {
 		if (getMeasuredHeight() > 0 && getMeasuredWidth() > 0) {
@@ -157,8 +165,12 @@ public class ChatPageWebView extends LWebView{
 			arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
 			arview.invalidate();
 			ringProgressDialog.dismiss();
-			String js = "javascript:(function() {window.join('"+chat.toJSONObject().toString()+"')})()";
-			Log.d("messaggio nome",chat.toJSONObject().toString());
+			String js;
+			if(user!=null){
+				js = "javascript:(function() {window.join('"+chat.getText()+"','"+String.valueOf(user.getId())+"');})()";
+			}else{
+				js = "javascript:(function() {window.join('"+chat.getText()+"','anonymous');})()";
+			}
 			loadUrl(js);
 		} else {
 			width = maxwidth;

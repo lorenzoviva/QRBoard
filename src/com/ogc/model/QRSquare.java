@@ -99,6 +99,9 @@ public class QRSquare {
 	public void onTouch(MotionEvent event){
 		
 	}
+	public void onClose(){
+		
+	}
 	
 	public String getText() {
 		return text;

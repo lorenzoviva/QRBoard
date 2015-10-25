@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.example.qrboard.ARGUI;
 import com.google.gson.Gson;
+import com.google.gson.GsonHelper;
 import com.ogc.action.Action;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
@@ -98,7 +99,7 @@ public class Qrwebpage extends Action{
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					QRWebPage newsquare = (new Gson()).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRWebPage.class);
+					QRWebPage newsquare = (GsonHelper.customGson).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRWebPage.class);
 					QRWebPageEditor qrChooser = new QRWebPageEditor(newsquare);
 					qrChooser.setShape(qrSquare);
 					argui.setQRSquare(qrChooser, false);

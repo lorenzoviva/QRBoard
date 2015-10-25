@@ -20,14 +20,13 @@ import android.util.Log;
 
 import com.example.qrboard.ARGUI;
 import com.google.gson.Gson;
+import com.google.gson.GsonHelper;
 import com.google.gson.reflect.TypeToken;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
-import com.ogc.model.QRInternalWebPage;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
-import com.ogc.model.QRUserMenager;
 import com.ogc.model.QRUsersWebPage;
 
 public class Users extends Action {
@@ -66,7 +65,9 @@ public class Users extends Action {
 			Map<String, Object> paramap = new HashMap<String, Object>();
 			ACL acl = new ACL(true, true);
 			paramap.put("text", qrSquare.getText());
-			paramap.put("user", qrUser.getId());
+			if(qrUser!=null){
+				paramap.put("user", qrUser.getId());
+			}
 
 			JSONObject paramjson = new JSONObject(paramap);
 
@@ -85,7 +86,7 @@ public class Users extends Action {
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					Gson gson = new Gson();
+					Gson gson = GsonHelper.customGson;
 
 					String jsonstring = jsonresponse.getJSONArray("QRSquareUser").toString();
 					Type listType = new TypeToken<ArrayList<QRSquareUser>>() {

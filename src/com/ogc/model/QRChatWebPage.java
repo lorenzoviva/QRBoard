@@ -22,7 +22,7 @@ public class QRChatWebPage extends QRWebPage {
 	private transient float dx;
 	private transient float dy;
 	private boolean goToChatActivity = false;
-	
+
 	public QRChat getChat() {
 		return chat;
 	}
@@ -36,18 +36,26 @@ public class QRChatWebPage extends QRWebPage {
 		this.chat = qrSquare;
 
 	}
-
+	@Override
+	public void onClose(){
+		if (webview != null) {
+			((ChatPageWebView) webview).onClose();
+		}
+	}
 	@Override
 	public void draw(Canvas canvas, ARLayerView arview) {
 		// super.draw(canvas, arview);ù
-		if(goToChatActivity){
-			Intent intent = new Intent(arview.getContext(), ChatActivity.class);
-			intent.putExtra("qrchat", chat.toJSONObject().toString());
-			if(arview.getUser()!=null){
-				intent.putExtra("qruser",((new Gson()).toJsonTree(arview.getUser(),QRUser.class)).toString());
+		if (goToChatActivity) {
+			if (webview != null) {
+				onClose();
+				Intent intent = new Intent(arview.getContext(), ChatActivity.class);
+				intent.putExtra("qrchat", chat.toJSONObject().toString());
+				if (arview.getUser() != null) {
+					intent.putExtra("qruser", ((new Gson()).toJsonTree(arview.getUser(), QRUser.class)).toString());
 
+				}
+				arview.getContext().startActivity(intent);
 			}
-			arview.getContext().startActivity(intent);
 		}
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
@@ -87,9 +95,9 @@ public class QRChatWebPage extends QRWebPage {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 
 			if (dx < 5 && dy < 5) {
-				
+
 				goToChatActivity = true;
-				
+
 			}
 
 		}

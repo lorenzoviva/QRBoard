@@ -11,41 +11,7 @@ import com.ogc.action.Action;
 import com.ogc.action.Request.QRSquareAction;
 import com.ogc.model.QRSquare;
 
-public class Back extends Action{
-	ARGUI argui;
+public class Back extends com.ogc.action.Back {
 	
-	@Override
-	public void execute() {
-		super.execute();
-		argui.goToLastQRSquare();
-		argui.setActionContext("");
-		argui.finishAction(argui.getLastactions());
-	}
 
-	@Override
-	public void perform(ARGUI argui, Context context) {
-		super.perform(argui, context);
-		this.argui = argui;
-		execute();
-		
-	}
-
-	@Override
-	public void addQRParameter(QRSquare qrsquare) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void prepare(ARGUI argui) {
-		//we have a qrsquare		
-	}
-
-	@Override
-	public int getColor(ARGUI argui) {
-			return Color.YELLOW;
-	}
-
-	
-	
 }

@@ -41,12 +41,18 @@ public class QRChat extends QRSquare {
 	public QRChat() {
 		super();
 		page = new QRChatWebPage(this);
-		setShape(this);
+		page.setShape(this);
+	
 	}
 	public List<QRMessage> getMessages() {
 		return messages;
 	}
-	
+	@Override
+	public void onClose(){
+		if(page!=null){
+			page.onClose();
+		}
+	}
 
 	public void setMessages(List<QRMessage> messages) {
 		this.messages = messages;
@@ -106,7 +112,7 @@ public class QRChat extends QRSquare {
 
 	@Override
 	public void draw(Canvas canvas, ARLayerView arview) {
-		setShape(this);
+		page.setShape(this);
 		page.draw(canvas, arview);
 	}
 	@Override

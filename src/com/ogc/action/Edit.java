@@ -9,11 +9,15 @@ import com.ogc.model.QRUser;
 
 public class Edit extends Action{
 	private QRSquare qrSquare;
-	private QRUser qrUser;
 	private ARGUI argui;
+	private Context context;
 	@Override
 	public void execute() {
 		super.execute();
+		if(qrSquare!=null){
+			argui.setActionContext("edit");
+			argui.performAction(qrSquare.getClass().getSimpleName().toLowerCase(), context);
+		}
 		
 	}
 
@@ -21,8 +25,8 @@ public class Edit extends Action{
 	public void perform(ARGUI argui, Context context) {
 		super.perform(argui, context);
 		qrSquare = argui.getQRSquare();
-		qrUser = argui.getUser();
 		this.argui = argui;
+		this.context = context;
 		execute();
 		
 	}

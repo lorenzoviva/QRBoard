@@ -46,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonHelper;
 import com.ogc.dbutility.DBConst;
 import com.ogc.dbutility.JSONParser;
 import com.ogc.dialog.DialogBuilder;
@@ -435,7 +436,7 @@ public class DrawingView extends View {
 		protected String doInBackground(String... args) {
 			// Getting username and password from user inpu
 				Map<String, Object> paramap = new HashMap<String, Object>();
-				paramap.put("jsonfreedraw", (new Gson()).toJson(qrEntity));
+				paramap.put("jsonfreedraw", GsonHelper.customGson.toJsonTree(qrEntity, QRFreeDraw.class).toString());
 
 				JSONObject paramjson = new JSONObject(paramap);
 

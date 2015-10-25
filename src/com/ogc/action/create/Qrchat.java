@@ -113,12 +113,12 @@ public class Qrchat extends Action{
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					QRChat newsquare = (new Gson()).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRChat.class);
+					QRChat newsquare = GsonHelper.customGson.fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRChat.class);
 					QRChatWebPage qrChooser = new QRChatWebPage(newsquare);
 					qrChooser.setShape(qrSquare);
 					argui.setQRSquare(qrChooser, false);
 					argui.setActionContext("");
-					argui.finishAction("users,links,");
+					argui.finishAction("users,links,chat,");
 				} else {
 					argui.finishAction("Unable to create a chat page");
 				}
