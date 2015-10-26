@@ -44,6 +44,7 @@ public class Chat extends Action{
 			intent.putExtra("qruser",(GsonHelper.customGson.toJsonTree(user,QRUser.class)).toString());
 
 		}
+		argui.finishAction("");
 		context.startActivity(intent);
 		
 	}

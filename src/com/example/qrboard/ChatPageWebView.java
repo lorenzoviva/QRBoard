@@ -3,8 +3,11 @@ package com.example.qrboard;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 
 import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
@@ -19,6 +22,7 @@ public class ChatPageWebView extends LWebView{
 		super(arview, qrsquare, width, height);
 		this.chat=qrsquare.getChat();
 		this.user = arview.getUser();
+		this.addJavascriptInterface(new JsScollInterface(arview.getContext()), "scrollInterface");
 	}
 
 	@Override
@@ -110,44 +114,9 @@ public class ChatPageWebView extends LWebView{
 
 		String js = "javascript:(function() { " 
 				//	scroll the window
-				+"	document.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
+				+"	document.getElementById('messages').scrollTo(" + scrollX / f + "," + scrollY / f + "); "
 				//	get the clicked object
 				+"	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" 
-				+"	var parents = '';"
-				//	Throws a click event
-				+"	if (obj.fireEvent) {"
-				+"		obj.fireEvent('onclick');"
- 				+"	} else {"
-   				+"		var evObj = document.createEvent('Events');"
-   				+"		evObj.initEvent('click', true, false);"
-   				+"		obj.dispatchEvent(evObj);"
-   				+"	}" 
-   				//	find a parent object with an action (url, scr , onclick method, href)
-				+"	while((obj.tagName == 'IMG' && obj.parentNode!=null) || (obj.onclick == null && obj.parentNode!=null && !obj.hasAttribute('src') && !obj.hasAttribute('href'))){"
-				//		add the courrent object tagName to 'parents' (eg: DIV)
-				+"		parents += obj.tagName + ' ';" 
-				//		add all attributes of parent to 'parents' (eg: color<black>)
-				+"		if(obj.tagName != 'DOCUMENT' && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}"
-				+"		}"
-				+"		parents += ' ';" 
-				+"		obj = obj.parentNode;" 
-				+"	} " 
-				+"	if(obj!=null) {"
-				+"		if(obj.onclick != null){"
-				+"	 		obj.onclick();"
-				+"		}"
-				+"		var att = '';"
-				//		add all attributes to the attribute list
-				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}" 
-				+"		}"
-				+"		window.clickInterface.onclick(obj.tagName,att,parents);"
-				+"	}" 
 				+"})()";
 		loadUrl(js);
 	}
@@ -162,14 +131,14 @@ public class ChatPageWebView extends LWebView{
 			setVerticalScrollBarEnabled(true);
 			setHorizontalScrollBarEnabled(true);
 
-			arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
+			
 			arview.invalidate();
 			ringProgressDialog.dismiss();
 			String js;
 			if(user!=null){
-				js = "javascript:(function() {window.join('"+chat.getText()+"','"+String.valueOf(user.getId())+"');})()";
+				js = "javascript:(function() {window.join('"+chat.getText()+"','"+String.valueOf(user.getId())+"');var ul = document.getElementById('messages');window.scrollInterface.setScroll(ul.lastChild.offsetTop - ul.firstChild.offsetTop	+ ul.lastChild.outerHeight + parseFloat(ul.get('padding-top'))+ parseFloat(ul.get('padding-bottom')));})()";
 			}else{
-				js = "javascript:(function() {window.join('"+chat.getText()+"','anonymous');})()";
+				js = "javascript:(function() {window.join('"+chat.getText()+"','anonymous');	var ul = document.getElementById('messages');window.scrollInterface.setScroll(ul.lastChild.offsetTop - ul.firstChild.offsetTop	+ ul.lastChild.outerHeight + parseFloat(ul.get('padding-top'))+ parseFloat(ul.get('padding-bottom')));})()";
 			}
 			loadUrl(js);
 		} else {
@@ -179,7 +148,36 @@ public class ChatPageWebView extends LWebView{
 			load();
 		}
 
+		
+
 	}
-	
+	public class JsScollInterface {
+		private Context context;
+		public JsScollInterface(Context context) {
+			this.context = context;
+		}
+		@JavascriptInterface
+		public void setScroll(final float scrollY) {
+
+			if (scrollY != 0) {
+				runOnUIThread(new Runnable() {
+					@Override
+					public void run() {
+						setScroll(scrollY);
+
+					}
+				});
+			}
+		}
+		public void runOnUIThread(Runnable runnable) {
+			Handler mainHandler = new Handler(context.getMainLooper());
+			mainHandler.post(runnable);
+		}
+	}
+	public void setScroll(float scrollY){
+		Log.d("OMFG","scrollY :" + scrollY);
+		arview.setQRSquareScrollable(0, (int)scrollY);
+	}
+
 
 }
