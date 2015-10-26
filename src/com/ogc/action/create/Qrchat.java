@@ -79,7 +79,7 @@ public class Qrchat extends Action{
 			// Getting username and password from user inpu
 
 			Map<String, Object> paramap = new HashMap<String, Object>();
-			ACL acl = new ACL(true, false);
+			ACL acl = new ACL(true, true);
 			
 			
 			
