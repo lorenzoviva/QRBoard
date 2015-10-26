@@ -226,23 +226,20 @@ public class ChatActivity extends Activity {
 						QRMessage m = new QRMessage(message, sender);
 						appendMessage(m, true);
 					}else{
-						if(!this.sessionId.equals(sessionId)){
-							//not my message
-							QRMessage m = new QRMessage(message,null);
-							appendMessage(m, true);
-						}
+						//not my message
+						QRMessage m = new QRMessage(message,null);
+						appendMessage(m, true);
 					
 					}
+				
 				} else {
-					QRMessage m = new QRMessage(message, qruser);
-					appendMessage(m, false);
-				}
 
 				QRMessage m = new QRMessage(message, qruser);
 
 				// Appending the message to chat list
 				appendMessage(m, true);
-
+				}
+				
 			} else if (flag.equalsIgnoreCase(TAG_EXIT)) {
 				// If the flag is 'exit', somebody left the conversation
 				String name = jObj.getString("name");
