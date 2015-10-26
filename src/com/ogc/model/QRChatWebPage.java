@@ -41,6 +41,7 @@ public class QRChatWebPage extends QRWebPage {
 		if (webview != null) {
 			((ChatPageWebView) webview).onClose();
 		}
+		webview = null;
 	}
 	@Override
 	public void draw(Canvas canvas, ARLayerView arview) {

@@ -52,6 +52,7 @@ public class QRChat extends QRSquare {
 		if(page!=null){
 			page.onClose();
 		}
+		page = null;
 	}
 
 	public void setMessages(List<QRMessage> messages) {

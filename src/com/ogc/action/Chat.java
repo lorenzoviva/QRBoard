@@ -1,5 +1,6 @@
 package com.ogc.action;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -46,6 +47,13 @@ public class Chat extends Action{
 		}
 		argui.finishAction("");
 		context.startActivity(intent);
+		
+		argui.setQRSquare(null, true);
+		if (argui.getAction() != null) {
+			argui.finishAction("");
+		}
+		argui.setActionContext("");
+		((Activity) context).finish();
 		
 	}
 
