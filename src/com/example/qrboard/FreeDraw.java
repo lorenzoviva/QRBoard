@@ -58,7 +58,7 @@ public class FreeDraw extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_free_draw);
 		drawView = (DrawingView) findViewById(R.id.drawing);
-		LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
+		LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors1);
 		currPaint = (ImageButton) paintLayout.getChildAt(0);
 		currPaint.setImageDrawable(getResources().getDrawable(
 				R.drawable.paint_pressed));

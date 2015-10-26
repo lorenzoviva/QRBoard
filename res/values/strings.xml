@@ -133,14 +133,15 @@
     <string name="signupfirstnametext">First name:</string>
     <string name="signuplastnametext">Last name:</string>
     <string name="title_activity_free_draw">FreeDraw</string>
-    <string name="discard">Annulla</string>
-    <string name="brush">Pennello</string>
-    <string name="erase">Cancella</string>
-    <string name="text">Testo</string>
-    <string name="save">Salva</string>
-    <string name="confirm">Conferma</string>
-    <string name="paint">Dipingi</string>
-    <string name="edittextsize">ModificaGrandezzaTesto</string>
+    <string name="discard">Discard</string>
+    <string name="brush">Brush</string>
+    <string name="erase">Erase</string>
+    <string name="text">Text</string>
+    <string name="save">Save</string>
+     <string name="move">Move</string>
+    <string name="confirm">Confirm</string>
+    <string name="paint">Paint</string>
+    <string name="edittextsize">Edit text size</string>
     <string name="title_activity_chat">ChatActivity</string>
     
     <string name="btn_send">Send</string>

@@ -38,12 +38,14 @@
         </activity>
         <activity
             android:name=".ScanActivity"
-            android:label="@string/title_activity_scan" >
+            android:label="@string/title_activity_scan" 
+            android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".FreeDraw"
             android:label="@string/title_activity_free_draw"
-            android:parentActivityName=".DecoderActivity" >
+            android:parentActivityName=".DecoderActivity"       
+            android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.qr_readerexample.DecoderActivity" />
