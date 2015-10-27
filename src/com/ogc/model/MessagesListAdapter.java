@@ -1,5 +1,10 @@
 package com.ogc.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -69,6 +74,12 @@ public class MessagesListAdapter extends BaseAdapter {
 			lblFrom.setText(m.getSender().getFirstName() + " " + m.getSender().getLastName());
 		} else {
 			lblFrom.setText("anonymous");
+		}
+		if(m.getDate()!=null){
+			DateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+			iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
+			String dateFormatAsString = iso8601Format.format(m.getDate());
+			lblFrom.append(" " + iso8601Format);
 		}
 
 		return convertView;
