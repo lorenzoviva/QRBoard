@@ -81,7 +81,7 @@ public class Qrfreedraw extends Action{
 			Map<String, Object> paramap = new HashMap<String, Object>();
 			ACL acl = new ACL(true, true);
 			
-			Bitmap whiteBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+			Bitmap whiteBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.RGB_565);
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			for(int x = 0;x<500;x++){
 				for(int y = 0;y<500;y++){
