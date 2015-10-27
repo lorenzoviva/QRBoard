@@ -65,7 +65,7 @@ public class BrushSizeDialog extends Dialog {
         show();
     }
     public void setBrushSize(){
-        drawwindow.setBrushSize(seekbar.getProgress() + 5);
+        drawwindow.confirmBrushSizeDialog(seekbar.getProgress() + 5);
     }
 
 

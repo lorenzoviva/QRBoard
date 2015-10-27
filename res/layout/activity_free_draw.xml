@@ -119,6 +119,7 @@
                     android:contentDescription="@string/paint"
                     android:onClick="paintClicked"
                     android:src="@drawable/paint"
+                    android:id="@+id/blackbutton"
                     android:tag="#FF000000" />
 
                 <ImageButton

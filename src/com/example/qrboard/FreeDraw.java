@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -50,8 +51,9 @@ public class FreeDraw extends Activity {
 	private ImageButton editTextSizeButton;
 	private ImageButton confirmTextButton;
 	private ImageButton discardTextButton;
-	private BrushSizeDialog dialog;
-
+	private BrushSizeDialog brushDialog;
+	private TextDialog textDialog;
+	private TextSizeDialog textSizeDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +61,8 @@ public class FreeDraw extends Activity {
 		setContentView(R.layout.activity_free_draw);
 		drawView = (DrawingView) findViewById(R.id.drawing);
 		LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors1);
-		currPaint = (ImageButton) paintLayout.getChildAt(0);
-		currPaint.setImageDrawable(getResources().getDrawable(
-				R.drawable.paint_pressed));
+		currPaint = (ImageButton) findViewById(R.id.blackbutton);
+		currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 		saveButton = (ImageButton) findViewById(R.id.save_btn);
 		moveButton = (ImageButton) findViewById(R.id.move_btn);
 		drawButton = (ImageButton) findViewById(R.id.draw_btn);
@@ -70,13 +71,13 @@ public class FreeDraw extends Activity {
 		editTextSizeButton = (ImageButton) findViewById(R.id.editTextSize_btn);
 		confirmTextButton = (ImageButton) findViewById(R.id.confirm_btn);
 		discardTextButton = (ImageButton) findViewById(R.id.discard_btn);
+
 		Intent intent = getIntent();
 		String json = intent.getStringExtra("jsonFreeDraw");
-		Log.e("JSONNNN",json);
+		Log.e("JSONNNN", json);
 		Gson gson = com.google.gson.GsonHelper.customGson;
 		qrEntity = gson.fromJson(json, QRFreeDraw.class);
-		Bitmap bitmap = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0,
-				qrEntity.getImg().length);
+		Bitmap bitmap = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0, qrEntity.getImg().length);
 		Log.d("BITMAP DECODED", bitmap.getWidth() + "," + bitmap.getHeight());
 		drawView.requestLayout();
 		drawView.setup(bitmap, qrEntity);
@@ -133,13 +134,95 @@ public class FreeDraw extends Activity {
 				return false;
 			}
 		});
+		confirmTextButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (drawView.getTextDrawer() != null) {
+					drawView.confirmText();
+				}
+				resetAllButtonsColors();
+				moveButton.setBackgroundColor(Color.DKGRAY);
+				drawView.setTool(3);
+				return false;
+			}
+		});
+		discardTextButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (drawView.getTextDrawer() != null) {
+					drawView.discardText();
+				}
+				resetAllButtonsColors();
+				moveButton.setBackgroundColor(Color.DKGRAY);
+				drawView.setTool(3);
+				return false;
+			}
+		});
+		editTextSizeButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				openTextSizeDialog();
+
+				return false;
+			}
+		});
 	}
 
 	public void openBrushSizeDialog(int i) {
-		if (dialog == null || !dialog.isShowing()) {
-			dialog = new BrushSizeDialog(this, i, drawView.getBrushSize());
+		if (brushDialog == null || !brushDialog.isShowing()) {
+			brushDialog = new BrushSizeDialog(this, i, drawView.getBrushSize());
 		}
 
+	}
+
+	public void confirmBrushSizeDialog(int s) {
+		drawView.setBrushSize(s);
+		brushDialog.hide();
+		brushDialog.dismiss();
+		brushDialog = null;
+	}
+
+	public void openTextDialog() {
+		if (textDialog == null || !textDialog.isShowing()) {
+			textDialog = new TextDialog(this);
+		}
+
+	}
+
+	public void openTextSizeDialog() {
+		if (textSizeDialog == null || !textSizeDialog.isShowing()) {
+			textSizeDialog = new TextSizeDialog(this);
+		}
+
+	}
+
+	public void confirmTextDialog(String t) {
+		drawView.setText(t);
+		textDialog.hide();
+		textDialog.dismiss();
+		textDialog = null;
+	}
+
+	public void confirmTextSizeDialog(int s) {
+		drawView.setTextSize(s);
+		textSizeDialog.hide();
+		textSizeDialog.dismiss();
+		textSizeDialog = null;
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// String key = KeyEvent.keyCodeToString(keyCode);
+		// // key will be something like "KEYCODE_A" - extract the "A"
+		//
+		// // use pattern to convert int keycode to some character
+		// Matcher matcher = KEYCODE_PATTERN.matcher(key);
+		// if (matcher.matches()) {
+		// // append character to textview
+		// mTextView.append(matcher.group(1));
+		// }
+		// // let the default implementation handle the event
+		return super.onKeyDown(keyCode, event);
 	}
 
 	public void showTextButtons() {
@@ -154,25 +237,17 @@ public class FreeDraw extends Activity {
 		discardTextButton.setVisibility(View.INVISIBLE);
 	}
 
-	public void setBrushSize(int s) {
-		drawView.setBrushSize(s);
-		dialog.hide();
-		dialog.dismiss();
-		dialog = null;
+	public void resetAllButtonsColors() {
+		resetAllExceptTextButtonsColors();
+		hideTextButtons();
 	}
 
-	public void resetAllButtonsColors() {
+	public void resetAllExceptTextButtonsColors() {
 		moveButton.setBackgroundColor(Color.GRAY);
 		saveButton.setBackgroundColor(Color.GRAY);
 		drawButton.setBackgroundColor(Color.GRAY);
 		eraseButton.setBackgroundColor(Color.GRAY);
 		textButton.setBackgroundColor(Color.GRAY);
-		hideTextButtons();
-	}
-
-	public void goBackToScanActivity() {
-		Intent intent = new Intent(this, ScanActivity.class);
-		startActivity(intent);
 	}
 
 	public void paintClicked(View view) {
@@ -182,13 +257,19 @@ public class FreeDraw extends Activity {
 			ImageButton imgView = (ImageButton) view;
 			String color = view.getTag().toString();
 			drawView.setColor(color);
-			imgView.setImageDrawable(getResources().getDrawable(
-					R.drawable.paint_pressed));
-			currPaint.setImageDrawable(getResources().getDrawable(
-					R.drawable.paint));
+			imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+			currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
 			currPaint = (ImageButton) view;
 		}
 	}
 
-	
+	public void goBackToScanActivity() {
+		Intent intent = new Intent(this, ScanActivity.class);
+		startActivity(intent);
+	}
+
+	public DrawingView getDrawView() {
+		return drawView;
+	}
+
 }
