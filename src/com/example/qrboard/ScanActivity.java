@@ -44,6 +44,8 @@ public class ScanActivity extends CaptureActivity {
 
 	private int state = 0;// 0 scanning, 1 waiting for response, 2 showing
 							// response
+	private int authstate = 0;// 0 scanning, 1 waiting for response, 2 showing
+	// response
 	Result result = null;
 	ActivityInvalidator invalidator;
 
@@ -68,46 +70,54 @@ public class ScanActivity extends CaptureActivity {
 	}
 
 	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
+		
 		if (rawResult.getResultPoints().length == 4) {
-			if (state == 2 && arview.getQRSquare() == null) {
-				state = 0;
-			}
-			if (state == 0 || !rawResult.getText().equals(result.getText()) || (arview.getQRSquare() != null && !arview.getQRSquare().getText().equals(rawResult.getText()))) {
-				if (getActionState() == 1) {// if the courrent actions is
-					// waiting for a qr
-					result = rawResult;
-					arview.setQRSquare(new QRSquare(result.getText()));
-					arview.drawCodeResult(result);
-					state = 2;
-				} else {
+			Log.d("BARCODE", rawResult.getText());
+			if (authstate == 0 && rawResult.getText().startsWith("authentication")) {
+				result = rawResult;
+				new QRSquareAuthenticate().execute();
+			} else {
+				if (state == 2 && arview.getQRSquare() == null) {
+					state = 0;
+				}
 
-					result = rawResult;
-					state = 1;
-					// Log.d("found bar", "barcode found : points:" +
-					// rawResult.getResultPoints().length);
-					Log.d("found bar", "barcode found : text : " + rawResult.getText());
-					// Log.d("found bar", "state : " + state);
-					// Log.d("found bar", "qrcode found : version : " + ((Point)
-					// (rawResult.getResultMetadata().get(ResultMetadataType.OTHER))).x);
-					// Log.d("found bar", "qrcode found : size : " + ((Point)
-					// (rawResult.getResultMetadata().get(ResultMetadataType.OTHER))).y);
-					if(rawResult.getText().startsWith("authentication")){
-						new QRSquareAuthenticate().execute();
-					}else{
+				if (state == 0 || !rawResult.getText().equals(result.getText()) || (arview.getQRSquare() != null && !arview.getQRSquare().getText().equals(rawResult.getText()))) {
+					if (getActionState() == 1) {// if the courrent actions is
+						// waiting for a qr
+						result = rawResult;
+						arview.setQRSquare(new QRSquare(result.getText()));
+						arview.drawCodeResult(result);
+						state = 2;
+					} else {
+
+						result = rawResult;
+						state = 1;
+						// Log.d("found bar", "barcode found : points:" +
+						// rawResult.getResultPoints().length);
+						Log.d("found bar", "barcode found : text : " + rawResult.getText());
+						// Log.d("found bar", "state : " + state);
+						// Log.d("found bar", "qrcode found : version : " +
+						// ((Point)
+						// (rawResult.getResultMetadata().get(ResultMetadataType.OTHER))).x);
+						// Log.d("found bar", "qrcode found : size : " +
+						// ((Point)
+						// (rawResult.getResultMetadata().get(ResultMetadataType.OTHER))).y);
+
 						new QRSquareLoader().execute();
+
 					}
 
-				}
-
-			} else if (state == 2) {
-				if (rawResult.getResultPoints().length == 4) {
-					result = rawResult;
-					arview.drawCodeResult(result);
-					arview.invalidate();
-				} else {
-					Log.d("found bar", "barcode found : type:" + rawResult.getBarcodeFormat());
+				} else if (state == 2) {
+					if (rawResult.getResultPoints().length == 4) {
+						result = rawResult;
+						arview.drawCodeResult(result);
+						arview.invalidate();
+					} else {
+						Log.d("found bar", "barcode found : type:" + rawResult.getBarcodeFormat());
+					}
 				}
 			}
+
 		} else {
 			Log.d("found bar", "barcode found : type:" + rawResult.getBarcodeFormat());
 		}
@@ -163,7 +173,7 @@ public class ScanActivity extends CaptureActivity {
 				Log.d("request:", json.toString());
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("json", json.toString()));
-			
+
 				JSONObject jsonresponse = null;
 				try {
 					jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "GET", params);
@@ -201,10 +211,10 @@ public class ScanActivity extends CaptureActivity {
 							// state = 2;
 						}
 					}
-				} catch ( HttpHostConnectException | ClassNotFoundException e) {
+				} catch (HttpHostConnectException | ClassNotFoundException e) {
 					createErrorDialog("The servers are down! please try again later");
-				} catch (JSONException  | NullPointerException e) {
-					if(jsonresponse == null){
+				} catch (JSONException | NullPointerException e) {
+					if (jsonresponse == null) {
 						createErrorDialog("The servers are down! please try again later");
 					}
 					Log.d("WARNING", "there is some missing information in this qr :" + e.getMessage());
@@ -217,9 +227,11 @@ public class ScanActivity extends CaptureActivity {
 
 	public class QRSquareAuthenticate extends AsyncTask<String, String, String> {
 		WebSocketClient client;
+
 		@Override
 		protected String doInBackground(String... params) {
-			if (state != 2 && arview.getUser()!=null) {
+			if (authstate == 1 && arview.getUser() != null) {
+				authstate =1;
 				long userid = arview.getUser().getId();
 				String text = result.getText();
 				URI create = URI.create(DBConst.url_webSocket + "?authenticate=" + String.valueOf(userid) + "&text=" + text);
@@ -227,7 +239,7 @@ public class ScanActivity extends CaptureActivity {
 				client = new WebSocketClient(create, new WebSocketClient.Listener() {
 					@Override
 					public void onConnect() {
-
+						authstate =2;
 					}
 
 					/**
@@ -235,14 +247,15 @@ public class ScanActivity extends CaptureActivity {
 					 * */
 					@Override
 					public void onMessage(String message) {
-						if(message.equals("d")){
+						if (message.equals("d")) {
 							client.disconnect();
+							authstate =0;
 						}
 					}
 
 					@Override
 					public void onMessage(byte[] data) {
-						
+
 					}
 
 					/**
@@ -250,7 +263,7 @@ public class ScanActivity extends CaptureActivity {
 					 * */
 					@Override
 					public void onDisconnect(int code, String reason) {
-						
+
 					}
 
 					@Override
@@ -258,14 +271,13 @@ public class ScanActivity extends CaptureActivity {
 					}
 
 				}, null);
-				
+
 				client.connect();
 			}
 			return null;
 		}
-		
-	}
 
+	}
 
 	public boolean needToInvalidate() {
 		return (arview.getQRSquare() != null && result != null);
@@ -278,6 +290,7 @@ public class ScanActivity extends CaptureActivity {
 
 		}
 	}
+
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(Intent.ACTION_MAIN);
