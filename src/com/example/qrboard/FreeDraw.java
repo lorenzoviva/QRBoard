@@ -80,7 +80,7 @@ public class FreeDraw extends Activity {
 		Bitmap bitmap = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0, qrEntity.getImg().length);
 		Log.d("BITMAP DECODED", bitmap.getWidth() + "," + bitmap.getHeight());
 		drawView.requestLayout();
-		drawView.setup(bitmap, qrEntity);
+		drawView.setup(qrEntity);
 		drawView.requestLayout();
 		resetAllButtonsColors();
 
@@ -272,4 +272,8 @@ public class FreeDraw extends Activity {
 		return drawView;
 	}
 
+	@Override
+	public void onBackPressed() {
+		goBackToScanActivity();
+	}
 }

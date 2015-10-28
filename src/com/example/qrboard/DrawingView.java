@@ -137,10 +137,10 @@ public class DrawingView extends View {
         if(bitmap!= null){
 //        	Log.d("PIXEL", "color:"+bitmap.getPixel(1, 1));
         	Log.d("onSizeChanged", "(" + bitmap.getWidth()+","+bitmap.getHeight() + ")" + "("+w+"," + h+")");
-        	canvasBitmap = convertToMutable(Bitmap.createBitmap(bitmap,0, 0, bitmap.getWidth(),bitmap.getHeight()));
+//        	canvasBitmap = convertToMutable(Bitmap.createBitmap(bitmap,0, 0, bitmap.getWidth(),bitmap.getHeight()));
         	// canvasBitmap = convertToMutable(Bitmap.createBitmap(bitmap,0, 0, w,h));
         	
-//        	canvasBitmap = convertToMutable(bitmap);
+        	canvasBitmap = convertToMutable(BitmapFactory.decodeByteArray(qrEntity.getImg(), 0, qrEntity.getImg().length));
 
             centerImage();
         }else{
@@ -762,9 +762,9 @@ public class DrawingView extends View {
 //        }
 //    }
 //
-    public void setup(Bitmap bitmap, QRFreeDraw qrEntity) {
+    public void setup(QRFreeDraw qrEntity) {
         this.qrEntity = qrEntity;
-        this.bitmap = bitmap;
+        this.bitmap  = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0, qrEntity.getImg().length);;
         int h = this.getHeight();
         int w = this.getWidth();
 //    	Log.d("setup", "(" + bitmap.getWidth()+","+bitmap.getHeight() + ")" + "("+w+"," + h+")");
