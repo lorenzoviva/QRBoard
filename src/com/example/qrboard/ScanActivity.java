@@ -72,7 +72,7 @@ public class ScanActivity extends CaptureActivity {
 	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
 		
 		if (rawResult.getResultPoints().length == 4) {
-			Log.d("BARCODE", rawResult.getText());
+			Log.d("BARCODE", authstate + " " + rawResult.getText());
 			if (authstate == 0 && rawResult.getText().startsWith("authentication")) {
 				result = rawResult;
 				new QRSquareAuthenticate().execute();
@@ -230,7 +230,7 @@ public class ScanActivity extends CaptureActivity {
 
 		@Override
 		protected String doInBackground(String... params) {
-			if (authstate == 1 && arview.getUser() != null) {
+			if (authstate == 0 && arview.getUser() != null) {
 				authstate =1;
 				long userid = arview.getUser().getId();
 				String text = result.getText();
