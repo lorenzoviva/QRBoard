@@ -72,7 +72,6 @@ public class ScanActivity extends CaptureActivity {
 	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
 		
 		if (rawResult.getResultPoints().length == 4) {
-			Log.d("BARCODE", authstate + " " + rawResult.getText());
 			if (authstate == 0 && rawResult.getText().startsWith("authentication")) {
 				result = rawResult;
 				new QRSquareAuthenticate().execute();
