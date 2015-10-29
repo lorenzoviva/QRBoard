@@ -58,7 +58,7 @@ public class MessagesListAdapter extends BaseAdapter {
 
 		// Identifying the message owner
 
-		if (user != null && qrchat.get(position).equals(user)) {
+		if (user != null && m.getSender() != null && m.getSender().equals(user)) {
 			// message belongs to you, so load the right aligned layout
 			convertView = mInflater.inflate(R.layout.list_item_message_right, null);
 		} else {

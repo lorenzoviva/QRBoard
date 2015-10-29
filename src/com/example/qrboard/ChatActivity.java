@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.codebutler.android_websockets.WebSocketClient;
 import com.google.gson.Gson;
+import com.google.gson.GsonHelper;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.MessagesListAdapter;
 import com.ogc.model.QRChat;
@@ -211,26 +212,22 @@ public class ChatActivity extends Activity {
 				String fromName = "";
 				JSONObject jmessage = new JSONObject(jObj.getString("message"));
 				String sessionId = jObj.getString("sessionId");
-				boolean isSelf = true;
 
-				// Checking if the message was sent by you
+				// Checking if the message was sent by you on this session
 				if (!sessionId.equals(this.sessionId)) {
 					fromName = jObj.getString("name");
-					isSelf = false;
 					if (!fromName.equals("anonymous")) {
-						String firstName = fromName.split("&")[0];
-						String lastName = fromName.substring(firstName.length() + 1);
-						QRUser sender = new QRUser(firstName, lastName);
-						QRMessage m = new QRMessage(jmessage.getString("text"), sender);
+						//someones message, could be my message of a recent session
+						QRMessage m = new QRMessage(jmessage.getString("text"), GsonHelper.customGson.fromJson(jmessage.getString("sender"),QRUser.class));
 						appendMessage(m, true);
-					} else {
+					} else { //anonymus message
 						// not my message
 						QRMessage m = new QRMessage(jmessage.getString("text"), null);
 						appendMessage(m, true);
 
 					}
 
-				} else {
+				} else {//my message
 
 					QRMessage m = new QRMessage(jmessage.getString("text"), qruser);
 
