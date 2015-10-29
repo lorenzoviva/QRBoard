@@ -79,7 +79,7 @@ public class MessagesListAdapter extends BaseAdapter {
 			DateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 			iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
 			String dateFormatAsString = iso8601Format.format(m.getDate());
-			lblFrom.append(" " + iso8601Format);
+			lblFrom.append(" " + dateFormatAsString);
 		}
 
 		return convertView;

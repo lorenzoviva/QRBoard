@@ -51,7 +51,7 @@ public class ChatActivity extends Activity {
 		listViewMessages = (ListView) findViewById(R.id.list_view_messages);
 		sendButton = (Button) findViewById(R.id.btnSend);
 		inputMessage = (EditText) findViewById(R.id.inputMsg);
-		if(client==null || !client.isConnected()){
+		if (client == null || !client.isConnected()) {
 			try {
 				qrchat = new QRChat(new JSONObject(getIntent().getStringExtra("qrchat")));
 			} catch (JSONException e) {
@@ -139,8 +139,6 @@ public class ChatActivity extends Activity {
 				Log.d("messaggio qrchat", "errore");
 			}
 		}
-		
-		
 
 	}
 
@@ -211,7 +209,7 @@ public class ChatActivity extends Activity {
 			} else if (flag.equalsIgnoreCase(TAG_MESSAGE)) {
 				// if the flag is 'message', new message received
 				String fromName = "";
-				String message = jObj.getString("message");
+				JSONObject jmessage = new JSONObject(jObj.getString("message"));
 				String sessionId = jObj.getString("sessionId");
 				boolean isSelf = true;
 
@@ -221,25 +219,25 @@ public class ChatActivity extends Activity {
 					isSelf = false;
 					if (!fromName.equals("anonymous")) {
 						String firstName = fromName.split("&")[0];
-						String lastName = fromName.substring(firstName.length()+1);
-						QRUser sender = new QRUser(firstName,lastName);
-						QRMessage m = new QRMessage(message, sender);
+						String lastName = fromName.substring(firstName.length() + 1);
+						QRUser sender = new QRUser(firstName, lastName);
+						QRMessage m = new QRMessage(jmessage.getString("text"), sender);
 						appendMessage(m, true);
-					}else{
-						//not my message
-						QRMessage m = new QRMessage(message,null);
+					} else {
+						// not my message
+						QRMessage m = new QRMessage(jmessage.getString("text"), null);
 						appendMessage(m, true);
-					
+
 					}
-				
+
 				} else {
 
-				QRMessage m = new QRMessage(message, qruser);
+					QRMessage m = new QRMessage(jmessage.getString("text"), qruser);
 
-				// Appending the message to chat list
-				appendMessage(m, true);
+					// Appending the message to chat list
+					appendMessage(m, true);
 				}
-				
+
 			} else if (flag.equalsIgnoreCase(TAG_EXIT)) {
 				// If the flag is 'exit', somebody left the conversation
 				String name = jObj.getString("name");
@@ -320,6 +318,5 @@ public class ChatActivity extends Activity {
 		}
 		return new String(hexChars);
 	}
-
 
 }

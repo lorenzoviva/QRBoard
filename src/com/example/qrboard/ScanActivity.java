@@ -44,9 +44,9 @@ public class ScanActivity extends CaptureActivity {
 
 	private int state = 0;// 0 scanning, 1 waiting for response, 2 showing
 							// response
-	private int authstate = 0;// 0 scanning, 1 waiting for response, 2 showing
 	// response
 	Result result = null;
+	Result authresult = null;
 	ActivityInvalidator invalidator;
 
 	@SuppressLint("InlinedApi")
@@ -72,9 +72,12 @@ public class ScanActivity extends CaptureActivity {
 	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
 		
 		if (rawResult.getResultPoints().length == 4) {
-			if (authstate == 0 && rawResult.getText().startsWith("authentication")) {
-				result = rawResult;
-				new QRSquareAuthenticate().execute();
+			if (rawResult.getText().startsWith("authentication")) {
+				
+				if(authresult==null || !authresult.getText().equals(result.getText())){
+					authresult = rawResult;
+					new QRSquareAuthenticate().execute();
+				}
 			} else {
 				if (state == 2 && arview.getQRSquare() == null) {
 					state = 0;
@@ -229,16 +232,14 @@ public class ScanActivity extends CaptureActivity {
 
 		@Override
 		protected String doInBackground(String... params) {
-			if (authstate == 0 && arview.getUser() != null) {
-				authstate =1;
+			if (arview.getUser() != null) {
 				long userid = arview.getUser().getId();
-				String text = result.getText();
+				String text = authresult.getText();
 				URI create = URI.create(DBConst.url_webSocket + "?authenticate=" + String.valueOf(userid) + "&text=" + text);
 				Log.d("CONNECTING", create.toString());
 				client = new WebSocketClient(create, new WebSocketClient.Listener() {
 					@Override
 					public void onConnect() {
-						authstate =2;
 					}
 
 					/**
@@ -248,7 +249,6 @@ public class ScanActivity extends CaptureActivity {
 					public void onMessage(String message) {
 						if (message.equals("d")) {
 							client.disconnect();
-							authstate =0;
 						}
 					}
 
