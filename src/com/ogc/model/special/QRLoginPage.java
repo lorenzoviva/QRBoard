@@ -5,7 +5,15 @@ import com.ogc.model.QRUserMenager;
 import com.ogc.model.QRWebPage;
 
 public class QRLoginPage extends QRUserMenager{
-	private static String loginHtml = "<h1 styleClass='margin:0 ;padding: 0;text-align: center;display:table-cell;vertical-align:middle; background:grey;height: 300px;width: 450px;'>Hello, this is a User's personal qr. Do you want to login?</h1>";
+	private static String loginHtml = "<!DOCTYPE html>"
+			+ "<html>"
+			+ "<head>"
+			+ "<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700' rel='stylesheet' type='text/css'>"
+			+ "</head>"
+			+ "<body style='margin:0; background-color:#5DB5E0'>"
+			+ "<div style='text-align: center; font-family: 'Open Sans', sans-serif;font-size: 32px;font-weight: 300;'>Hello!<br>This is a User's personal QR.<br><br>Do you want to login?</div>"
+			+ "</body>"
+			+ "</html>";
 	public QRLoginPage(QRSquare realQR) {
 		super(realQR.getText(), loginHtml, "");
 		setOne(realQR.getOne());
