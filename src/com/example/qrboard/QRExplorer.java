@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.ogc.graphics.Point;
 import com.ogc.graphics.Quadrilateral;
@@ -39,6 +40,8 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback,Sq
 	private QRSquare square;
 	private int scroll = 0;
 	private int maxScroll = 0;
+	private int selectedRow = 1;
+	private QRSquare focusedSquare;
 	float dx;//difference of x coordinate of touch
 	float dy;//difference of y coordinate of touch
 	float lx = -1;//last x coordinate of touch
@@ -109,9 +112,9 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback,Sq
 			lx = -1;
 			ly = -1;
 			if(ddy<5){
-				int qrtouched = getQRExplorerRowSquareTouched(event);
-				if(qrtouched!=-1){
-					rows.get(qrtouched).onTouchEvent(event);
+				selectedRow = getQRExplorerRowSquareTouched(event);
+				if(selectedRow!=-1){
+					rows.get(selectedRow).onTouchEvent(event);
 				}
 			}
 		
@@ -130,6 +133,13 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback,Sq
 			String qrsquareuserString = jsonresponse.getJSONArray("QRSquareUser").toString();
 
 			int request = jsonresponse.getInt("request");
+			if(jsonresponse.has("QRSquare") && jsonresponse.has("type")){
+				String type = "com.ogc.model." + jsonresponse.getString("type");
+				square = (QRSquare) gson.fromJson(jsonresponse.getString("QRSquare"), Class.forName(type));
+				if(request != 3){
+					focusedSquare = square;
+				}
+			}
 
 			Type qrsquareUserlistType = new TypeToken<ArrayList<QRSquareUser>>() {
 			}.getType();
@@ -182,6 +192,12 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback,Sq
 //			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -198,14 +214,19 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback,Sq
 		}
 		if (!rows.isEmpty() && bounds != null) {
 			for(int i = 0; i < rows.size() ; i++){
-				rows.get(i).draw(canvas,this,i,bounds,scroll);
+				if(selectedRow!=i){
+					rows.get(i).draw(canvas,this,i,bounds,scroll,false);
+				}else{
+					rows.get(i).draw(canvas,this,i,bounds,scroll,true);
+				}
 			}
 		}
 	}
 	public int getQRExplorerRowSquareTouched(MotionEvent event) {
 		if (!rows.isEmpty()) {
 			for(int i =0 ; i < rows.size(); i++){
-				if(rows.get(i).touched(event)){
+				if(rows.get(i).touched(event)!=null){
+					focusedSquare = rows.get(i).touched(event);
 					return i;
 				}
 			}

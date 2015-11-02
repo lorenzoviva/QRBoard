@@ -78,12 +78,19 @@ public class QRExplorerRow {
 		this.qrsu = qrsu;
 	}
 
-	public void draw(Canvas canvas, QRExplorer qrExplorer, int i, Rect bounds, int scroll) {
+	public void draw(Canvas canvas, QRExplorer qrExplorer, int i, Rect bounds, int scroll, boolean selected) {
 		// i is the position
-		externalmargin.setColor(Color.rgb(0, 88, 133));
-		externalmargin.setStrokeWidth(4);
-		internalmargin.setColor(Color.rgb(0, 88, 133));
-		internalmargin.setStrokeWidth(2);
+		if (!selected) {
+			externalmargin.setColor(Color.rgb(200, 200, 200));
+			externalmargin.setStrokeWidth(4);
+			internalmargin.setColor(Color.rgb(133, 133, 133));
+			internalmargin.setStrokeWidth(2);
+		} else {
+			externalmargin.setColor(Color.rgb(0, 0, 0));
+			externalmargin.setStrokeWidth(4);
+			internalmargin.setColor(Color.rgb(0, 0, 0));
+			internalmargin.setStrokeWidth(2);
+		}
 		if (request == 1) {
 			if (qrum != null) {
 				qrum.setOne(new PointF((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size));
@@ -109,7 +116,7 @@ public class QRExplorerRow {
 			}
 		}
 		canvas.drawLine((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i) * size, externalmargin);
-		canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size, externalmargin);
+//		canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size, externalmargin);
 		canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i) * size, externalmargin);
 		canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left), -scroll + bounds.top + (i) * size, externalmargin);
 		canvas.drawLine((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + (i) * size, internalmargin);
@@ -120,36 +127,36 @@ public class QRExplorerRow {
 	public boolean touchOnQRSquare(MotionEvent event, QRSquare qrs) {
 		if (qrs != null) {
 			Quadrilateral polygon = new Quadrilateral();
-			polygon.addVertex(new Point(qrum.getTwo().x, qrum.getTwo().y));
-			polygon.addVertex(new Point(qrum.getThree().x, qrum.getThree().y));
-			polygon.addVertex(new Point(qrum.getFour().x, qrum.getFour().y));
-			polygon.addVertex(new Point(qrum.getOne().x, qrum.getOne().y));
+			polygon.addVertex(new Point(qrs.getTwo().x, qrs.getTwo().y));
+			polygon.addVertex(new Point(qrs.getThree().x, qrs.getThree().y));
+			polygon.addVertex(new Point(qrs.getFour().x, qrs.getFour().y));
+			polygon.addVertex(new Point(qrs.getOne().x, qrs.getOne().y));
 			return Utility.PointInPolygon(new Point(event.getX(), event.getY()), polygon);
 		} else {
 			return false;
 		}
 	}
 
-	public boolean touched(MotionEvent event) {
+	public QRSquare touched(MotionEvent event) {
 
 		if (touchOnQRSquare(event, qrum)) {
-			return true;
-		}
-		if (touchOnQRSquare(event, qrur)) {
-			return true;
+			return qrum;
 		}
 		if (touchOnQRSquare(event, qrsur)) {
-			return true;
+			return qrsur;
+		}
+		if (touchOnQRSquare(event, qrur)) {
+			return qrur;
 		}
 		if (touchOnQRSquare(event, qrs)) {
-			return true;
+			return qrs;
 		}
-		return false;
+		return null;
 	}
 
 	public void onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

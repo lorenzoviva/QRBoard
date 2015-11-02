@@ -331,7 +331,7 @@ public abstract class LWebView extends WebView {
 	public abstract void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f);
 
 	private void getDevicePixelRatio(float touchX, float scrollX, float touchY, float scrollY) {
-		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(" + touchX + "," + scrollX + "," + touchY + "," + scrollY + "," + "obj);}" + "})()";
+		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(" + touchX + "," + scrollX + "," + touchY + "," + scrollY + "," + "1);}" + "})()";
 		loadUrl(js);
 	}
 
