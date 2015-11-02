@@ -8,7 +8,7 @@ public class QRFreePage extends QRInternalWebPage{
 	private static String freeQRHTML = "<!DOCTYPE html>"
 			+ "<html>"
 			+ "<head>"
-			+ "<link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>"
+			+ "<link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>"
 			+ "</head>"
 			+ "<body style='margin:0; background-color:#5DB5E0'>"
 			+ "<div style='text-align: center; font-family: fantasy; font-size: 60px; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;'>THIS<br>QR IS<br>FREE</div>"

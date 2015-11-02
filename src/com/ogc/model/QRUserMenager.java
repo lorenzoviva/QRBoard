@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.util.Log;
 
-import com.example.qrboard.ARLayerView;
 import com.example.qrboard.SquareHolderView;
 import com.example.qrboard.UserMenagerWebView;
 
@@ -42,7 +42,7 @@ public class QRUserMenager extends QRInternalWebPage {
 			// webview.layout(0, 0, 500, 500);
 			int w = webview.getMeasuredWidth();
 			int h = webview.getMeasuredHeight();
-			// Log.d("page dimension:", w + "," + h );
+			Log.d("page dimension:", w + "," + h );
 			if (getHorizontalScroll() != webview.getScrollX()) {
 				webview.setScrollX(getHorizontalScroll());
 			}
