@@ -37,7 +37,7 @@ import com.ogc.dbutility.JSONParser;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.QRSquare;
 
-public class ScanActivity extends CaptureActivity {
+public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 
 	ARLayerView arview;// the drawable view
 	JSONParser jParser = new JSONParser();

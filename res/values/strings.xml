@@ -138,12 +138,12 @@
     <string name="erase">Erase</string>
     <string name="text">Text</string>
     <string name="save">Save</string>
-     <string name="move">Move</string>
+    <string name="move">Move</string>
     <string name="confirm">Confirm</string>
     <string name="paint">Paint</string>
     <string name="edittextsize">Edit text size</string>
     <string name="title_activity_chat">ChatActivity</string>
-    
     <string name="btn_send">Send</string>
+    <string name="title_activity_explore">ExploreActivity</string>
 
 </resources>

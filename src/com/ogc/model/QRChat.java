@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.example.qrboard.ARLayerView;
 import com.example.qrboard.LWebView;
+import com.example.qrboard.SquareHolderView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.GsonHelper;
@@ -112,7 +113,7 @@ public class QRChat extends QRSquare {
 	}
 
 	@Override
-	public void draw(Canvas canvas, ARLayerView arview) {
+	public void draw(Canvas canvas, SquareHolderView arview) {
 		page.setShape(this);
 		page.draw(canvas, arview);
 	}

@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 
 import com.example.qrboard.ARLayerView;
 import com.example.qrboard.LWebView;
+import com.example.qrboard.SquareHolderView;
 import com.google.zxing.ResultPoint;
 
 public class QRSquare {
@@ -64,7 +65,7 @@ public class QRSquare {
 		four.x = four.x + (float)((float)3.5/(float)(qrsize-8)) * (four.x - two.x);
 		four.y = four.y + (float)((float)3.5/(float)(qrsize-8)) * (four.y - two.y);
 	}
-	public void draw(Canvas canvas, ARLayerView arview) {
+	public void draw(Canvas canvas, SquareHolderView arview) {
 
 		Paint wallpaint = new Paint();
 		wallpaint.setColor(Color.WHITE);

@@ -18,7 +18,7 @@ public class ChatPageWebView extends LWebView{
 	private QRChat chat;
 	private QRUser user;
 	
-	public ChatPageWebView(ARLayerView arview, QRChatWebPage qrsquare, int width, int height) {
+	public ChatPageWebView(SquareHolderView arview, QRChatWebPage qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 		this.chat=qrsquare.getChat();
 		this.user = arview.getUser();

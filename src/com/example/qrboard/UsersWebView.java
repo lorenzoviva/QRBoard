@@ -8,7 +8,7 @@ import com.ogc.model.QRWebPage;
 public class UsersWebView extends LWebView{
 	
 
-	public UsersWebView(ARLayerView arview, QRUsersWebPage qrsquare, int width, int height) {
+	public UsersWebView(SquareHolderView arview, QRUsersWebPage qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 	}
 

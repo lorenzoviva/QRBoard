@@ -20,7 +20,7 @@ import com.ogc.graphics.Point;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 
-public class ARLayerView extends SurfaceView {
+public class ARLayerView extends SurfaceView implements SquareHolderView{
 
 	private ARGUI argui = null;
 

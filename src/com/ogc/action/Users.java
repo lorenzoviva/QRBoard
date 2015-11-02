@@ -14,11 +14,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.ExploreActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.google.gson.reflect.TypeToken;
@@ -27,13 +29,14 @@ import com.ogc.model.ACL;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
+import com.ogc.model.QRUserMenager;
 import com.ogc.model.QRUsersWebPage;
 
 public class Users extends Action {
 	private QRSquare qrSquare = null;
 	private QRUser qrUser = null;
 	private ARGUI argui;
-
+	private Context context;
 	@Override
 	public void execute() {
 		super.execute();
@@ -47,6 +50,7 @@ public class Users extends Action {
 		qrSquare = argui.getQRSquare();
 		qrUser = argui.getUser();
 		this.argui = argui;
+		this.context = context;
 		execute();
 	}
 
@@ -68,6 +72,7 @@ public class Users extends Action {
 			if(qrUser!=null){
 				paramap.put("user", qrUser.getId());
 			}
+			paramap.put("request", 1);
 
 			JSONObject paramjson = new JSONObject(paramap);
 
@@ -86,32 +91,9 @@ public class Users extends Action {
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					Gson gson = GsonHelper.customGson;
-
-					String jsonstring = jsonresponse.getJSONArray("QRSquareUser").toString();
-					Type listType = new TypeToken<ArrayList<QRSquareUser>>() {
-					}.getType();
-					List<QRSquareUser> fromJson = (List<QRSquareUser>) gson.fromJson(jsonstring, listType);
-					String html = "";
-
-					if (fromJson != null && !fromJson.isEmpty()) {
-						QRUsersWebPage usersquare = new QRUsersWebPage(qrSquare.getText(), fromJson);
-						usersquare.setOne(qrSquare.getOne());
-						usersquare.setTwo(qrSquare.getTwo());
-						usersquare.setThree(qrSquare.getThree());
-						usersquare.setFour(qrSquare.getFour());
-						argui.setQRSquare(usersquare, true);
-						Log.d("FROM JSON", fromJson.toString());
-						if(jsonresponse.has("action")){
-							argui.setActionContext("users");
-							argui.finishAction(jsonresponse.getString("action"));
-						}else{
-							argui.finishAction("Unable to load users");
-						}
-					} else {
-						argui.finishAction("Unable to load users");
-					}
-
+					Intent intent = new Intent(context,ExploreActivity.class);
+					intent.putExtra("response", jsonresponse.toString());
+					context.startActivity(intent);
 				} else {
 					argui.finishAction("Unable to load users");
 				}

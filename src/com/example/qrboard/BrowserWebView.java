@@ -9,7 +9,7 @@ import com.ogc.model.QRWebPage;
 
 public class BrowserWebView extends LWebView {
 
-	public BrowserWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
+	public BrowserWebView(SquareHolderView arview, QRWebPage qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 	}
 

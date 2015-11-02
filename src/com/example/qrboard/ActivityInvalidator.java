@@ -7,9 +7,9 @@ import android.os.Looper;
 import android.util.Log;
 
 public class ActivityInvalidator{
-	ScanActivity activity;
+	InvalidableAcivity activity;
 //	int i = 0;
-	public ActivityInvalidator(ScanActivity context) {
+	public ActivityInvalidator(InvalidableAcivity context) {
 		activity = context;
 		final Runnable invalidation = new Runnable() {
 		    public void run() {

@@ -9,9 +9,9 @@ import com.ogc.model.RoleType;
 public class InternalWebView extends LWebView{
 
 		private RoleType role;
-		protected ARLayerView arview;
+		protected SquareHolderView arview;
 		
-		public InternalWebView(ARLayerView arview, QRInternalWebPage qrsquare, int width, int height) {
+		public InternalWebView(SquareHolderView arview, QRInternalWebPage qrsquare, int width, int height) {
 			super(arview, qrsquare, width, height);
 			this.arview = arview;
 		}

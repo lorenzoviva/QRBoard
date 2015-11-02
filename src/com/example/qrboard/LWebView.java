@@ -36,9 +36,9 @@ public abstract class LWebView extends WebView {
 	private int maxrequest = 50;
 	public String id, lastid;
 	protected String localURL = "";
-	ARLayerView arview;
+	SquareHolderView arview;
 	View mCustomView = null;
-	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
+	public LWebView(SquareHolderView arview, QRWebPage qrsquare, int width, int height) {
 		super(arview.getContext());
 		this.arview = arview;
 		Context context = arview.getContext();

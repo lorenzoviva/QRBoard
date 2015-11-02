@@ -9,7 +9,7 @@ public class UserMenagerWebView extends InternalWebView{
 
 	public RoleType role;
 	
-	public UserMenagerWebView(ARLayerView arview, QRUserMenager qrsquare, int width, int height) {
+	public UserMenagerWebView(SquareHolderView arview, QRUserMenager qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 	}
 

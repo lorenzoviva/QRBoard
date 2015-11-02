@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.qrboard"
     android:versionCode="1"
-    android:versionName="1.0"
-     >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -38,20 +37,24 @@
         </activity>
         <activity
             android:name=".ScanActivity"
-            android:label="@string/title_activity_scan" 
-            android:screenOrientation="landscape">
+            android:label="@string/title_activity_scan"
+            android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name=".FreeDraw"
             android:label="@string/title_activity_free_draw"
-            android:parentActivityName=".DecoderActivity"       
-            android:screenOrientation="landscape">
+            android:parentActivityName=".DecoderActivity"
+            android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.qr_readerexample.DecoderActivity" />
         </activity>
-         <activity
-            android:name=".ChatActivity" >
+        <activity android:name=".ChatActivity" >
+        </activity>
+        <activity
+            android:name=".ExploreActivity"
+            android:label="@string/title_activity_explore"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 

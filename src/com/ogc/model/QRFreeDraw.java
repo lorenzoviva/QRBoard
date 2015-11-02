@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.example.qrboard.ARLayerView;
 import com.example.qrboard.LWebView;
+import com.example.qrboard.SquareHolderView;
 import com.google.gson.annotations.Expose;
 
 public class QRFreeDraw extends QRSquare {
@@ -66,7 +67,7 @@ public class QRFreeDraw extends QRSquare {
 	}
 
 	@Override
-	public void draw(Canvas canvas, ARLayerView arview) {
+	public void draw(Canvas canvas, SquareHolderView arview) {
 		if (img != null) {
 			Paint wallpaint = new Paint();
 			wallpaint.setColor(Color.WHITE);
