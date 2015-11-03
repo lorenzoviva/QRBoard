@@ -36,6 +36,7 @@ public abstract class LWebView extends WebView {
 	private int maxrequest = 50;
 	public String id, lastid;
 	protected String localURL = "";
+	private float divicePixelRatio = -1;
 	SquareHolderView arview;
 	View mCustomView = null;
 	public LWebView(SquareHolderView arview, QRWebPage qrsquare, int width, int height) {
@@ -178,7 +179,6 @@ public abstract class LWebView extends WebView {
 				view.loadUrl(url);
 				return false;
 			}
-
 		});
 
 		calculate();
@@ -260,7 +260,7 @@ public abstract class LWebView extends WebView {
 		if (getMeasuredHeight() > 0 && getMeasuredWidth() > 0) {
 			setVerticalScrollBarEnabled(true);
 			setHorizontalScrollBarEnabled(true);
-
+//			getDevicePixelRatio();
 			arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
 			arview.invalidate();
 			ringProgressDialog.dismiss();
@@ -268,6 +268,7 @@ public abstract class LWebView extends WebView {
 		} else {
 			width = maxwidth;
 			height = maxheight;
+//			getDevicePixelRatio();
 			calculate();
 			load();
 		}
@@ -321,7 +322,18 @@ public abstract class LWebView extends WebView {
 			});
 
 		}
+		@JavascriptInterface
+		public void setDevicePixelRatio( final float f) {
+//			Log.d("JSINTERFACE","PIXEL RATIO:" + f);
 
+			runOnUIThread(new Runnable() {
+				@Override
+				public void run() {
+					setDevicePixelRatio(f);
+				} // This is your code
+			});
+
+		}
 		public void runOnUIThread(Runnable runnable) {
 			Handler mainHandler = new Handler(context.getMainLooper());
 			mainHandler.post(runnable);
@@ -329,12 +341,19 @@ public abstract class LWebView extends WebView {
 	}
 
 	public abstract void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f);
-
+	public void setDevicePixelRatio(float f){
+		divicePixelRatio = f;
+		height = (int) (maxheight*f);
+		width = (int) (maxwidth*f);
+	}
 	private void getDevicePixelRatio(float touchX, float scrollX, float touchY, float scrollY) {
-		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(" + touchX + "," + scrollX + "," + touchY + "," + scrollY + "," + "1);}" + "})()";
+		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(" + touchX + "," + scrollX + "," + touchY + "," + scrollY + ",obj);}" + "})()";
 		loadUrl(js);
 	}
-
+	private void getDevicePixelRatio() {
+		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(obj);}" + "})()";
+		loadUrl(js);
+	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		long pressureTime = event.getEventTime() - event.getDownTime();

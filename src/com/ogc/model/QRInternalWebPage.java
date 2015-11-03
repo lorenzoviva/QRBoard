@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import com.example.qrboard.ARLayerView;
 import com.example.qrboard.InternalWebView;
 import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.UserMenagerWebView;
 
 public class QRInternalWebPage extends QRWebPage{
 
@@ -23,7 +24,8 @@ public class QRInternalWebPage extends QRWebPage{
 		paint.setColor(Color.BLACK);
 
 		if (webview == null) {
-			webview = new InternalWebView(arview, this, 500, 500);
+			float density = arview.getContext().getResources().getDisplayMetrics().density;
+			webview = new InternalWebView(arview, this, (int)(density*250), (int)( density*250));
 
 		} else {
 

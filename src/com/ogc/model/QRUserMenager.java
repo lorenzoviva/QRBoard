@@ -35,8 +35,9 @@ public class QRUserMenager extends QRInternalWebPage {
 		paint.setColor(Color.BLACK);
 
 		if (webview == null) {
-			webview = new UserMenagerWebView(arview, this, 500, 500);
-
+			float density = arview.getContext().getResources().getDisplayMetrics().density;
+			Log.d("density", "density" + density);
+			webview = new UserMenagerWebView(arview, this, (int)(density*250), (int)( density*250));
 		} else {
 
 			// webview.layout(0, 0, 500, 500);
