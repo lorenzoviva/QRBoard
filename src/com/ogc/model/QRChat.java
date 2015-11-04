@@ -20,11 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.LWebView;
 import com.example.qrboard.SquareHolderView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.GsonHelper;
+import com.ogc.browsers.LWebView;
 
 public class QRChat extends QRSquare {
 	

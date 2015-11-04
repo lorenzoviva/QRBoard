@@ -13,9 +13,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.LWebView;
 import com.example.qrboard.SquareHolderView;
 import com.google.zxing.ResultPoint;
+import com.ogc.browsers.LWebView;
 
 public class QRSquare {
 

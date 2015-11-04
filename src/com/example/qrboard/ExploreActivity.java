@@ -3,11 +3,12 @@ package com.example.qrboard;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ExploreActivity extends Activity implements InvalidableAcivity {
 	QRExplorer explorer;
@@ -25,9 +26,9 @@ public class ExploreActivity extends Activity implements InvalidableAcivity {
 		
 		explorer = (QRExplorer) findViewById(R.id.qr_explorer);
 		invalidator = new ActivityInvalidator(this);
-		
-		
-		
+		explorer.setExploreButton((Button) findViewById(R.id.explorerbutton));
+		explorer.setEditImageInfo((ImageView) findViewById(R.id.explorereditifoimage));
+		explorer.setEditTextInfo((TextView)findViewById(R.id.explorereditifo));
 		if (getIntent().hasExtra("response")) {
 			String jsonresponse = getIntent().getStringExtra("response");
 			setup(jsonresponse);

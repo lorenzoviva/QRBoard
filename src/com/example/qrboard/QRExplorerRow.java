@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.view.MotionEvent;
+import android.widget.Button;
 
 import com.ogc.graphics.Point;
 import com.ogc.graphics.Quadrilateral;
@@ -26,7 +27,7 @@ public class QRExplorerRow {
 	private QRSquareUser qrsu = null;
 	private QRSquareUserRepresentation qrsur = null;
 	private int request;
-	public final static int size = 300;
+	private int size = 300;
 	Paint externalmargin = new Paint();
 	Paint internalmargin = new Paint();
 
@@ -79,7 +80,7 @@ public class QRExplorerRow {
 	}
 
 	public void draw(Canvas canvas, QRExplorer qrExplorer, int i, Rect bounds, int scroll, boolean selected) {
-		// i is the position
+		size = (bounds.right-bounds.left)/5;
 		if (!selected) {
 			externalmargin.setColor(Color.rgb(200, 200, 200));
 			externalmargin.setStrokeWidth(4);
@@ -87,7 +88,7 @@ public class QRExplorerRow {
 			internalmargin.setStrokeWidth(2);
 		} else {
 			externalmargin.setColor(Color.rgb(0, 0, 0));
-			externalmargin.setStrokeWidth(4);
+			externalmargin.setStrokeWidth(6);
 			internalmargin.setColor(Color.rgb(0, 0, 0));
 			internalmargin.setStrokeWidth(2);
 		}
@@ -116,8 +117,12 @@ public class QRExplorerRow {
 			}
 		}
 		canvas.drawLine((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i) * size, externalmargin);
-//		canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size, externalmargin);
-		canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i) * size, externalmargin);
+		// if (selected) {
+		canvas.drawLine((bounds.right - bounds.left), -2-scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 3 * size,-2 -scroll + bounds.top + (i + 1) * size, externalmargin);
+		// }
+		if (selected) {
+			canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i) * size, (bounds.right - bounds.left) - 3 * size,-scroll + bounds.top + (i) * size, externalmargin);
+		}
 		canvas.drawLine((bounds.right - bounds.left), -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left), -scroll + bounds.top + (i) * size, externalmargin);
 		canvas.drawLine((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + (i) * size, internalmargin);
 		canvas.drawLine((bounds.right - bounds.left) - size, -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - size, -scroll + bounds.top + (i) * size, internalmargin);
@@ -157,6 +162,10 @@ public class QRExplorerRow {
 	public void onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public int getSize() {
+		return size;
 	}
 
 }

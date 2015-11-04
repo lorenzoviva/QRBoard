@@ -7,9 +7,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.InternalWebView;
-import com.example.qrboard.PageEditorWebView;
 import com.example.qrboard.SquareHolderView;
+import com.ogc.browsers.InternalWebView;
+import com.ogc.browsers.PageEditorWebView;
 
 public class QRWebPageEditor extends QRWebPage{
 	

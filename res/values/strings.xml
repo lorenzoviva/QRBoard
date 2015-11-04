@@ -145,5 +145,6 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="btn_send">Send</string>
     <string name="title_activity_explore">ExploreActivity</string>
-
+	<string name="explorer_button_text">Explore</string>
+	<string name="explorer_edit_info_text">Click to edit</string>
 </resources>

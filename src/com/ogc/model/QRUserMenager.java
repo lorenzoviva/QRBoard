@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.example.qrboard.SquareHolderView;
-import com.example.qrboard.UserMenagerWebView;
+import com.ogc.browsers.UserMenagerWebView;
 
 public class QRUserMenager extends QRInternalWebPage {
 
@@ -43,7 +43,7 @@ public class QRUserMenager extends QRInternalWebPage {
 			// webview.layout(0, 0, 500, 500);
 			int w = webview.getMeasuredWidth();
 			int h = webview.getMeasuredHeight();
-			Log.d("page dimension:", w + "," + h );
+//			Log.d("page dimension:", w + "," + h );
 			if (getHorizontalScroll() != webview.getScrollX()) {
 				webview.setScrollX(getHorizontalScroll());
 			}

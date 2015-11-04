@@ -1,4 +1,4 @@
-package com.example.qrboard;
+package com.ogc.browsers;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,6 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
+import com.example.qrboard.SquareHolderView;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.QRWebPage;
 
@@ -56,7 +57,8 @@ public abstract class LWebView extends WebView {
 		getSettings().setPluginState(WebSettings.PluginState.ON);
 		getSettings().setAllowContentAccess(true);
 		getSettings().setDomStorageEnabled(true);
-		
+		getSettings().setFantasyFontFamily("fantasy");
+		getSettings().setFixedFontFamily("fantasy");
 		setWebChromeClient(new WebChromeClient() {
 			
 			public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {

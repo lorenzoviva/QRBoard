@@ -10,9 +10,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.BrowserWebView;
-import com.example.qrboard.LWebView;
 import com.example.qrboard.SquareHolderView;
+import com.ogc.browsers.BrowserWebView;
+import com.ogc.browsers.LWebView;
 
 public class QRWebPage extends QRSquare {
 

@@ -10,8 +10,8 @@ import android.graphics.Paint;
 
 import com.example.qrboard.ARLayerView;
 import com.example.qrboard.SquareHolderView;
-import com.example.qrboard.UserMenagerWebView;
-import com.example.qrboard.UsersWebView;
+import com.ogc.browsers.UserMenagerWebView;
+import com.ogc.browsers.UsersWebView;
 
 public class QRUsersWebPage extends QRWebPage{
 	List<QRSquareUser> squareUsers;

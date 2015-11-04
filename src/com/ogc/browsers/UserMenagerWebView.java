@@ -1,7 +1,8 @@
-package com.example.qrboard;
+package com.ogc.browsers;
 
 import android.util.Log;
 
+import com.example.qrboard.SquareHolderView;
 import com.ogc.model.QRUserMenager;
 import com.ogc.model.RoleType;
 

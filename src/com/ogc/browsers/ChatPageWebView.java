@@ -1,4 +1,4 @@
-package com.example.qrboard;
+package com.ogc.browsers;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 
+import com.example.qrboard.SquareHolderView;
 import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
 import com.ogc.model.QRUser;

@@ -11,4 +11,5 @@ public interface SquareHolderView {
 	public void setActionContext(String string);
 	public void performAction(String string);
 	public QRUser getUser();
+	
 }

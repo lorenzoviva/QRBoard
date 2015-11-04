@@ -1,5 +1,6 @@
-package com.example.qrboard;
+package com.ogc.browsers;
 
+import com.example.qrboard.SquareHolderView;
 import com.ogc.model.QRWebPageEditor;
 
 public class PageEditorWebView extends LWebView{

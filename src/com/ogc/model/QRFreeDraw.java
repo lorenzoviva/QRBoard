@@ -10,9 +10,9 @@ import android.graphics.Path;
 import android.util.Log;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.LWebView;
 import com.example.qrboard.SquareHolderView;
 import com.google.gson.annotations.Expose;
+import com.ogc.browsers.LWebView;
 
 public class QRFreeDraw extends QRSquare {
 

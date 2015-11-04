@@ -7,4 +7,32 @@
 <com.example.qrboard.QRExplorer android:id="@+id/qr_explorer"
                android:layout_width="fill_parent"
                android:layout_height="fill_parent"/>
+
+<Button
+    android:id="@+id/explorerbutton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_marginBottom="72dp"
+    android:layout_marginLeft="50dp"
+    android:text="@string/explorer_button_text" />
+
+<TextView
+    android:id="@+id/explorereditifo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/explorerbutton"
+    android:layout_alignRight="@+id/explorerbutton"
+    android:text="@string/explorer_edit_info_text"
+    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+<ImageView
+    android:id="@+id/explorereditifoimage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/explorerbutton"
+    android:layout_alignLeft="@+id/explorerbutton"
+    android:src="@drawable/abc_ic_commit_search_api_mtrl_alpha" />
+
 </RelativeLayout>

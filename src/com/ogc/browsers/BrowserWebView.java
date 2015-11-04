@@ -1,10 +1,11 @@
-package com.example.qrboard;
+package com.ogc.browsers;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.util.Log;
 
+import com.example.qrboard.SquareHolderView;
 import com.ogc.model.QRWebPage;
 
 public class BrowserWebView extends LWebView {
