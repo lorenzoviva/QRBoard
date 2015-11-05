@@ -6,11 +6,9 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.SquareHolderView;
 import com.ogc.browsers.BrowserWebView;
 import com.ogc.browsers.LWebView;
 
@@ -42,7 +40,7 @@ public class QRWebPage extends QRSquare {
 	}
 
 	@Override
-	public void draw(Canvas canvas, SquareHolderView arview) {
+	public void draw(Canvas canvas, ARLayerView arview) {
 		super.draw(canvas, arview);
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);

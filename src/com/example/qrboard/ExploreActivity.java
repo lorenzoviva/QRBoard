@@ -1,6 +1,7 @@
 package com.example.qrboard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 public class ExploreActivity extends Activity implements InvalidableAcivity {
 	QRExplorer explorer;
 	ActivityInvalidator invalidator;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ public class ExploreActivity extends Activity implements InvalidableAcivity {
 		explorer.setExploreButton((Button) findViewById(R.id.explorerbutton));
 		explorer.setEditImageInfo((ImageView) findViewById(R.id.explorereditifoimage));
 		explorer.setEditTextInfo((TextView)findViewById(R.id.explorereditifo));
+		explorer.setBackButton((Button) findViewById(R.id.explorequitbutton));
 		if (getIntent().hasExtra("response")) {
 			String jsonresponse = getIntent().getStringExtra("response");
 			setup(jsonresponse);
@@ -50,5 +52,15 @@ public class ExploreActivity extends Activity implements InvalidableAcivity {
 	public boolean onTouchEvent(MotionEvent event) {
 		explorer.onTouchEvent(event);
 		return super.onTouchEvent(event);
+	}
+
+	@Override
+	public void onBackPressed() {
+		gotoScanActivity();
+	}
+	public void gotoScanActivity(){
+		Intent intent = new Intent(getApplicationContext(), ScanActivity.class);
+		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
+		startActivityForResult(intent, 0);
 	}
 }

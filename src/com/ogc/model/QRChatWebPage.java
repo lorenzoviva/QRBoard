@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 
 import com.example.qrboard.ARLayerView;
 import com.example.qrboard.ChatActivity;
-import com.example.qrboard.SquareHolderView;
 import com.google.gson.Gson;
 import com.ogc.browsers.ChatPageWebView;
 import com.ogc.dbutility.DBConst;
@@ -45,7 +44,7 @@ public class QRChatWebPage extends QRWebPage {
 		webview = null;
 	}
 	@Override
-	public void draw(Canvas canvas, SquareHolderView arview) {
+	public void draw(Canvas canvas, ARLayerView arview) {
 		// super.draw(canvas, arview);ù
 		if (goToChatActivity) {
 			if (webview != null) {

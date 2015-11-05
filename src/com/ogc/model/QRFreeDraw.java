@@ -4,14 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.Log;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.SquareHolderView;
-import com.google.gson.annotations.Expose;
 import com.ogc.browsers.LWebView;
 
 public class QRFreeDraw extends QRSquare {
@@ -67,7 +64,7 @@ public class QRFreeDraw extends QRSquare {
 	}
 
 	@Override
-	public void draw(Canvas canvas, SquareHolderView arview) {
+	public void draw(Canvas canvas, ARLayerView arview) {
 		if (img != null) {
 			Paint wallpaint = new Paint();
 			wallpaint.setColor(Color.WHITE);

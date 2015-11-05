@@ -6,14 +6,10 @@ import java.net.URL;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -21,9 +17,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 
-import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.ARLayerView;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.QRWebPage;
 
@@ -38,9 +33,9 @@ public abstract class LWebView extends WebView {
 	public String id, lastid;
 	protected String localURL = "";
 	private float divicePixelRatio = -1;
-	SquareHolderView arview;
+	ARLayerView arview;
 	View mCustomView = null;
-	public LWebView(SquareHolderView arview, QRWebPage qrsquare, int width, int height) {
+	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
 		super(arview.getContext());
 		this.arview = arview;
 		Context context = arview.getContext();

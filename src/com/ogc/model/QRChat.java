@@ -10,19 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.graphics.Canvas;
-
-import java.text.DateFormat;
-
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.SquareHolderView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.GsonHelper;
 import com.ogc.browsers.LWebView;
 
@@ -113,7 +104,7 @@ public class QRChat extends QRSquare {
 	}
 
 	@Override
-	public void draw(Canvas canvas, SquareHolderView arview) {
+	public void draw(Canvas canvas, ARLayerView arview) {
 		page.setShape(this);
 		page.draw(canvas, arview);
 	}

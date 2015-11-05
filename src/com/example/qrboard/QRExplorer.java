@@ -7,7 +7,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,7 +20,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,16 +32,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.ogc.action.Action;
 import com.ogc.graphics.Point;
 import com.ogc.graphics.Quadrilateral;
 import com.ogc.graphics.Utility;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRSquareUser;
-import com.ogc.model.QRSquareUserRepresentation;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
+import com.ogc.model.special.QRSquareUserRepresentation;
 
-public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, SquareHolderView {
+public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, OnClickListener {
 
 	private Rect bounds = null;
 	private Paint background = new Paint();
@@ -48,7 +52,6 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 	private int scroll = 0;
 	private int maxScroll = 0;
 	private int selectedRow = 0;
-	private QRSquare focusedSquare;
 	float dx;// difference of x coordinate of touch
 	float dy;// difference of y coordinate of touch
 	float lx = -1;// last x coordinate of touch
@@ -58,6 +61,9 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 	private Button explorebutton;
 	private ImageView image;
 	private TextView text;
+	private String actionContext = "";
+	private Action action;
+	private Button backbutton;
 
 	public QRExplorer(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -76,23 +82,20 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 
 	public void setExploreButton(Button explorebutton) {
 		this.explorebutton = explorebutton;
-		this.explorebutton.setVisibility(INVISIBLE);
+		explorebutton.setOnClickListener(this);
 
 	}
 
 	public void setEditTextInfo(TextView text) {
 		this.text = text;
-		this.text.setVisibility(INVISIBLE);
 		this.text.setTextColor(Color.WHITE);
 	}
 
 	public void setEditImageInfo(ImageView image) {
 		this.image = image;
-		this.image.setVisibility(INVISIBLE);
 	}
 
 	public void init() {
-		setWillNotDraw(false);
 		getHolder().addCallback(this);
 
 	}
@@ -115,6 +118,7 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 	public void surfaceDestroyed(SurfaceHolder holder) {
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		float tx = event.getX();
@@ -143,29 +147,54 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 			// " dx:" + dx + " dy:" + dy + " lx:" + lx + " ly:" +ly);
 			lx = -1;
 			ly = -1;
-			if (ddy < 5) {
-				selectedRow = getQRExplorerRowSquareTouched(event);
-				if (selectedRow != -1) {
+			if (ddy < 15) {
+
+				if (getQRExplorerRowSquareTouched(event) != -1) {
+					selectedRow = getQRExplorerRowSquareTouched(event);
+					setFocusedSquare(rows.get(selectedRow).touched(event));
 					rows.get(selectedRow).onTouchEvent(event);
 				} else if (getFocusedQRTouched(event)) {
 					Log.d("QRExplorer", "QRFocusedSquare has been touched");
 					Toast.makeText(getContext(), "YEEEE CLICKED ON SQUARE", Toast.LENGTH_SHORT).show();
-//					focusedSquare.setOne(new PointF(focusedSquare.getOne().x - 20, focusedSquare.getOne().y));
-				} else if (getExploreButtonTouched(event)) {
-					Log.d("QRExplorer", "Explore button has been touched");
-					Toast.makeText(getContext(), "YEEEE CLICKED ON BUTTON", Toast.LENGTH_SHORT).show();
-//					explorebutton.setBackgroundColor(Color.BLUE);
+					// focusedSquare.setOne(new PointF(focusedSquare.getOne().x
+					// - 20, focusedSquare.getOne().y));
+					// performAction("edit");
 				} else {
+					// (!getFocusedQRTouched(event) &&
+					// !getExploreButtonTouched(event) &&
+					// getQRExplorerRowSquareTouched(event) == -1)
 					setFocusedSquare(null);
 				}
 
+				performClick();
+
 			}
 			ddy = -1;
+
 		}
 
-		return super.onTouchEvent(event);
+		return true;
 	}
 
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == explorebutton.getId()) {
+			Log.d("QRExplorer", "Explore button has been touched");
+			Toast.makeText(getContext(), "YEEEE CLICKED ON BUTTON", Toast.LENGTH_SHORT).show();
+			explore();
+		} else if (v.getId() == backbutton.getId()) {
+			Log.d("QRExplorer", "Back button has been touched");
+			gotoScanActivity();
+		}
+	}
+
+	public void explore() {
+
+		performAction("users");
+
+	}
+
+	@SuppressWarnings("unchecked")
 	public void setup(String stringjsonresponse) {
 		try {
 			JSONObject jsonresponse = new JSONObject(stringjsonresponse);
@@ -178,33 +207,69 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 			if (jsonresponse.has("QRSquare") && jsonresponse.has("type")) {
 				String type = "com.ogc.model." + jsonresponse.getString("type");
 				square = (QRSquare) gson.fromJson(jsonresponse.getString("QRSquare"), Class.forName(type));
+				setFocusedSquare(square);
+
+			}
+			if (jsonresponse.has("QRUser")) {
+				QRUser user = (GsonHelper.customGson).fromJson(jsonresponse.getString("QRUser"), QRUser.class);
 				if (request != 3) {
-					setFocusedSquare(square);
+					setUser(user);
+				} else if (jsonresponse.has("user")) {
+					QRUser me = (GsonHelper.customGson).fromJson(jsonresponse.getString("user"), QRUser.class);
+					setUser(me);
 				}
 			}
-
 			Type qrsquareUserlistType = new TypeToken<ArrayList<QRSquareUser>>() {
 			}.getType();
 			Type qrusermenagerlistType = new TypeToken<ArrayList<QRUserMenager>>() {
 			}.getType();
-			Type qrsquareslistType = new TypeToken<ArrayList<QRSquare>>() {
+			Type qrsquareslistType = new TypeToken<ArrayList<String>>() {
 			}.getType();
 			List<QRUserMenager> qrusersmenagersfromJson = null;
-			List<QRSquare> qrsquaresfromJson = null;
+			List<String> qrsquaresfromJson = null;
 			List<QRSquareUser> qrsquareusersfromJson = (List<QRSquareUser>) gson.fromJson(qrsquareuserString, qrsquareUserlistType);
 			if (request == 1 || request == 2) {
 				String qrusersmenagersString = jsonresponse.getJSONArray("QRUserMenagers").toString();
 				qrusersmenagersfromJson = (List<QRUserMenager>) gson.fromJson(qrusersmenagersString, qrusermenagerlistType);
 			} else if (request == 3) {
 				String qrsquaresString = jsonresponse.getJSONArray("QRSquares").toString();
-				qrsquaresfromJson = (List<QRSquare>) gson.fromJson(qrsquaresString, qrsquareslistType);
+				qrsquaresfromJson = (List<String>) gson.fromJson(qrsquaresString, qrsquareslistType);
 			}
 			boolean qrsquareusersAvaliable = qrsquareusersfromJson != null && !qrsquareusersfromJson.isEmpty();
 			boolean qrusermenagersAvaliable = qrusersmenagersfromJson != null && !qrusersmenagersfromJson.isEmpty();
+			boolean qrsquaresAvaliable = qrsquaresfromJson != null && !qrsquaresfromJson.isEmpty();
 			if (request == 1 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
-					Log.d("QRExplorer", "adding a QRExplorerRow user:" + qrsquareusersfromJson.get(i).getUser());
+					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
+					// qrsquareusersfromJson.get(i).getUser());
 					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), 1));
+
+				}
+			}
+			if (request == 2 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
+				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
+					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
+					// qrsquareusersfromJson.get(i).getUser());
+					if (qrsquareusersfromJson.get(i).getIsnew()) {
+						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), null, 2));
+					} else {
+						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), 2));
+					}
+
+				}
+			}
+			if (request == 3 && qrsquareusersAvaliable && qrsquaresAvaliable && qrsquareusersfromJson.size() == qrsquaresfromJson.size()) {
+				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
+					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
+					// qrsquareusersfromJson.get(i).getUser());
+
+					Class<? extends QRSquare> squareclass = (Class<? extends QRSquare>) Class.forName("com.ogc.model." + qrsquaresfromJson.get(i));
+					String stringjsonsquare = (new JSONObject(jsonresponse.getJSONArray("QRSquareUser").get(i).toString())).getString("square");
+					QRSquare cast = (QRSquare) gson.fromJson(stringjsonsquare, squareclass);
+					rows.add(new QRExplorerRow(cast, squareclass.getName(), qrsquareusersfromJson.get(i)));
+					// rows.add(new QRExplorerRow(qrsquaresfromJson.get(i),
+					// qrsquareusersfromJson.get(i)));
+
 				}
 			}
 			// if (qrsquareusersfromJson != null &&
@@ -249,7 +314,7 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 	@Override
 	public void draw(Canvas canvas) {
 
-		super.draw(canvas);
+		// super.draw(canvas);
 		background.setColor(Color.rgb(93, 181, 224));
 		if (bounds == null) {
 			canvas.drawRect(new Rect(0, 0, 100, 100), background);
@@ -265,27 +330,34 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 				}
 			}
 		}
+		QRSquare focusedSquare = getQRSquare();
 		if (focusedSquare != null) {
 			int xr = (bounds.right - bounds.left) / 10;
 			int xl = ((bounds.right - bounds.left) * 3) / 10;
 			int yt = ((bounds.bottom - bounds.top)) / 10;
 			int yb = yt + (bounds.right - bounds.left) / 5;
 
-			
 			Paint backgroundpaint = new Paint();
-			backgroundpaint.setColor(Color.rgb(200,200,200));
-			canvas.drawRect(new RectF(xr-33,yt-33,xl+33,yb+yt), backgroundpaint);
-			
+			backgroundpaint.setColor(Color.rgb(200, 200, 200));
+			canvas.drawRect(new RectF(xr - 33, yt - 33, xl + 33, yb + yt), backgroundpaint);
+
 			focusedSquare.setOne(new PointF(xr, yb));
 			focusedSquare.setTwo(new PointF(xr, yt));
 			focusedSquare.setThree(new PointF(xl, yt));
 			focusedSquare.setFour(new PointF(xl, yb));
+			setQRSquare(focusedSquare);
 			focusedSquare.draw(canvas, this);
+
+			RelativeLayout.LayoutParams exploreparams = new RelativeLayout.LayoutParams(xl - xr, 100);
+			exploreparams.leftMargin = xr;
+			exploreparams.topMargin = yb + (2 * yt);
+			explorebutton.setLayoutParams(exploreparams);
+			RelativeLayout.LayoutParams backparams = new RelativeLayout.LayoutParams(xl - xr, 100);
+			backparams.leftMargin = xr;
+			backparams.bottomMargin = 5;
+			backbutton.setLayoutParams(backparams);
 			
-			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(xl - xr, 100);
-			params.leftMargin = xr;
-			params.topMargin = yb + (2 * yt);
-			explorebutton.setLayoutParams(params);
+			
 			RelativeLayout.LayoutParams imageparams = new RelativeLayout.LayoutParams(50, 50);
 			imageparams.leftMargin = xr;
 			imageparams.topMargin = yb;
@@ -299,6 +371,7 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 	}
 
 	private boolean getFocusedQRTouched(MotionEvent event) {
+		QRSquare focusedSquare = getQRSquare();
 		if (focusedSquare != null) {
 			Quadrilateral polygon = new Quadrilateral();
 			polygon.addVertex(new Point(focusedSquare.getTwo().x, focusedSquare.getTwo().y));
@@ -318,12 +391,11 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 			int yt = ((bounds.bottom - bounds.top)) / 10;
 			int yb = yt + (bounds.right - bounds.left) / 5;
 
-			RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) explorebutton.getLayoutParams();
 			Quadrilateral polygon = new Quadrilateral();
-			polygon.addVertex(new Point(layoutParams.leftMargin, layoutParams.topMargin));
-			polygon.addVertex(new Point(layoutParams.leftMargin + layoutParams.width, layoutParams.topMargin));
-			polygon.addVertex(new Point(layoutParams.leftMargin + layoutParams.width, layoutParams.topMargin + layoutParams.height));
-			polygon.addVertex(new Point(layoutParams.leftMargin, layoutParams.topMargin + layoutParams.height));
+			polygon.addVertex(new Point(xr, yb + (2 * yt)));
+			polygon.addVertex(new Point(xl, yb + (2 * yt)));
+			polygon.addVertex(new Point(xl, yb + (2 * yt) + 100));
+			polygon.addVertex(new Point(xr, yb + (2 * yt) + 100));
 			return Utility.PointInPolygon(new Point(event.getX(), event.getY()), polygon);
 		} else {
 			return false;
@@ -334,7 +406,6 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 		if (!rows.isEmpty()) {
 			for (int i = 0; i < rows.size(); i++) {
 				if (rows.get(i).touched(event) != null) {
-					setFocusedSquare(rows.get(i).touched(event));
 					return i;
 				}
 			}
@@ -344,42 +415,35 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 
 	@Override
 	public void setQRSquareScrollable(int horizontal, int vertical) {
-		// TODO Auto-generated method stub
+		// don't need this since clicking on qr must be managed in another way
+		// if (square != null) {
+		// square.setMaxHorizontalScroll(horizontal);
+		// square.setMaxVerticalScroll(vertical);
+		// }
 
-	}
-
-	@Override
-	public void setActionContext(String string) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void performAction(String string) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public QRUser getUser() {
-		return user;
 	}
 
 	public QRSquare getFocusedSquare() {
-		return focusedSquare;
+		return getQRSquare();
 	}
 
 	public void setFocusedSquare(QRSquare focusedSquare) {
-		this.focusedSquare = focusedSquare;
+		Gson gson = GsonHelper.customGson;
 		if (explorebutton != null) {
 			if (focusedSquare == null) {
+				Log.d("QRExplorer", "SETTING FOCUSED SQUARE: null");
+				setQRSquare(null);
 				explorebutton.setVisibility(INVISIBLE);
 				text.setVisibility(INVISIBLE);
 				image.setVisibility(INVISIBLE);
 			} else {
+				Log.d("QRExplorer", "TYPE : " + focusedSquare.getClass().getSimpleName() + " SETTING FOCUSED SQUARE:" + (gson.toJson(focusedSquare)).toString());
+				// setQRSquare(gson.fromJson(gson.toJson(focusedSquare).toString(),
+				// focusedSquare.getClass()));
+				setQRSquare(focusedSquare);
 				if (!(focusedSquare instanceof QRSquareUserRepresentation)) {
 					explorebutton.setVisibility(VISIBLE);
-				}else{
+				} else {
 					explorebutton.setVisibility(INVISIBLE);
 				}
 
@@ -387,6 +451,22 @@ public class QRExplorer extends SurfaceView implements SurfaceHolder.Callback, S
 				image.setVisibility(VISIBLE);
 			}
 		}
+	}
+
+	public Button getBackButton() {
+		return backbutton;
+
+	}
+
+	public void setBackButton(Button backButton) {
+		this.backbutton = backButton;
+		explorebutton.setOnClickListener(this);
+	}
+
+	public void gotoScanActivity() {
+		Intent intent = new Intent(getContext(), ScanActivity.class);
+		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
+		getContext().startActivity(intent);
 	}
 
 }

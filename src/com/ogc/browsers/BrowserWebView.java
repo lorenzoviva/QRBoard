@@ -5,12 +5,12 @@ import java.net.URL;
 
 import android.util.Log;
 
-import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.ARLayerView;
 import com.ogc.model.QRWebPage;
 
 public class BrowserWebView extends LWebView {
 
-	public BrowserWebView(SquareHolderView arview, QRWebPage qrsquare, int width, int height) {
+	public BrowserWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 	}
 

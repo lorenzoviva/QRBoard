@@ -2,14 +2,13 @@ package com.ogc.browsers;
 
 import android.util.Log;
 
-import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.ARLayerView;
 import com.ogc.model.QRUsersWebPage;
-import com.ogc.model.QRWebPage;
 
 public class UsersWebView extends LWebView{
 	
 
-	public UsersWebView(SquareHolderView arview, QRUsersWebPage qrsquare, int width, int height) {
+	public UsersWebView(ARLayerView arview, QRUsersWebPage qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 	}
 

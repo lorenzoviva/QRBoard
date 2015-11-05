@@ -2,28 +2,27 @@ package com.ogc.model.special;
 
 import android.util.Log;
 
-import com.ogc.action.Action;
-import com.ogc.model.QRInternalWebPage;
+import com.ogc.model.QRRepresentation;
 import com.ogc.model.QRSquare;
 
-public class QRCreationChooserPage extends QRInternalWebPage {
+public class QRCreationChooserPage extends QRRepresentation{
 
 	public QRCreationChooserPage(QRSquare realQR, String choises) {
-		super(realQR.getText(), getHtmlFromChoises(choises));
+		super(realQR.getText(), getStaticHtml(choises));
 		setOne(realQR.getOne());
 		setTwo(realQR.getTwo());
 		setThree(realQR.getThree());
 		setFour(realQR.getFour());
 	}
-
-	public static String getHtmlFromChoises(String choises) {
-		if (!choises.equals(null)) {
+	
+	public static String getStaticHtml(String params) {
+		if (!params.equals(null)) {
 			String html = "<!DOCTYPE html><html><head><link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'></head><body style=\"margin: 0px;\"><table height='250px' width='250px'  cellpadding='0' cellspacing='0' style=\"table-layout: fixed;\"><tbody>";
 
-			if (choises.endsWith(",")) {
-				choises = choises.substring(0, choises.length() - 1);
+			if (params.endsWith(",")) {
+				params = params.substring(0, params.length() - 1);
 			}
-			String[] choisesArray = choises.split(",");
+			String[] choisesArray = params.split(",");
 			for (int i = 0; i < 16; i++) {
 				if (choisesArray.length > i) {
 					String qrType = choisesArray[i];

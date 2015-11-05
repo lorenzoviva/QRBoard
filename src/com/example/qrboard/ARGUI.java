@@ -27,7 +27,7 @@ import com.ogc.graphics.Utility;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 
-public class ARGUI {
+public class ARGUI{
 
 	private Result result;
 	private QRSquare qrsquare;
@@ -158,7 +158,7 @@ public class ARGUI {
 			this.qrsquare = qrsquare;
 		} else {
 			// if(qrsquare == null){
-			Log.d("EXCEPTION", "not forced, action:" + action.getClass().getSimpleName());
+//			Log.d("EXCEPTION", "not forced, action:" + action.getClass().getSimpleName());
 			// }
 
 			action.addQRParameter(qrsquare);

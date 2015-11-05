@@ -2,7 +2,7 @@ package com.ogc.browsers;
 
 import android.util.Log;
 
-import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.ARLayerView;
 import com.ogc.model.QRUserMenager;
 import com.ogc.model.RoleType;
 
@@ -10,7 +10,7 @@ public class UserMenagerWebView extends InternalWebView{
 
 	public RoleType role;
 	
-	public UserMenagerWebView(SquareHolderView arview, QRUserMenager qrsquare, int width, int height) {
+	public UserMenagerWebView(ARLayerView arview, QRUserMenager qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 	}
 

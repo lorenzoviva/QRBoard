@@ -18,7 +18,8 @@ public class QRSquareUser {
 	private QRUser user;
 	private RoleType role;
 	private Date date;
-
+	private boolean isnew;
+	
 	public QRSquareUser() {
 	}
 
@@ -28,6 +29,7 @@ public class QRSquareUser {
 		this.user = user;
 		this.role = role;
 		this.date = new Date();
+		isnew = false;
 	}
 
 	public QRSquare getSquare() {
@@ -103,6 +105,14 @@ public class QRSquareUser {
 		paramap.put("role", gson.toJson(role));
 		paramap.put("date",gson.toJson(date));
 		return new JSONObject(paramap);
+	}
+
+	public boolean getIsnew() {
+		return isnew;
+	}
+
+	public void setIsnew(boolean isnew) {
+		this.isnew = isnew;
 	}
 
 }

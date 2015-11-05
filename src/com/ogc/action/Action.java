@@ -2,14 +2,11 @@ package com.ogc.action;
 
 import java.util.Locale;
 
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
 import com.example.qrboard.ARGUI;
-import com.google.gson.JsonObject;
 import com.ogc.dbutility.JSONParser;
 import com.ogc.model.QRSquare;
 

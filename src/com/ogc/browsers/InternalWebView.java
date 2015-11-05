@@ -2,17 +2,16 @@ package com.ogc.browsers;
 
 import android.util.Log;
 
-import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.ARLayerView;
 import com.ogc.model.QRInternalWebPage;
-import com.ogc.model.QRUserMenager;
 import com.ogc.model.RoleType;
 
 public class InternalWebView extends LWebView{
 
 		private RoleType role;
-		protected SquareHolderView arview;
+		protected ARLayerView arview;
 		
-		public InternalWebView(SquareHolderView arview, QRInternalWebPage qrsquare, int width, int height) {
+		public InternalWebView(ARLayerView arview, QRInternalWebPage qrsquare, int width, int height) {
 			super(arview, qrsquare, width, height);
 			this.arview = arview;
 		}

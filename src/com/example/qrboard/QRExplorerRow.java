@@ -13,10 +13,10 @@ import com.ogc.graphics.Quadrilateral;
 import com.ogc.graphics.Utility;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRSquareUser;
-import com.ogc.model.QRSquareUserRepresentation;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
-import com.ogc.model.QRUserRepresentation;
+import com.ogc.model.special.QRSquareUserRepresentation;
+import com.ogc.model.special.QRUserRepresentation;
 
 public class QRExplorerRow {
 
@@ -24,16 +24,20 @@ public class QRExplorerRow {
 	private QRUser qru = null;
 	private QRUserRepresentation qrur = null;
 	private QRSquare qrs = null;
+	private String qrst;
 	private QRSquareUser qrsu = null;
+	
 	private QRSquareUserRepresentation qrsur = null;
 	private int request;
 	private int size = 300;
 	Paint externalmargin = new Paint();
 	Paint internalmargin = new Paint();
 
-	public QRExplorerRow(QRSquare qrs, QRSquareUser qrsu) {
+	public QRExplorerRow(QRSquare qrs,String qrst,QRSquareUser qrsu) {
 		this.qrs = qrs;
 		this.qrsu = qrsu;
+		this.qrst = qrst;
+		this.qrsur = new QRSquareUserRepresentation(qrsu);
 		request = 3;
 	}
 
@@ -92,7 +96,7 @@ public class QRExplorerRow {
 			internalmargin.setColor(Color.rgb(0, 0, 0));
 			internalmargin.setStrokeWidth(2);
 		}
-		if (request == 1) {
+		if (request == 1 || request == 2) {
 			if (qrum != null) {
 				qrum.setOne(new PointF((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size));
 				qrum.setTwo(new PointF((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + i * size));
@@ -114,6 +118,29 @@ public class QRExplorerRow {
 				qrur.setThree(new PointF((bounds.right - bounds.left), -scroll + bounds.top + i * size));
 				qrur.setFour(new PointF((bounds.right - bounds.left), -scroll + bounds.top + (i + 1) * size));
 				qrur.draw(canvas, qrExplorer);
+			}
+		}else{
+			if (qrsur != null) {
+				qrsur.setOne(new PointF((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + (i + 1) * size));
+				qrsur.setTwo(new PointF((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + i * size));
+				qrsur.setThree(new PointF((bounds.right - bounds.left) - 1 * size, -scroll + bounds.top + i * size));
+				qrsur.setFour(new PointF((bounds.right - bounds.left) - 1 * size, -scroll + bounds.top + (i + 1) * size));
+				qrsur.draw(canvas, qrExplorer);
+
+			}
+			if (qrs != null) {
+				qrs.setOne(new PointF((bounds.right - bounds.left) - 1 * size, -scroll + bounds.top + (i + 1) * size));
+				qrs.setTwo(new PointF((bounds.right - bounds.left) - 1 * size, -scroll + bounds.top + i * size));
+				qrs.setThree(new PointF((bounds.right - bounds.left), -scroll + bounds.top + i * size));
+				qrs.setFour(new PointF((bounds.right - bounds.left), -scroll + bounds.top + (i + 1) * size));
+				Class<? extends QRSquare> squareclass;
+				try {
+					squareclass = (Class<? extends QRSquare>) Class.forName(qrst);
+					(squareclass.cast(qrs)).draw(canvas, qrExplorer);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		canvas.drawLine((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size, (bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i) * size, externalmargin);

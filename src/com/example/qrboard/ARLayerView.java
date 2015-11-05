@@ -16,11 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.zxing.Result;
+import com.ogc.action.Action;
 import com.ogc.graphics.Point;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 
-public class ARLayerView extends SurfaceView implements SquareHolderView{
+public class ARLayerView extends SurfaceView{
 
 	private ARGUI argui = null;
 
@@ -177,6 +178,11 @@ public class ARLayerView extends SurfaceView implements SquareHolderView{
 
 	public void setActionContext(String actionContext) {
 		argui.setActionContext(actionContext);
+	}
+
+	public Action getRealAction(String action) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return argui.getRealAction(action);
 	}
 
 }

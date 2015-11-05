@@ -7,7 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.ARLayerView;
 import com.ogc.browsers.UserMenagerWebView;
 
 public class QRUserMenager extends QRInternalWebPage {
@@ -29,7 +29,7 @@ public class QRUserMenager extends QRInternalWebPage {
 	
 
 	@Override
-	public void draw(Canvas canvas, SquareHolderView arview) {
+	public void draw(Canvas canvas, ARLayerView arview) {
 //		super.draw(canvas, arview);
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);

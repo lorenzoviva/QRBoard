@@ -1,11 +1,11 @@
 package com.ogc.browsers;
 
-import com.example.qrboard.SquareHolderView;
+import com.example.qrboard.ARLayerView;
 import com.ogc.model.QRWebPageEditor;
 
 public class PageEditorWebView extends LWebView{
 
-	public PageEditorWebView(SquareHolderView arview, QRWebPageEditor qrsquare, int width, int height) {
+	public PageEditorWebView(ARLayerView arview, QRWebPageEditor qrsquare, int width, int height) {
 		super(arview, qrsquare, width, height);
 		// TODO Auto-generated constructor stub
 	}

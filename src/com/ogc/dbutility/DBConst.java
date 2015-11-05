@@ -1,7 +1,7 @@
 package com.ogc.dbutility;
 
 public class DBConst {
-	public static final String ip = "10.25.218.14";
+	public static final String ip = "192.168.1.2";
 	public static final String ip_port = ip + ":8080";
 	public static final String app_name = "QRWebService";
 	public static final String url = "http://" + ip_port + "/"+app_name+"/";

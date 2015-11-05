@@ -26,11 +26,13 @@ import com.google.gson.GsonHelper;
 import com.google.gson.reflect.TypeToken;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
+import com.ogc.model.QRRepresentation;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
 import com.ogc.model.QRUsersWebPage;
+import com.ogc.model.special.QRUserRepresentation;
 
 public class Users extends Action {
 	private QRSquare qrSquare = null;
@@ -68,12 +70,16 @@ public class Users extends Action {
 
 			Map<String, Object> paramap = new HashMap<String, Object>();
 			ACL acl = new ACL(true, true);
-			paramap.put("text", qrSquare.getText());
+			if(!(qrSquare instanceof QRUserRepresentation)){
+				paramap.put("text", qrSquare.getText());
+				paramap.put("request", 1);
+			}else{
+				paramap.put("QRUser", ((QRUserRepresentation) qrSquare).getUser().getId());
+				paramap.put("request", 3);
+			}
 			if(qrUser!=null){
 				paramap.put("user", qrUser.getId());
 			}
-			paramap.put("request", 1);
-
 			JSONObject paramjson = new JSONObject(paramap);
 
 			Map<String, Object> map = new HashMap<String, Object>();
