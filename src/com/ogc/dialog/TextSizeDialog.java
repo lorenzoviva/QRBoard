@@ -1,4 +1,9 @@
-package com.example.qrboard;
+package com.ogc.dialog;
+import com.example.qrboard.FreeDraw;
+import com.example.qrboard.R;
+import com.example.qrboard.R.id;
+import com.example.qrboard.R.layout;
+
 import android.app.Dialog;
 import android.view.MotionEvent;
 import android.view.View;

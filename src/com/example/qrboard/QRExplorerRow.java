@@ -6,52 +6,70 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.view.MotionEvent;
-import android.widget.Button;
 
 import com.ogc.graphics.Point;
 import com.ogc.graphics.Quadrilateral;
 import com.ogc.graphics.Utility;
+import com.ogc.model.ACL;
+import com.ogc.model.QRRepresentation;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
+import com.ogc.model.special.QRAccessDaniedWebPage;
 import com.ogc.model.special.QRSquareUserRepresentation;
 import com.ogc.model.special.QRUserRepresentation;
 
 public class QRExplorerRow {
 
-	private QRUserMenager qrum = null;
+	private QRSquare qrum = null;
 	private QRUser qru = null;
-	private QRUserRepresentation qrur = null;
+	private QRRepresentation qrur = null;
 	private QRSquare qrs = null;
 	private String qrst;
 	private QRSquareUser qrsu = null;
-	
-	private QRSquareUserRepresentation qrsur = null;
+	private ACL acl;
+	private QRRepresentation qrsur = null;
 	private int request;
 	private int size = 300;
 	Paint externalmargin = new Paint();
 	Paint internalmargin = new Paint();
 
-	public QRExplorerRow(QRSquare qrs,String qrst,QRSquareUser qrsu) {
+	public QRExplorerRow(QRSquare qrs,String qrst,QRSquareUser qrsu, ACL acl) {
+		if(acl.isRead()){
+			this.qrs = qrs;
+			this.qrst = qrst;
+		}else{
+			this.qrs = new QRAccessDaniedWebPage(qrs.getText());
+			this.qrst = QRAccessDaniedWebPage.class.getName();
+		}
 		this.qrs = qrs;
 		this.qrsu = qrsu;
-		this.qrst = qrst;
 		this.qrsur = new QRSquareUserRepresentation(qrsu);
+		this.acl = acl;
 		request = 3;
 	}
 
-	public QRExplorerRow(QRUserMenager qrum, QRUser qru, QRSquareUser qrsu, int request) {
-		this.qrum = qrum;
-		this.qru = qru;
+	public QRExplorerRow(QRUserMenager qrum, QRUser qru, QRSquareUser qrsu, ACL acl, int request) {
+
 		this.qrur = new QRUserRepresentation(qru);
-		this.qrsu = qrsu;
 		this.qrsur = new QRSquareUserRepresentation(qrsu);
+		if(acl.isRead()){
+			this.qrum = qrum;
+		}else{
+			this.qrum = new QRAccessDaniedWebPage(qrum.getText());
+			this.qrur = new QRAccessDaniedWebPage(qrur.getText());
+			this.qrsur = new QRAccessDaniedWebPage(qrsur.getText());
+		}
+		this.qru = qru;
+		this.acl = acl;
+		this.qrsu = qrsu;
+		
 		this.request = request;
 
 	}
 
-	public QRUserMenager getQrum() {
+	public QRSquare getQrum() {
 		return qrum;
 	}
 
@@ -193,6 +211,14 @@ public class QRExplorerRow {
 
 	public int getSize() {
 		return size;
+	}
+
+	public ACL getAcl() {
+		return acl;
+	}
+
+	public void setAcl(ACL acl) {
+		this.acl = acl;
 	}
 
 }

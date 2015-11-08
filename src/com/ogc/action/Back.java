@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.ogc.model.QRSquare;
 
 public class Back extends Action{
@@ -55,10 +56,10 @@ public class Back extends Action{
 		}
 	}
 
-//	@Override
-//	public Bitmap getIcon(View view) {
-//		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.icon_back);;
-//	}
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.back32x32);
+	}
 
 	
 	

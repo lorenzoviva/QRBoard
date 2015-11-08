@@ -23,12 +23,12 @@ import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
 import com.ogc.model.QRWebPage;
+import com.ogc.model.special.QRAccessDaniedWebPage;
 
 public class Request extends Action {
 	private QRSquare qrSquare = null;
 	private QRUser qrUser = null;
 	private ARGUI argui;
-	private static String accessDaniedHtml = "You cant see this qr!";
 	
 	@Override
 	public void execute() {
@@ -96,8 +96,8 @@ public class Request extends Action {
 
 	@Override
 	public void prepare(ARGUI argui) {
-		QRWebPage accessDaniedWebPage = new QRWebPage(argui.getQRSquare().getText(), accessDaniedHtml);
-		argui.setQRSquare(accessDaniedWebPage, true);
+//		QRAccessDaniedWebPage accessDaniedWebPage = new QRAccessDaniedWebPage(argui.getQRSquare().getText());
+//		argui.setQRSquare(accessDaniedWebPage, true);
 		
 	}
 

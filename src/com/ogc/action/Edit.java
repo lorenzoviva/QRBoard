@@ -1,9 +1,13 @@
 package com.ogc.action;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 
@@ -47,5 +51,8 @@ public class Edit extends Action{
 		// TODO Auto-generated method stub
 		
 	}
-
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
+	}
 }

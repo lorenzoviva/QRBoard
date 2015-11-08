@@ -36,6 +36,7 @@ import com.ogc.dbutility.DBConst;
 import com.ogc.dbutility.JSONParser;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.QRSquare;
+import com.ogc.model.special.QRAccessDaniedWebPage;
 
 public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 
@@ -190,7 +191,16 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 							String type = jsonresponse.getString("type");
 							String jsonstring = jsonresponse.getJSONObject("QRSquare").toString();
 							String actions = jsonresponse.getString("action");
-							QRSquare fromJson = (QRSquare) gson.fromJson(jsonstring, Class.forName(type));
+							QRSquare fromJson =  null;
+							if(!actions.toLowerCase(Locale.ROOT).contains("read,")){
+								
+								fromJson = new QRAccessDaniedWebPage(((QRSquare) gson.fromJson(jsonstring, Class.forName(type))).getText());
+							}else{
+								actions = actions.replace("read,", "");
+								fromJson = (QRSquare) gson.fromJson(jsonstring, Class.forName(type));
+							}
+								
+							
 							// Log.d("result:",
 							// result.getResultPoints()[0].toString());
 							state = 2;

@@ -36,6 +36,7 @@ import com.ogc.action.Action;
 import com.ogc.graphics.Point;
 import com.ogc.graphics.Quadrilateral;
 import com.ogc.graphics.Utility;
+import com.ogc.model.ACL;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
@@ -202,7 +203,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 			Log.d("surface setup", "surface setup");
 			String qrsquareuserString = jsonresponse.getJSONArray("QRSquareUser").toString();
-
+			String aclliststring = jsonresponse.getString("ACLList");
 			int request = jsonresponse.getInt("request");
 			if (jsonresponse.has("QRSquare") && jsonresponse.has("type")) {
 				String type = "com.ogc.model." + jsonresponse.getString("type");
@@ -225,9 +226,12 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			}.getType();
 			Type qrsquareslistType = new TypeToken<ArrayList<String>>() {
 			}.getType();
+			Type acllistType = new TypeToken<ArrayList<ACL>>(){
+			}.getType();
 			List<QRUserMenager> qrusersmenagersfromJson = null;
 			List<String> qrsquaresfromJson = null;
 			List<QRSquareUser> qrsquareusersfromJson = (List<QRSquareUser>) gson.fromJson(qrsquareuserString, qrsquareUserlistType);
+			List<ACL> aclList = (List<ACL>) gson.fromJson(aclliststring, acllistType);
 			if (request == 1 || request == 2) {
 				String qrusersmenagersString = jsonresponse.getJSONArray("QRUserMenagers").toString();
 				qrusersmenagersfromJson = (List<QRUserMenager>) gson.fromJson(qrusersmenagersString, qrusermenagerlistType);
@@ -238,12 +242,13 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			boolean qrsquareusersAvaliable = qrsquareusersfromJson != null && !qrsquareusersfromJson.isEmpty();
 			boolean qrusermenagersAvaliable = qrusersmenagersfromJson != null && !qrusersmenagersfromJson.isEmpty();
 			boolean qrsquaresAvaliable = qrsquaresfromJson != null && !qrsquaresfromJson.isEmpty();
+			
 			if (request == 1 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
 					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
 					// qrsquareusersfromJson.get(i).getUser());
-					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), 1));
-
+						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i),1));
+					
 				}
 			}
 			if (request == 2 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
@@ -251,9 +256,9 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
 					// qrsquareusersfromJson.get(i).getUser());
 					if (qrsquareusersfromJson.get(i).getIsnew()) {
-						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), null, 2));
+						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), null,aclList.get(i), 2));
 					} else {
-						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), 2));
+						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i),aclList.get(i), 2));
 					}
 
 				}
@@ -266,12 +271,13 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 					Class<? extends QRSquare> squareclass = (Class<? extends QRSquare>) Class.forName("com.ogc.model." + qrsquaresfromJson.get(i));
 					String stringjsonsquare = (new JSONObject(jsonresponse.getJSONArray("QRSquareUser").get(i).toString())).getString("square");
 					QRSquare cast = (QRSquare) gson.fromJson(stringjsonsquare, squareclass);
-					rows.add(new QRExplorerRow(cast, squareclass.getName(), qrsquareusersfromJson.get(i)));
+					rows.add(new QRExplorerRow(cast, squareclass.getName(), qrsquareusersfromJson.get(i),aclList.get(i)));
 					// rows.add(new QRExplorerRow(qrsquaresfromJson.get(i),
 					// qrsquareusersfromJson.get(i)));
 
 				}
 			}
+			
 			// if (qrsquareusersfromJson != null &&
 			// !qrsquareusersfromJson.isEmpty()) {
 			// for (QRSquareUser qrsu : qrsquareusersfromJson) {
@@ -350,11 +356,11 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 			RelativeLayout.LayoutParams exploreparams = new RelativeLayout.LayoutParams(xl - xr, 100);
 			exploreparams.leftMargin = xr;
-			exploreparams.topMargin = yb + (2 * yt);
+			exploreparams.topMargin = yb + yt;
 			explorebutton.setLayoutParams(exploreparams);
 			RelativeLayout.LayoutParams backparams = new RelativeLayout.LayoutParams(xl - xr, 100);
 			backparams.leftMargin = xr;
-			backparams.bottomMargin = 5;
+			backparams.topMargin = yb + yt +120;
 			backbutton.setLayoutParams(backparams);
 			
 			
@@ -460,7 +466,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 	public void setBackButton(Button backButton) {
 		this.backbutton = backButton;
-		explorebutton.setOnClickListener(this);
+		backbutton.setOnClickListener(this);
 	}
 
 	public void gotoScanActivity() {

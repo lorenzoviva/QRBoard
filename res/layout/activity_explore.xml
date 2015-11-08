@@ -44,7 +44,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
-    android:layout_marginBottom="28dp"
+    android:layout_marginLeft="20dp"
     android:text="@string/explorer_back_button_text" />
 
 </RelativeLayout>

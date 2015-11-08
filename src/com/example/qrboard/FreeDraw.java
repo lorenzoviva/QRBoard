@@ -35,6 +35,8 @@ import com.google.zxing.Result;
 import com.ogc.dbutility.DBConst;
 import com.ogc.dbutility.JSONParser;
 import com.ogc.dialog.DialogBuilder;
+import com.ogc.dialog.TextDialog;
+import com.ogc.dialog.TextSizeDialog;
 import com.ogc.model.QRFreeDraw;
 import com.ogc.model.QRSquare;
 
