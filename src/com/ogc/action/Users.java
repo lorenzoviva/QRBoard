@@ -77,6 +77,7 @@ public class Users extends Action {
 				paramap.put("QRUser", ((QRUserRepresentation) qrSquare).getUser().getId());
 				paramap.put("request", 3);
 			}
+			paramap.put("listindex", argui.getListindex());
 			if(qrUser!=null){
 				paramap.put("user", qrUser.getId());
 			}

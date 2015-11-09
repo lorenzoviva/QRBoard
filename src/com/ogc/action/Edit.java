@@ -15,6 +15,7 @@ public class Edit extends Action{
 	private QRSquare qrSquare;
 	private ARGUI argui;
 	private Context context;
+	
 	@Override
 	public void execute() {
 		super.execute();

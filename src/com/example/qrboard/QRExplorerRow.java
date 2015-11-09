@@ -17,11 +17,12 @@ import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
 import com.ogc.model.special.QRAccessDaniedWebPage;
+import com.ogc.model.special.QRCode;
 import com.ogc.model.special.QRSquareUserRepresentation;
 import com.ogc.model.special.QRUserRepresentation;
 
 public class QRExplorerRow {
-
+	private QRCode qrc = null;
 	private QRSquare qrum = null;
 	private QRUser qru = null;
 	private QRRepresentation qrur = null;
@@ -36,6 +37,7 @@ public class QRExplorerRow {
 	Paint internalmargin = new Paint();
 
 	public QRExplorerRow(QRSquare qrs,String qrst,QRSquareUser qrsu, ACL acl) {
+		this.qrc = new QRCode(qrs.getText());
 		if(acl.isRead()){
 			this.qrs = qrs;
 			this.qrst = qrst;
@@ -43,7 +45,6 @@ public class QRExplorerRow {
 			this.qrs = new QRAccessDaniedWebPage(qrs.getText());
 			this.qrst = QRAccessDaniedWebPage.class.getName();
 		}
-		this.qrs = qrs;
 		this.qrsu = qrsu;
 		this.qrsur = new QRSquareUserRepresentation(qrsu);
 		this.acl = acl;
@@ -58,8 +59,8 @@ public class QRExplorerRow {
 			this.qrum = qrum;
 		}else{
 			this.qrum = new QRAccessDaniedWebPage(qrum.getText());
-			this.qrur = new QRAccessDaniedWebPage(qrur.getText());
-			this.qrsur = new QRAccessDaniedWebPage(qrsur.getText());
+//			this.qrur = new QRAccessDaniedWebPage(qrur.getText());
+//			this.qrsur = new QRAccessDaniedWebPage(qrsur.getText());
 		}
 		this.qru = qru;
 		this.acl = acl;
@@ -100,9 +101,11 @@ public class QRExplorerRow {
 	public void setQrsu(QRSquareUser qrsu) {
 		this.qrsu = qrsu;
 	}
-
+	public int getSize(Rect bounds){
+		return (bounds.right-bounds.left)/5;
+	}
 	public void draw(Canvas canvas, QRExplorer qrExplorer, int i, Rect bounds, int scroll, boolean selected) {
-		size = (bounds.right-bounds.left)/5;
+		size = getSize(bounds);
 		if (!selected) {
 			externalmargin.setColor(Color.rgb(200, 200, 200));
 			externalmargin.setStrokeWidth(4);
@@ -138,6 +141,13 @@ public class QRExplorerRow {
 				qrur.draw(canvas, qrExplorer);
 			}
 		}else{
+			if(qrc !=  null){
+				qrc.setOne(new PointF((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + (i + 1) * size));
+				qrc.setTwo(new PointF((bounds.right - bounds.left) - 3 * size, -scroll + bounds.top + i * size));
+				qrc.setThree(new PointF((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + i * size));
+				qrc.setFour(new PointF((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + (i + 1) * size));
+				qrc.draw(canvas, qrExplorer);
+			}
 			if (qrsur != null) {
 				qrsur.setOne(new PointF((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + (i + 1) * size));
 				qrsur.setTwo(new PointF((bounds.right - bounds.left) - 2 * size, -scroll + bounds.top + i * size));

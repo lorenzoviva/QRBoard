@@ -28,6 +28,12 @@ public class ARLayerView extends SurfaceView{
 	private Button removeSquareButton;
 	private Button userButton;
 
+	
+	
+	
+	public void setListIndex(int index){
+		argui.setListindex(index);
+	}
 	public ARLayerView(Context context) {
 		super(context);
 		setWillNotDraw(false);

@@ -36,7 +36,10 @@ public class ARGUI{
 	private String useractions;
 	private String lastactions;
 	private List<String> actions = new ArrayList<String>();
+	private int listindex = 0; // in actions witch needs more pages of data to load
+	
 
+	//this index tells us what is the currently last page index.
 	private int hover = -1;
 	private String clickedaction = "";
 	private QRUser user = null;
@@ -387,6 +390,13 @@ public class ARGUI{
 
 	public String getActionContext() {
 		return actionContext;
+	}
+	public int getListindex() {
+		return listindex;
+	}
+
+	public void setListindex(int listindex) {
+		this.listindex = listindex;
 	}
 
 	public void setActionContext(String actionContext) {
