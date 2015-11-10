@@ -64,6 +64,11 @@ public class ARGUI{
 		intent.putExtra("jsonFreeDraw", jsonObject.toString());
 		context.startActivity(intent);
 	}
+	public void openEditWebPageActivity(Context context) {
+		Intent intent = new Intent(context, EditWebPageActivity.class);
+//		intent.putExtra("jsonFreeDraw", jsonObject.toString());
+		context.startActivity(intent);
+	}
 
 	public void draw(Canvas canvas, ARLayerView arview) {
 		if (qrsquare != null && (!actions.isEmpty() && actions.size() > 0)) {

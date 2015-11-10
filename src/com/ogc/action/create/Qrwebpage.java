@@ -16,7 +16,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.qrboard.ARGUI;
-import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.ogc.action.Action;
 import com.ogc.dbutility.DBConst;
@@ -24,12 +23,12 @@ import com.ogc.model.ACL;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRWebPage;
-import com.ogc.model.QRWebPageEditor;
 
 public class Qrwebpage extends Action{
 	ARGUI argui;
 	QRSquare qrSquare;
 	QRUser qrUser;
+	private Context context;
 	
 	@Override
 	public void execute() {
@@ -43,6 +42,7 @@ public class Qrwebpage extends Action{
 		this.argui = argui;
 		qrUser = argui.getUser();
 		qrSquare = argui.getQRSquare();
+		this.context = context;
 		execute();
 		
 	}
@@ -78,12 +78,8 @@ public class Qrwebpage extends Action{
 			if(qrUser!=null){
 				paramap.put("user", qrUser.getId());
 				paramap.put("owner", qrUser.getId());
-				
 			}
-			
-
 			JSONObject paramjson = new JSONObject(paramap);
-
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("action", "create");
 			map.put("parameters", paramjson);
@@ -91,7 +87,6 @@ public class Qrwebpage extends Action{
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("json", json.toString()));
-			
 			try {
 				JSONObject jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "POST", params);
 				boolean s = false;
@@ -100,11 +95,7 @@ public class Qrwebpage extends Action{
 				s = jsonresponse.getBoolean("success");
 				if (s) {
 					QRWebPage newsquare = (GsonHelper.customGson).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRWebPage.class);
-					QRWebPageEditor qrChooser = new QRWebPageEditor(newsquare);
-					qrChooser.setShape(qrSquare);
-					argui.setQRSquare(qrChooser, false);
-					argui.setActionContext("create.qrwebpage");
-					argui.finishAction("save,access,add,edit,remove,exit,");
+					argui.openEditWebPageActivity(context);
 				} else {
 					argui.finishAction("Unable to create a web page");
 				}

@@ -31,7 +31,6 @@ import com.ogc.model.QRFreeDraw;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRWebPage;
-import com.ogc.model.QRWebPageEditor;
 
 public class Qrfreedraw extends Action{
 

@@ -10,10 +10,21 @@ import com.ogc.model.QRUser;
 public class Qrwebpage extends Action{
 	
 	private ARGUI argui;
-	private QRSquare qrSquare;
-	private QRUser user;
 	private Context context;
 	
+	
+	@Override
+	public void execute() {
+		argui.setActionContext("");
+		argui.openEditWebPageActivity(context);
+	}
+	@Override
+	public void perform(ARGUI argui, Context context) {
+		this.argui = argui;
+		this.context = context;
+		execute();
+
+	}
 	@Override
 	public int getColor(ARGUI argui) {
 		// TODO Auto-generated method stub

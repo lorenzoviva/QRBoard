@@ -214,10 +214,6 @@ public class QRExplorerRow {
 		return null;
 	}
 
-	public void onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-
-	}
 
 	public int getSize() {
 		return size;

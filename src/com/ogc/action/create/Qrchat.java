@@ -1,6 +1,5 @@
 package com.ogc.action.create;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,24 +12,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.qrboard.ARGUI;
-import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.ogc.action.Action;
-import com.ogc.action.create.Qrwebpage.QRSquareAction;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
 import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
-import com.ogc.model.QRWebPage;
-import com.ogc.model.QRWebPageEditor;
 
 public class Qrchat extends Action{
 

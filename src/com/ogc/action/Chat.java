@@ -46,13 +46,13 @@ public class Chat extends Action{
 
 		}
 		argui.finishAction("");
+		argui.setActionContext("");
 		context.startActivity(intent);
 		
 		argui.setQRSquare(null, true);
 		if (argui.getAction() != null) {
 			argui.finishAction("");
 		}
-		argui.setActionContext("");
 		((Activity) context).finish();
 		
 	}
