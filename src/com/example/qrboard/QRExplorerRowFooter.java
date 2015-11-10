@@ -38,11 +38,11 @@ public class QRExplorerRowFooter {
 		this.maxusers = maxusers;
 		this.listindex = listindex;
 		this.totusers = totusers;
-		if (totusers > listindex) {
+		if (totusers > listindex + 1) {
 			forwardAllowed = true;
 			forwardIcon = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
 		}
-		if (listindex > maxusers) {
+		if (listindex + 1 > maxusers) {
 			backAllowed = true;
 			backIcon = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
 		}
@@ -50,15 +50,15 @@ public class QRExplorerRowFooter {
 
 	public int getForwardIndex() {
 		if (listindex != -1) {
-			return listindex;
+			return listindex + 1;
 		} else {
 			return 0;
 		}
 	}
 
 	public int getBackIndex() {
-		if (listindex != -1 && maxusers != -1) {
-			return listindex - maxusers;
+		if ((listindex != -1 && maxusers != -1) && (listindex - (maxusers * 2 - 1) >= 0)) {
+			return listindex - (maxusers * 2 - 1);
 		} else {
 			return 0;
 		}
@@ -93,19 +93,20 @@ public class QRExplorerRowFooter {
 		canvas.drawLine((bounds.right - bounds.left) - 2 * width, top + bounds.top + height, (bounds.right - bounds.left) - 2 * width, top + bounds.top, internalmargin);
 		canvas.drawLine((bounds.right - bounds.left) - width, top + bounds.top + height, (bounds.right - bounds.left) - width, top + bounds.top, internalmargin);
 		if (maxusers != -1 && listindex != -1 && totusers != -1) {
-			String text = listindex + "/" + totusers;
+			String text = listindex + 1 + "/" + totusers;
 			canvas.drawText(text, (bounds.right - bounds.left) - 2 * width + (width / 2), (top + bounds.top) + (height / 2), textPaint);
 		}
 		if (backAllowed) {
-			canvas.drawBitmap(backIcon, (bounds.right - bounds.left) - 5 * (width/2) -(backIcon.getWidth()/2),top + bounds.top+(height/2) - (backIcon.getHeight()/2), internalmargin);
-			backRect = new Rect((bounds.right - bounds.left) - (3*width),  top + bounds.top, (bounds.right - bounds.left) - (2*width),  top + bounds.top + height);
+			canvas.drawBitmap(backIcon, (bounds.right - bounds.left) - 5 * (width / 2) - (backIcon.getWidth() / 2), top + bounds.top + (height / 2) - (backIcon.getHeight() / 2), internalmargin);
+			backRect = new Rect((bounds.right - bounds.left) - (3 * width), top + bounds.top, (bounds.right - bounds.left) - (2 * width), top + bounds.top + height);
 		}
-		if(forwardAllowed){
-			canvas.drawBitmap(forwardIcon, (bounds.right - bounds.left) - (width/2) -(forwardIcon.getWidth()/2),top + bounds.top+(height/2) - (forwardIcon.getHeight()/2), internalmargin);
-			forwardRect = new Rect((bounds.right - bounds.left) - (width),  top + bounds.top, (bounds.right - bounds.left),  top + bounds.top + height);
-			
+		if (forwardAllowed) {
+			canvas.drawBitmap(forwardIcon, (bounds.right - bounds.left) - (width / 2) - (forwardIcon.getWidth() / 2), top + bounds.top + (height / 2) - (forwardIcon.getHeight() / 2), internalmargin);
+			forwardRect = new Rect((bounds.right - bounds.left) - (width), top + bounds.top, (bounds.right - bounds.left), top + bounds.top + height);
+
 		}
 	}
+
 	public boolean touchOnRect(MotionEvent event, Rect rect) {
 		if (rect != null) {
 			Quadrilateral polygon = new Quadrilateral();
@@ -118,6 +119,7 @@ public class QRExplorerRowFooter {
 			return false;
 		}
 	}
+
 	public int touched(MotionEvent event) {
 
 		if (touchOnRect(event, backRect)) {
