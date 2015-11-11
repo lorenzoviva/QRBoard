@@ -76,13 +76,17 @@ public class FreeDraw extends Activity {
 
 		Intent intent = getIntent();
 		String json = intent.getStringExtra("jsonFreeDraw");
+		long userid = -1;
 		Log.e("JSONNNN", json);
+		if(intent.hasExtra("userid")){
+			userid = intent.getLongExtra("user", -1);
+		}
 		Gson gson = com.google.gson.GsonHelper.customGson;
 		qrEntity = gson.fromJson(json, QRFreeDraw.class);
 		Bitmap bitmap = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0, qrEntity.getImg().length);
 		Log.d("BITMAP DECODED", bitmap.getWidth() + "," + bitmap.getHeight());
 		drawView.requestLayout();
-		drawView.setup(qrEntity);
+		drawView.setup(qrEntity,userid);
 		drawView.requestLayout();
 		resetAllButtonsColors();
 

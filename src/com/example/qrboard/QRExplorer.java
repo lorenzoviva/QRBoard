@@ -117,6 +117,16 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			if (rows.size() * (bounds.right - bounds.left) / 5 - height > 0) {
 				maxScroll = rows.size() * rows.get(0).getSize(bounds) + qrExplorerRowHeader.getHeight(bounds) + qrExplorerRowFooter.getHeight(bounds) - height;
 			}
+			if(bounds!=null && backbutton != null){
+				int xr = (bounds.right - bounds.left) / 10;
+				int xl = ((bounds.right - bounds.left) * 3) / 10;
+				int yt = ((bounds.bottom - bounds.top)) / 10;
+				int yb = yt + (bounds.right - bounds.left) / 5;
+				RelativeLayout.LayoutParams backparams = new RelativeLayout.LayoutParams(xl - xr, 100);
+				backparams.leftMargin = xr;
+				backparams.topMargin = yb + yt + 120;
+				backbutton.setLayoutParams(backparams);
+			}
 		}
 	}
 
@@ -231,9 +241,8 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			Log.d("surface setup", "surface setup");
 			String qrsquareuserString = jsonresponse.getJSONArray("QRSquareUser").toString();
 			String aclliststring = jsonresponse.getString("ACLList");
-			messageRequest = jsonresponse.getString("request");
-			JSONObject requestMessageObj = new JSONObject(messageRequest);
-			int request = requestMessageObj.getInt("request");
+			messageRequest = jsonresponse.getString("requestmessage");
+			int request = jsonresponse.getInt("request");
 			int maxusers = jsonresponse.getInt("maxusers");
 			int listindex = jsonresponse.getInt("listindex");
 			int totusers = jsonresponse.getInt("totusers");
@@ -287,16 +296,12 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 			if (request == 1 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
-					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
-					// qrsquareusersfromJson.get(i).getUser());
 					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 1));
 
 				}
 			}
 			if (request == 2 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
-					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
-					// qrsquareusersfromJson.get(i).getUser());
 					if (qrsquareusersfromJson.get(i).getIsnew()) {
 						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), null, aclList.get(i), 2));
 					} else {
@@ -307,46 +312,23 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			}
 			if (request == 3 && qrsquareusersAvaliable && qrsquaresAvaliable && qrsquareusersfromJson.size() == qrsquaresfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
-					// Log.d("QRExplorer", "adding a QRExplorerRow user:" +
-					// qrsquareusersfromJson.get(i).getUser());
-
 					Class<? extends QRSquare> squareclass = (Class<? extends QRSquare>) Class.forName("com.ogc.model." + qrsquaresfromJson.get(i));
 					String stringjsonsquare = (new JSONObject(jsonresponse.getJSONArray("QRSquareUser").get(i).toString())).getString("square");
 					QRSquare cast = (QRSquare) gson.fromJson(stringjsonsquare, squareclass);
 					rows.add(new QRExplorerRow(cast, squareclass.getName(), qrsquareusersfromJson.get(i), aclList.get(i)));
-					// rows.add(new QRExplorerRow(qrsquaresfromJson.get(i),
-					// qrsquareusersfromJson.get(i)));
 
 				}
 			}
-
-			// if (qrsquareusersfromJson != null &&
-			// !qrsquareusersfromJson.isEmpty()) {
-			// for (QRSquareUser qrsu : qrsquareusersfromJson) {
-			// towrite.add(qrsu.getJSON().toString()) ;
-			// Log.d("QRSUS", towrite.get(towrite.size()-1));
-			// }
-			// // QRUsersWebPage usersquare = new
-			// // QRUsersWebPage(qrSquare.getText(), qrsquareusersfromJson);
-			// // usersquare.setOne(qrSquare.getOne());
-			// // usersquare.setTwo(qrSquare.getTwo())d;
-			// // usersquare.setThree(qrSquare.getThree());
-			// // usersquare.setFour(qrSquare.getFour());
-			// // argui.setQRSquare(usersquare, true);
-			// // Log.d("FROM JSON", qrsquareusersfromJson.toString());
-			// // if (stringjsonresponse.has("action")) {
-			// // argui.setActionContext("users");
-			// // argui.finishAction(stringjsonresponse.getString("action"));
-			// // } else {
-			// // argui.finishAction("Unable to load users");
-			// // }
-			// }
-			// if(qrusersmenagersfromJson != null &&
-			// !qrusersmenagersfromJson.isEmpty()){
-			// for(QRUserMenager qrum : qrusersmenagersfromJson){
-			// towrite.add(gson.toJson(qrum));
-			// }
-			// }
+			if(bounds!=null && backbutton != null){
+				int xr = (bounds.right - bounds.left) / 10;
+				int xl = ((bounds.right - bounds.left) * 3) / 10;
+				int yt = ((bounds.bottom - bounds.top)) / 10;
+				int yb = yt + (bounds.right - bounds.left) / 5;
+				RelativeLayout.LayoutParams backparams = new RelativeLayout.LayoutParams(xl - xr, 100);
+				backparams.leftMargin = xr;
+				backparams.topMargin = yb + yt + 120;
+				backbutton.setLayoutParams(backparams);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (JsonSyntaxException e) {
@@ -520,6 +502,16 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 	public void setBackButton(Button backButton) {
 		this.backbutton = backButton;
+		if(bounds!=null && backButton != null){
+			int xr = (bounds.right - bounds.left) / 10;
+			int xl = ((bounds.right - bounds.left) * 3) / 10;
+			int yt = ((bounds.bottom - bounds.top)) / 10;
+			int yb = yt + (bounds.right - bounds.left) / 5;
+			RelativeLayout.LayoutParams backparams = new RelativeLayout.LayoutParams(xl - xr, 100);
+			backparams.leftMargin = xr;
+			backparams.topMargin = yb + yt + 120;
+			backbutton.setLayoutParams(backparams);
+		}
 		backbutton.setOnClickListener(this);
 	}
 

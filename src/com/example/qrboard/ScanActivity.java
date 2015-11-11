@@ -16,12 +16,14 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -53,21 +55,20 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 	@SuppressLint("InlinedApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 		super.onCreate(savedInstanceState);
-
 		if (Build.VERSION.SDK_INT < 16) {
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		} else {
 			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 		}
-
+		
 		setContentView(R.layout.activity_scan);
-
 		arview = (ARLayerView) findViewById(R.id.ar_view);
 		invalidator = new ActivityInvalidator(this);
 
 		this.addContentView(arview.getButtonView(), arview.getButtonViewLayoutParams());
-
+		
 	}
 
 	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {

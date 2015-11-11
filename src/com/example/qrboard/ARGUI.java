@@ -62,6 +62,9 @@ public class ARGUI{
 	public void openFreeDrawActivity(JSONObject jsonObject, Context context) {
 		Intent intent = new Intent(context, FreeDraw.class);
 		intent.putExtra("jsonFreeDraw", jsonObject.toString());
+		if(user!=null){
+			intent.putExtra("userid", user.getId());
+		}
 		context.startActivity(intent);
 	}
 	public void openEditWebPageActivity(Context context) {

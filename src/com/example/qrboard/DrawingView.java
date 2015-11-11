@@ -80,6 +80,7 @@ public class DrawingView extends View {
     private float lasty;
     private TextDrawer textDrawer;
     private Date lastTextTouch;
+    private long userid = -1;
     //queste tre variabili definiscono l'inquadramento delle variabili
     //xtras : rappresenta la traslazione horizzontale dell'immagine prima del ridimensionamento
     //un valore positivo rappresenta una traslazione verso destra
@@ -762,9 +763,10 @@ public class DrawingView extends View {
 //        }
 //    }
 //
-    public void setup(QRFreeDraw qrEntity) {
+    public void setup(QRFreeDraw qrEntity,long userid) {
         this.qrEntity = qrEntity;
         this.bitmap  = BitmapFactory.decodeByteArray(qrEntity.getImg(), 0, qrEntity.getImg().length);;
+        this.userid = userid;
         int h = this.getHeight();
         int w = this.getWidth();
 //    	Log.d("setup", "(" + bitmap.getWidth()+","+bitmap.getHeight() + ")" + "("+w+"," + h+")");
@@ -851,7 +853,9 @@ public class DrawingView extends View {
 			// Getting username and password from user inpu
 				Map<String, Object> paramap = new HashMap<String, Object>();
 				paramap.put("jsonfreedraw", GsonHelper.customGson.toJsonTree(qrEntity, QRFreeDraw.class).toString());
-
+				if(userid != -1){
+					paramap.put("userid", userid);
+				}
 				JSONObject paramjson = new JSONObject(paramap);
 
 				Map<String, Object> map = new HashMap<String, Object>();
