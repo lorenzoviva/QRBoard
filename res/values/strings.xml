@@ -149,5 +149,7 @@
     <string name="explorer_edit_info_text">Click to edit</string>
     <string name="explorer_back_button_text">Back</string>
     <string name="title_activity_edit_web_page">EditWebPageActivity</string>
-
+    <string name="esu_ok_button_text">ok</string>
+	<string name="esu_cancel_button_text">cancel</string>
+	<string name="esu_you">You</string>
 </resources>

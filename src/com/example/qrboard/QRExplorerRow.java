@@ -46,15 +46,15 @@ public class QRExplorerRow {
 			this.qrst = QRAccessDaniedWebPage.class.getName();
 		}
 		this.qrsu = qrsu;
-		this.qrsur = new QRSquareUserRepresentation(qrsu);
+		this.qrsur = new QRSquareUserRepresentation(qrsu,qrs.getText());
 		this.acl = acl;
 		request = 3;
 	}
 
-	public QRExplorerRow(QRUserMenager qrum, QRUser qru, QRSquareUser qrsu, ACL acl, int request) {
+	public QRExplorerRow(QRUserMenager qrum, QRUser qru, QRSquareUser qrsu, ACL acl, int request,QRSquare qrs) {
 
 		this.qrur = new QRUserRepresentation(qru);
-		this.qrsur = new QRSquareUserRepresentation(qrsu);
+		this.qrsur = new QRSquareUserRepresentation(qrsu,qrs.getText());
 		if(acl.isRead()){
 			this.qrum = qrum;
 		}else{

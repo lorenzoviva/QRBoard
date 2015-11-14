@@ -7,10 +7,11 @@ import com.ogc.model.QRSquareUser;
 public class QRSquareUserRepresentation extends QRRepresentation {
 
 	private QRSquareUser squareuser;
-
-	public QRSquareUserRepresentation(QRSquareUser squareuser) {
+	private String squareText;
+	public QRSquareUserRepresentation(QRSquareUser squareuser,String squareText) {
 		super("QRSquareUserRepresentation", getStaticnHtml(squareuser));
 		this.squareuser = squareuser;
+		this.squareText = squareText;
 	}
 
 	public static String getStaticnHtml(QRSquareUser squareuser) {
@@ -21,5 +22,17 @@ public class QRSquareUserRepresentation extends QRRepresentation {
 			html = "Role name : " + squareuser.getRole().getName() + " <br> Date : " + squareuser.getDate();
 		}
 		return html;
+	}
+
+	public QRSquareUser getSquareuser() {
+		return squareuser;
+	}
+
+	public void setSquareuser(QRSquareUser squareuser) {
+		this.squareuser = squareuser;
+	}
+
+	public String getSquareText() {
+		return squareText;
 	}
 }

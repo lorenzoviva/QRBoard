@@ -225,10 +225,10 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 	}
 
 	public void edit() {
-		if(getFocusedSquare() != null && focusedACL != null && focusedACL.isWrite() == true){
+		if(getFocusedSquare() != null && getUser() != null){
 			performAction("edit");
 		} else {
-			Toast.makeText(getContext(), "You can't edit that!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(), "You can't edit that, you must be logged in!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -296,16 +296,16 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 			if (request == 1 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
-					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 1));
+					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 1,getFocusedSquare()));
 
 				}
 			}
 			if (request == 2 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
 					if (qrsquareusersfromJson.get(i).getIsnew()) {
-						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), null, aclList.get(i), 2));
+						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), null, aclList.get(i), 2,getFocusedSquare()));
 					} else {
-						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 2));
+						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 2,getFocusedSquare()));
 					}
 
 				}

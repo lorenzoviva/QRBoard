@@ -21,19 +21,17 @@ import com.ogc.graphics.Point;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 
-public class ARLayerView extends SurfaceView{
+public class ARLayerView extends SurfaceView {
 
 	private ARGUI argui = null;
 
 	private Button removeSquareButton;
 	private Button userButton;
 
-	
-	
-	
-	public void setListIndex(int index){
+	public void setListIndex(int index) {
 		argui.setListindex(index);
 	}
+
 	public ARLayerView(Context context) {
 		super(context);
 		setWillNotDraw(false);
@@ -61,16 +59,22 @@ public class ARLayerView extends SurfaceView{
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
-		argui.draw(canvas, this);
-		if (argui.getQRSquare() == null) {
-			removeSquareButton.setVisibility(View.GONE);
-		} else {
-			removeSquareButton.setVisibility(View.VISIBLE);
-		}
-		if(argui.getUser() == null){
-			userButton.setVisibility(View.GONE);
-		} else {
-			userButton.setVisibility(View.VISIBLE);
+		if (argui != null) {
+			argui.draw(canvas, this);
+			if (removeSquareButton != null) {
+				if (argui.getQRSquare() == null) {
+					removeSquareButton.setVisibility(View.GONE);
+				} else {
+					removeSquareButton.setVisibility(View.VISIBLE);
+				}
+			}
+			if (userButton != null) {
+				if (argui.getUser() == null) {
+					userButton.setVisibility(View.GONE);
+				} else {
+					userButton.setVisibility(View.VISIBLE);
+				}
+			}
 		}
 	}
 
@@ -169,7 +173,7 @@ public class ARLayerView extends SurfaceView{
 	public void showUser() {
 		int width = this.getWidth();
 		int height = this.getHeight();
-		argui.showUsers(width,height);
+		argui.showUsers(width, height);
 	}
 
 	public void performAction(String action) {

@@ -61,7 +61,7 @@
             android:padding="5dp" >
 
             <SurfaceView
-                android:id="@+id/surfaceView1"
+                android:id="@+id/esu_usersurfaceView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
         </LinearLayout>
@@ -72,7 +72,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/esu_othertextview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
