@@ -16,6 +16,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -27,6 +28,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.qrboard.ARGUI;
 import com.example.qrboard.QRSquareUserEditorView;
 import com.example.qrboard.R;
 import com.google.gson.Gson;
@@ -39,7 +41,7 @@ import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
 import com.ogc.model.special.QRUserRepresentation;
 
-public class EditSquareUserDialog extends Dialog{
+public class EditSquareUserDialog extends Dialog {
 	private Button okButton;
 	private Button cancelButton;
 	private Spinner roleSpinner;
@@ -51,11 +53,15 @@ public class EditSquareUserDialog extends Dialog{
 	private QRUserRepresentation user;
 	private List<String> roleChoises;
 	private String lastrequest;
-	public EditSquareUserDialog(Context context,String lastrequest, QRSquareUser otherSquareUser, QRSquare square,String qrst, QRUser otheruser, List<String> roleChoises,String myrole) {
+	private Context context;
+	private ARGUI argui;
+
+	public EditSquareUserDialog(ARGUI argui, Context context, String lastrequest, QRSquareUser otherSquareUser, QRSquare square, String qrst, QRUser otheruser, List<String> roleChoises, String myrole) {
 		super(context);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); //before     
+		requestWindowFeature(Window.FEATURE_NO_TITLE); // before
 		setContentView(R.layout.editsquareuserdialog);
 		getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(128, 128, 128, 128)));
+		this.argui = argui;
 		this.lastrequest = lastrequest;
 		this.okButton = (Button) findViewById(R.id.esu_ok_button);
 		this.cancelButton = (Button) findViewById(R.id.esu_cancel_button);
@@ -68,25 +74,34 @@ public class EditSquareUserDialog extends Dialog{
 		this.qrSquareUser = otherSquareUser;
 		roleChoises.add(0, otherSquareUser.getRole().getName());
 		this.roleChoises = roleChoises;
-		otherTextView.setText(otheruser.getFirstName()+" "+otheruser.getLastName());
+		otherTextView.setText(otheruser.getFirstName() + " " + otheruser.getLastName());
 		myRoleTextView.setText(myrole);
 		android.view.WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LayoutParams.MATCH_PARENT;
-        params.width = LayoutParams.MATCH_PARENT;
-        getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
-		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, roleChoises); //selected item will look like a spinner set from XML
+		params.height = LayoutParams.MATCH_PARENT;
+		params.width = LayoutParams.MATCH_PARENT;
+		getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, roleChoises); // selected
+																																					// item
+																																					// will
+																																					// look
+																																					// like
+																																					// a
+																																					// spinner
+																																					// set
+																																					// from
+																																					// XML
 		spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		roleSpinner.setAdapter(spinnerArrayAdapter);
-		editorView.setup(user, square, getHalfMaxWidth(),qrst);
+		editorView.setup(user, square, getHalfMaxWidth(), qrst);
 		cancelButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				cancel();
 			}
 		});
 		okButton.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				save();
@@ -94,18 +109,22 @@ public class EditSquareUserDialog extends Dialog{
 		});
 		show();
 	}
-	public void cancel(){
+
+	public void cancel() {
 		dismiss();
 	}
-	public void save(){
-		if(roleSpinner.getSelectedItemPosition()!=0 && roleSpinner.getSelectedItemPosition()!=AdapterView.INVALID_POSITION)
-		(new QRSquareUserSaver()).execute();
-		
+
+	public void save() {
+		context = getContext();
+		if (roleSpinner.getSelectedItemPosition() != 0 && roleSpinner.getSelectedItemPosition() != AdapterView.INVALID_POSITION)
+			(new QRSquareUserSaver()).execute();
+
 	}
-	public int getHalfMaxWidth(){
-		if(myRoleTextView.getWidth()>otherTextView.getWidth()){
+
+	public int getHalfMaxWidth() {
+		if (myRoleTextView.getWidth() > otherTextView.getWidth()) {
 			return myRoleTextView.getWidth();
-		}else{
+		} else {
 			return otherTextView.getWidth();
 		}
 	}
@@ -130,7 +149,7 @@ public class EditSquareUserDialog extends Dialog{
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("json", json.toString()));
-			
+
 			try {
 				JSONObject jsonresponse = jParser.makeHttpRequest(DBConst.url_action, "POST", params);
 				boolean s = false;
@@ -138,15 +157,37 @@ public class EditSquareUserDialog extends Dialog{
 				Log.d("Msg", jsonresponse.toString());
 				s = jsonresponse.getBoolean("success");
 				if (s) {
-					Toast.makeText(getContext(), "Successfully saved!", Toast.LENGTH_SHORT);
-				}else{
-					Toast.makeText(getContext(), "Unable to save.", Toast.LENGTH_SHORT);
+					runOnUIThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(context, "Successfully saved!", Toast.LENGTH_SHORT);
+						}
+					}, context);
+					argui.setRefreshExplorer(true);
+				} else {
+					runOnUIThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(context, "Unable to save.", Toast.LENGTH_SHORT);
+						}
+					}, context);
 				}
 			} catch (JSONException | HttpHostConnectException e) {
-				Toast.makeText(getContext(), "Unable to save.", Toast.LENGTH_SHORT);
+				runOnUIThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(context, "Unable to save.", Toast.LENGTH_SHORT);
+					}
+				}, context);
 			}
+			argui.setActionContext("");
 			dismiss();
 			return null;
+		}
+
+		public void runOnUIThread(Runnable runnable, Context context) {
+			Handler mainHandler = new Handler(context.getMainLooper());
+			mainHandler.post(runnable);
 		}
 
 	}

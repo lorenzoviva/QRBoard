@@ -45,6 +45,9 @@ public class ExploreActivity extends Activity implements InvalidableAcivity {
 
 	@Override
 	public void invalidate() {
+		if(explorer.getArgui().isRefreshExplorer()){
+			explorer.refresh();
+		}
 		explorer.postInvalidate();
 	}
 

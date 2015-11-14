@@ -55,7 +55,14 @@ public class QRExplorerRowFooter {
 			return 0;
 		}
 	}
+	public int getCurrentIndex() {
+		if ((listindex != -1 && maxusers != -1) && (listindex - (maxusers- 1) >= 0)) {
+			return listindex - (maxusers - 1);
+		} else {
+			return 0;
+		}
 
+	}
 	public int getBackIndex() {
 		if ((listindex != -1 && maxusers != -1) && (listindex - (maxusers * 2 - 1) >= 0)) {
 			return listindex - (maxusers * 2 - 1);

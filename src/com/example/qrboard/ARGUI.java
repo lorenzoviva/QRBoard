@@ -46,7 +46,7 @@ public class ARGUI {
 	private List<String> actions = new ArrayList<String>();
 	private int listindex = 0; // in actions witch needs more pages of data to
 								// load
-
+	private boolean refreshExplorer = false;
 	// this index tells us what is the currently last page index.
 	private int hover = -1;
 	private String clickedaction = "";
@@ -77,6 +77,8 @@ public class ARGUI {
 	public void openSquareUserEditorDialog(final Context context, final JSONObject jsonresponse,final String lastrequest) {
 
 		final QRSquare fsquare = this.qrsquare;
+		final ARGUI fargui = this;
+		setActionContext("");
 		runOnUIThread(new Runnable() {
 
 			@Override
@@ -95,7 +97,7 @@ public class ARGUI {
 						for (int i = 0; i < rolechoises.length; i++) {
 							roleChoises.add(rolechoises[i].replace(",", ""));
 						}
-						new EditSquareUserDialog(context,lastrequest, rep.getSquareuser(), square,type, user, roleChoises,role);
+						new EditSquareUserDialog(fargui,context,lastrequest, rep.getSquareuser(), square,type, user, roleChoises,role);
 					} else {
 						Toast.makeText(context, "You don't have the permission to edit this role.", Toast.LENGTH_SHORT).show();
 					}
@@ -463,5 +465,13 @@ public class ARGUI {
 
 	public void setActionContext(String actionContext) {
 		this.actionContext = actionContext;
+	}
+
+	public boolean isRefreshExplorer() {
+		return refreshExplorer;
+	}
+
+	public void setRefreshExplorer(boolean refreshExplorer) {
+		this.refreshExplorer = refreshExplorer;
 	}
 }

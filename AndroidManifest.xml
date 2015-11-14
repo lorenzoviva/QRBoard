@@ -54,7 +54,8 @@
         <activity
             android:name=".ExploreActivity"
             android:label="@string/title_activity_explore"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape" 
+            android:configChanges="orientation|keyboardHidden" >
         </activity>
         <activity
             android:name=".EditWebPageActivity"

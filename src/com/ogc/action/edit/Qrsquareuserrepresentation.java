@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -104,12 +105,24 @@ public class Qrsquareuserrepresentation extends Action{
 				if (s) {
 					String roles = jsonresponse.getString("choises");
 					if(roles.equals("")){
-						Toast.makeText(context,"You don't have the permission to edit this role.", Toast.LENGTH_SHORT).show();
+						runOnUIThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(context,"You don't have the permission to edit this role.", Toast.LENGTH_SHORT).show();
+							}
+						}, context);
+						argui.setActionContext("");
 					}else{
 						argui.openSquareUserEditorDialog(context,jsonresponse, paramjson.toString());
 					}
 				} else {
-					Toast.makeText(context,"You don't have the permission to edit this role.", Toast.LENGTH_SHORT).show();
+					runOnUIThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(context,"You don't have the permission to edit this role.", Toast.LENGTH_SHORT).show();
+						}
+					}, context);
+					argui.setActionContext("");
 				}
 			} catch (JSONException | HttpHostConnectException e) {
 				Log.d("ERROR", e.getMessage());
@@ -118,7 +131,10 @@ public class Qrsquareuserrepresentation extends Action{
 
 			return null;
 		}
-
+		public void runOnUIThread(Runnable runnable, Context context) {
+			Handler mainHandler = new Handler(context.getMainLooper());
+			mainHandler.post(runnable);
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.example.qrboard;
 
 import java.lang.reflect.Type;
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -519,6 +520,27 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 		Intent intent = new Intent(getContext(), ScanActivity.class);
 		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
 		getContext().startActivity(intent);
+	}
+
+	public void refresh() {
+		if(qrExplorerRowFooter!=null){
+			
+			try {
+				getArgui().setRefreshExplorer(false);
+				getArgui().setListindex(qrExplorerRowFooter.getCurrentIndex());
+				JSONObject requestMessageObj;
+				requestMessageObj = new JSONObject(messageRequest);
+				if (requestMessageObj.has("text")) {
+					setQRSquare(new QRSquare(requestMessageObj.getString("text")));
+				}
+				explore();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}	
+		
 	}
 
 }
