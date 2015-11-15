@@ -16,7 +16,7 @@ public class Qrwebpage extends Action{
 	@Override
 	public void execute() {
 		argui.setActionContext("");
-		argui.openEditWebPageActivity(context);
+		argui.openEditWebPageActivity(context,null);
 	}
 	@Override
 	public void perform(ARGUI argui, Context context) {

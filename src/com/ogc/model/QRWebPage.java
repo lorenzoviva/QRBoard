@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.qrboard.ARLayerView;
@@ -47,7 +48,6 @@ public class QRWebPage extends QRSquare {
 
 		if (webview == null) {
 			webview = new BrowserWebView(arview, this, 500, 500);
-
 		} else {
 
 			// webview.layout(0, 0, 500, 500);
@@ -86,8 +86,8 @@ public class QRWebPage extends QRSquare {
 	}
 
 	public void onTouch(MotionEvent event) {
+
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-			
 
 			if (dx < 5 && dy < 5) {
 				
@@ -165,5 +165,11 @@ public class QRWebPage extends QRSquare {
 	@Override
 	public String getCreationChoiseHtml() {
 		return "<td height='25%' id='"+LWebView.applicationid + ".create." + this.getClass().getSimpleName()+"'  width='25%' bgcolor='#FFF000' style=\"word-wrap:break-word;\"><div align='center'>"+this.getClass().getSimpleName()+"</div><br><div align='center'><i class='fa fa-file'></div></i></td>";
+	}
+	public LWebView getWebview() {
+		return webview;
+	}
+	public void setWebview(LWebView webview) {
+		this.webview = webview;
 	}
 }

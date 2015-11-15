@@ -21,7 +21,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.google.gson.JsonSyntaxException;
 import com.google.zxing.Result;
@@ -54,7 +53,7 @@ public class ARGUI {
 	private Action action = null;
 	private List<Action> allActions = new ArrayList<Action>();
 	private String actionContext = "";
-
+	
 	public ARGUI() {
 
 	}
@@ -68,10 +67,19 @@ public class ARGUI {
 		context.startActivity(intent);
 	}
 
-	public void openEditWebPageActivity(Context context) {
-		Intent intent = new Intent(context, EditWebPageActivity.class);
-		// intent.putExtra("jsonFreeDraw", jsonObject.toString());
-		context.startActivity(intent);
+	public void openEditWebPageActivity(Context context, JSONObject square){
+		if(square==null){
+			Intent intent = new Intent(context, EditWebPageActivity.class);
+			intent.putExtra("type", qrsquare.getClass().toString());
+			intent.putExtra("QRSquare", GsonHelper.customGson.toJson(qrsquare).toString());
+			context.startActivity(intent);
+		}else{
+			Intent intent = new Intent(context, EditWebPageActivity.class);
+			intent.putExtra("type", square.getClass().toString());
+			intent.putExtra("QRSquare", square.toString());
+			context.startActivity(intent);
+		}
+		
 	}
 
 	public void openSquareUserEditorDialog(final Context context, final JSONObject jsonresponse,final String lastrequest) {

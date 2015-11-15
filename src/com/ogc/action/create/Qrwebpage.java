@@ -95,7 +95,7 @@ public class Qrwebpage extends Action{
 				s = jsonresponse.getBoolean("success");
 				if (s) {
 					QRWebPage newsquare = (GsonHelper.customGson).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRWebPage.class);
-					argui.openEditWebPageActivity(context);
+					argui.openEditWebPageActivity(context,jsonresponse.getJSONObject("QRSquare"));
 				} else {
 					argui.finishAction("Unable to create a web page");
 				}

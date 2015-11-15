@@ -18,6 +18,7 @@ public class InternalWebView extends LWebView{
 
 		@Override
 		public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {
+			super.clickWebPage(touchX,scrollX,touchY,scrollY,f);
 			String js = "javascript:(function() { " 
 					//	scroll the window
 					+"	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "

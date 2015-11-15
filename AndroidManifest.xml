@@ -59,7 +59,8 @@
         </activity>
         <activity
             android:name=".EditWebPageActivity"
-            android:label="@string/title_activity_edit_web_page" >
+            android:label="@string/title_activity_edit_web_page"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 

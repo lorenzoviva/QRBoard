@@ -19,28 +19,28 @@
             android:orientation="vertical" >
 
             <ImageButton
-                android:id="@+id/img"
+                android:id="@+id/epw_imgbutton"
                 android:layout_width="@+dimen/option_buttons"
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
                 android:src="@drawable/img32" />
             
             <ImageButton
-                android:id="@+id/div"
+                android:id="@+id/epw_divbutton"
                 android:layout_width="@+dimen/option_buttons"
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
                 android:src="@drawable/div32" />
             
             <ImageButton
-                android:id="@+id/button"
+                android:id="@+id/epw_linkbutton"
                 android:layout_width="@+dimen/option_buttons"
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
                 android:src="@drawable/link32" />
             
             <ImageButton
-                android:id="@+id/text"
+                android:id="@+id/epw_textbutton"
                 android:layout_width="@+dimen/option_buttons"
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
@@ -60,8 +60,8 @@
             android:orientation="vertical"
             android:padding="5dp" >
 
-            <SurfaceView
-                android:id="@+id/esu_usersurfaceView"
+            <com.example.qrboard.QRWebPageEditorView
+                android:id="@+id/epw_squaresurfaceView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
         </LinearLayout>

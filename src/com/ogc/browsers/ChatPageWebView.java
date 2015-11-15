@@ -176,7 +176,6 @@ public class ChatPageWebView extends LWebView{
 		}
 	}
 	public void setScroll(float scrollY){
-		Log.d("OMFG","scrollY :" + scrollY);
 		arview.setQRSquareScrollable(0, (int)scrollY);
 	}
 

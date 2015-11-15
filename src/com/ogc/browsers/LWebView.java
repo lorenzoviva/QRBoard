@@ -1,7 +1,11 @@
 package com.ogc.browsers;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -33,8 +37,10 @@ public abstract class LWebView extends WebView {
 	public String id, lastid;
 	protected String localURL = "";
 	private float divicePixelRatio = -1;
+	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
 	ARLayerView arview;
 	View mCustomView = null;
+
 	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
 		super(arview.getContext());
 		this.arview = arview;
@@ -55,10 +61,10 @@ public abstract class LWebView extends WebView {
 		getSettings().setFantasyFontFamily("fantasy");
 		getSettings().setFixedFontFamily("fantasy");
 		setWebChromeClient(new WebChromeClient() {
-			
+
 			public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {
 				Log.d("youtube", "youtube");
-				
+
 			}
 
 			public void onHideCustomView() {
@@ -67,7 +73,7 @@ public abstract class LWebView extends WebView {
 
 		});
 		getSettings().setJavaScriptEnabled(true); // Support JS
-//		setLayerType(this.LAYER_TYPE_SOFTWARE, null);
+		// setLayerType(this.LAYER_TYPE_SOFTWARE, null);
 		addJavascriptInterface(new JsClickInterface(context), "clickInterface");
 		final Context fcontext = context;
 		setWebViewClient(new WebViewClient() {
@@ -129,12 +135,12 @@ public abstract class LWebView extends WebView {
 
 			public void onPageFinished(WebView view, String url) {
 				int indexOf = url.indexOf("/", 8);
-				if(indexOf > 0){
+				if (indexOf > 0) {
 					localURL = url.substring(0, indexOf);
-				}else{
+				} else {
 					localURL = url;
 				}
-				
+
 				Log.d("LWebViewClient:" + i, "finished loading page url:" + localURL);// +
 																						// ", Height:"
 																						// +
@@ -198,6 +204,16 @@ public abstract class LWebView extends WebView {
 		layout(0, 0, width, height);
 	}
 
+	private void notifyListeners(Object object, String property, String oldValue, String newValue) {
+		for (PropertyChangeListener name : listener) {
+			name.propertyChange(new PropertyChangeEvent(this, object.toString(), oldValue, newValue));
+		}
+	}
+
+	public void addChangeListener(PropertyChangeListener newListener) {
+		listener.add(newListener);
+	}
+
 	public int computeHorizontal() {
 		return computeHorizontalScrollRange();
 	}
@@ -257,7 +273,7 @@ public abstract class LWebView extends WebView {
 		if (getMeasuredHeight() > 0 && getMeasuredWidth() > 0) {
 			setVerticalScrollBarEnabled(true);
 			setHorizontalScrollBarEnabled(true);
-//			getDevicePixelRatio();
+			// getDevicePixelRatio();
 			arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
 			arview.invalidate();
 			ringProgressDialog.dismiss();
@@ -265,7 +281,7 @@ public abstract class LWebView extends WebView {
 		} else {
 			width = maxwidth;
 			height = maxheight;
-//			getDevicePixelRatio();
+			// getDevicePixelRatio();
 			calculate();
 			load();
 		}
@@ -276,9 +292,9 @@ public abstract class LWebView extends WebView {
 	public void draw(Canvas canvas) {
 		arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
 		canvas.translate(-this.getScrollX(), -this.getScrollY());
-		if(mCustomView == null){
+		if (mCustomView == null) {
 			super.draw(canvas);
-		}else{
+		} else {
 			mCustomView.draw(canvas);
 		}
 
@@ -299,6 +315,7 @@ public abstract class LWebView extends WebView {
 				runOnUIThread(new Runnable() {
 					@Override
 					public void run() {
+						notifyListeners(tagname, "attributes", parents, attributes);
 						onElementTouched(tagname, attributes, parents);
 
 					}
@@ -319,9 +336,10 @@ public abstract class LWebView extends WebView {
 			});
 
 		}
+
 		@JavascriptInterface
-		public void setDevicePixelRatio( final float f) {
-//			Log.d("JSINTERFACE","PIXEL RATIO:" + f);
+		public void setDevicePixelRatio(final float f) {
+			// Log.d("JSINTERFACE","PIXEL RATIO:" + f);
 
 			runOnUIThread(new Runnable() {
 				@Override
@@ -331,26 +349,63 @@ public abstract class LWebView extends WebView {
 			});
 
 		}
+
 		public void runOnUIThread(Runnable runnable) {
 			Handler mainHandler = new Handler(context.getMainLooper());
 			mainHandler.post(runnable);
 		}
 	}
 
-	public abstract void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f);
-	public void setDevicePixelRatio(float f){
-		divicePixelRatio = f;
-		height = (int) (maxheight*f);
-		width = (int) (maxwidth*f);
+	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f){
+		if(!isChangeListenerListEmpty()){
+		String js = "javascript:(function() { " 
+				//	scroll the window
+				+"	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
+				//	get the clicked object
+				+"	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" 
+				+"	while(obj.parentNode!=null && !obj.hasAttribute('id')){"
+				//		add the courrent object tagName to 'parents' (eg: DIV)
+				+"		parents += obj.tagName + ' ';" 
+				//		add all attributes of parent to 'parents' (eg: color<black>)
+				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
+				+"			for (i = 0; i < obj.attributes.length; i++) {"
+				+"				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
+				+"			}"
+				+"		}"
+				+"		parents += ' ';" 
+				+"		obj = obj.parentNode;" 
+				+"	} "
+				+"	if(obj!=null) {"
+				+"		var att = '';"
+				//		add all attributes to the attribute list
+				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
+				+"			for (i = 0; i < obj.attributes.length; i++) {"
+				+"				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
+				+"			}" 
+				+"		}"
+				+"		window.clickInterface.onclick(obj.tagName,att,parents);"
+				+"	}" 
+				+"})()";
+			loadUrl(js);
+		}
 	}
+
+	public void setDevicePixelRatio(float f) {
+		divicePixelRatio = f;
+		height = (int) (maxheight * f);
+		width = (int) (maxwidth * f);
+	}
+
 	private void getDevicePixelRatio(float touchX, float scrollX, float touchY, float scrollY) {
 		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(" + touchX + "," + scrollX + "," + touchY + "," + scrollY + ",obj);}" + "})()";
 		loadUrl(js);
 	}
+
 	private void getDevicePixelRatio() {
 		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(obj);}" + "})()";
 		loadUrl(js);
 	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		long pressureTime = event.getEventTime() - event.getDownTime();
@@ -379,5 +434,9 @@ public abstract class LWebView extends WebView {
 	}
 
 	public abstract void onElementTouched(String tagname, String attributes, String parents);
+
+	public boolean isChangeListenerListEmpty() {
+		return listener.isEmpty();
+	}
 
 }
