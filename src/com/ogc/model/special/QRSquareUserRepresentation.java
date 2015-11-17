@@ -16,7 +16,7 @@ public class QRSquareUserRepresentation extends QRRepresentation {
 
 	public static String getStaticnHtml(QRSquareUser squareuser) {
 		String html = "";
-		if (squareuser == null) {
+		if (squareuser.getIsnew()) {
 			html = "ADD YOUR FRIEND";
 		} else {
 			html = "Role name : " + squareuser.getRole().getName() + " <br> Date : " + squareuser.getDate();

@@ -6,12 +6,13 @@ import java.net.URL;
 import android.util.Log;
 
 import com.example.qrboard.ARLayerView;
+import com.example.qrboard.LWebViewJsParameters;
 import com.ogc.model.QRWebPage;
 
 public class BrowserWebView extends LWebView {
 
 	public BrowserWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
-		super(arview, qrsquare, width, height);
+		super(arview, qrsquare, width, height,new LWebViewJsParameters(true,true,true,false,true,true));
 	}
 
 	@Override
@@ -87,50 +88,5 @@ public class BrowserWebView extends LWebView {
 		}
 	}
 
-	@Override
-	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {
-		super.clickWebPage(touchX,scrollX,touchY,scrollY,f);
-		String js = "javascript:(function() { " 
-				//	scroll the window
-				+"	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
-				//	get the clicked object
-				+"	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" 
-				+"	var parents = '';"
-				//	Throws a click event
-				+"	if (obj.fireEvent) {"
-				+"		obj.fireEvent('onclick');"
- 				+"	} else {"
-   				+"		var evObj = document.createEvent('Events');"
-   				+"		evObj.initEvent('click', true, false);"
-   				+"		obj.dispatchEvent(evObj);"
-   				+"	}" 
-   				//	find a parent object with an action (url, scr , onclick method, href)
-				+"	while((obj.tagName == 'IMG' && obj.parentNode!=null) || (obj.onclick == null && obj.parentNode!=null && !obj.hasAttribute('src') && !obj.hasAttribute('href'))){"
-				//		add the courrent object tagName to 'parents' (eg: DIV)
-				+"		parents += obj.tagName + ' ';" 
-				//		add all attributes of parent to 'parents' (eg: color<black>)
-				+"		if(obj.tagName != 'DOCUMENT' && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}"
-				+"		}"
-				+"		parents += ' ';" 
-				+"		obj = obj.parentNode;" 
-				+"	} " 
-				+"	if(obj!=null) {"
-				+"		if(obj.onclick != null){"
-				+"	 		obj.onclick();"
-				+"		}"
-				+"		var att = '';"
-				//		add all attributes to the attribute list
-				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}" 
-				+"		}"
-				+"		window.clickInterface.onclick(obj.tagName,att,parents);"
-				+"	}" 
-				+"})()";
-		loadUrl(js);
-	}
+	
 }

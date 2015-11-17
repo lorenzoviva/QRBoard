@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.qrboard.ARLayerView;
+import com.example.qrboard.LWebViewJsParameters;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.QRWebPage;
 
@@ -37,11 +39,17 @@ public abstract class LWebView extends WebView {
 	public String id, lastid;
 	protected String localURL = "";
 	private float divicePixelRatio = -1;
-	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
+	private List<BrowserListener> listener = new ArrayList<BrowserListener>();
 	ARLayerView arview;
 	View mCustomView = null;
+	private long pressureTime;
+	private transient float tx;
+	private transient float ty;
+	private transient float dx;
+	private transient float dy;
+	LWebViewJsParameters jsParameters;
 
-	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
+	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height, LWebViewJsParameters jsParameters) {
 		super(arview.getContext());
 		this.arview = arview;
 		Context context = arview.getContext();
@@ -50,6 +58,7 @@ public abstract class LWebView extends WebView {
 		maxwidth = width;
 		this.height = height;
 		maxheight = height;
+		this.jsParameters = jsParameters;
 
 		// Log.d("TAG rendering : ", qrsquare.toString());
 		ringProgressDialog = ProgressDialog.show(context, "Please wait ...", "loading web page ...", true);
@@ -204,13 +213,13 @@ public abstract class LWebView extends WebView {
 		layout(0, 0, width, height);
 	}
 
-	private void notifyListeners(Object object, String property, String oldValue, String newValue) {
-		for (PropertyChangeListener name : listener) {
-			name.propertyChange(new PropertyChangeEvent(this, object.toString(), oldValue, newValue));
+	private void notifyListeners(String tagname, String attributes, String parents) {
+		for (BrowserListener name : listener) {
+			name.onBrowserClickEvent(new BrowserClickEvent(tagname, attributes, parents, pressureTime));
 		}
 	}
 
-	public void addChangeListener(PropertyChangeListener newListener) {
+	public void addChangeListener(BrowserListener newListener) {
 		listener.add(newListener);
 	}
 
@@ -315,7 +324,7 @@ public abstract class LWebView extends WebView {
 				runOnUIThread(new Runnable() {
 					@Override
 					public void run() {
-						notifyListeners(tagname, "attributes", parents, attributes);
+						notifyListeners(tagname, attributes, parents);
 						onElementTouched(tagname, attributes, parents);
 
 					}
@@ -332,7 +341,7 @@ public abstract class LWebView extends WebView {
 				@Override
 				public void run() {
 					clickWebPage(touchX, scrollX, touchY, scrollY, f);
-				} // This is your code
+				}
 			});
 
 		}
@@ -356,38 +365,54 @@ public abstract class LWebView extends WebView {
 		}
 	}
 
-	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f){
-		if(!isChangeListenerListEmpty()){
-		String js = "javascript:(function() { " 
-				//	scroll the window
-				+"	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
-				//	get the clicked object
-				+"	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" 
-				+"	while(obj.parentNode!=null && !obj.hasAttribute('id')){"
-				//		add the courrent object tagName to 'parents' (eg: DIV)
-				+"		parents += obj.tagName + ' ';" 
-				//		add all attributes of parent to 'parents' (eg: color<black>)
-				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}"
-				+"		}"
-				+"		parents += ' ';" 
-				+"		obj = obj.parentNode;" 
-				+"	} "
-				+"	if(obj!=null) {"
-				+"		var att = '';"
-				//		add all attributes to the attribute list
-				+"		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"		
-				+"			for (i = 0; i < obj.attributes.length; i++) {"
-				+"				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" 
-				+"			}" 
-				+"		}"
-				+"		window.clickInterface.onclick(obj.tagName,att,parents);"
-				+"	}" 
-				+"})()";
-			loadUrl(js);
+	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {
+		// if(!isChangeListenerListEmpty()){
+
+		String whilecondition = createWhileCondition();
+
+		String js = "javascript:(function() { "
+		// scroll the window
+				+ "	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
+				// get the clicked object
+				+ "	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" + "	var  parents = '';";
+		if (jsParameters.isExecuteOnClick()) {
+			js += "	if (obj.fireEvent) {" + "		obj.fireEvent('onclick');" + "	} else {" + "		var evObj = document.createEvent('Events');" + "		evObj.initEvent('click', true, false);" + "		obj.dispatchEvent(evObj);" + "	}";
 		}
+		js += "	while(" + whilecondition + "){"
+		// add the courrent object tagName to 'parents' (eg: DIV)
+				+ "		parents += obj.tagName + ' ';"
+				// add all attributes of parent to 'parents' (eg: color<black>)
+				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){" + "			for (i = 0; i < obj.attributes.length; i++) {" + "				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" + "			}" + "		}" + "		parents += ' ';" + "		obj = obj.parentNode;" + "	} " + "	if(obj!=null) {";
+		if (jsParameters.isExecuteOnClick() && jsParameters.isFollowOnClick()) {
+			js += "		if(obj.onclick != null){" + "	 		obj.onclick();" + "		}";
+		}
+		js += "		var att = '';"
+		// add all attributes to the attribute list
+				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){" + "			for (i = 0; i < obj.attributes.length; i++) {" + "				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" + "			}" + "		}" + "		window.clickInterface.onclick(obj.tagName,att,parents);" + "	}" + "})()";
+		loadUrl(js);
+		// }
+	}
+
+	private String createWhileCondition() {
+		String res = "";
+		if (jsParameters.isExcludeImages()) {
+			res += "(obj.tagName == 'IMG' && obj.parentNode!=null) || (";
+		}
+		res += "obj.parentNode!=null ";
+		if (jsParameters.isFollowId()) {
+			res += "&& !obj.hasAttribute('id')";
+		}
+		if (jsParameters.isFollowExternalLinks()) {
+			res += "&& !obj.hasAttribute('src') && !obj.hasAttribute('href')";
+		}
+		if (jsParameters.isFollowOnClick()) {
+			res += "&& obj.onclick == null";
+		}
+		if (jsParameters.isExcludeImages()) {
+			res += ")";
+		}
+
+		return res;
 	}
 
 	public void setDevicePixelRatio(float f) {
@@ -406,30 +431,75 @@ public abstract class LWebView extends WebView {
 		loadUrl(js);
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		long pressureTime = event.getEventTime() - event.getDownTime();
-		Log.d("Clicked", "pressureTime:" + pressureTime);
-		if (pressureTime < 1000) {
-			getDevicePixelRatio(event.getX(), getScrollX(), event.getY(), getScrollY());
-		} else {
-			String url = this.getUrl();
+	public boolean onTouchEvent(MotionEvent event, QRWebPage qrWebPage) {
+		if (event.getAction() == MotionEvent.ACTION_UP) {
+			pressureTime = event.getEventTime() - event.getDownTime();
+			Log.d("Clicked", "pressureTime:" + pressureTime);
+			if (!jsParameters.isOpenOnNewWindow() || pressureTime < 1000 || dx > 10 || dy > 10) {
+				getDevicePixelRatio(event.getX(), getScrollX(), event.getY(), getScrollY());
+			} else {
+				String url = this.getUrl();
 
-			if (url != null) {
-				boolean link = true;
-				try {
-					new URL(url);
-				} catch (MalformedURLException e) {
-					link = false;
-				}
-				if (link) {
-					getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+				if (url != null) {
+					boolean link = true;
+					try {
+						new URL(url);
+					} catch (MalformedURLException e) {
+						link = false;
+					}
+					if (link) {
+						getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+					}
 				}
 			}
-		}
 
-		performClick();
-		super.onTouchEvent(event);
+			performClick();
+			super.onTouchEvent(event);
+		}
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			tx = -1;
+			ty = -1;
+			dx = 0;
+			dy = 0;
+		}
+		if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			if(tx!=-1){
+				float ddx = tx - event.getX();
+				float ddy = ty - event.getY();
+				dx += Math.abs(ddx);
+				dy += Math.abs(ddy);
+
+				if (tx != -1) {
+					PointF normalvector = new PointF();
+					normalvector.x = (float)(qrWebPage.getFour().x-qrWebPage.getOne().x);
+					normalvector.y = (float)(qrWebPage.getFour().y-qrWebPage.getOne().y);
+					float normalnorm = (float) Math.sqrt(Math.pow(normalvector.x,2)+Math.pow(normalvector.y,2));
+					float ddnorm =  (float) Math.sqrt(Math.pow(ddx,2)+Math.pow(ddy,2));
+					float theta = (float) Math.acos(((float)(normalvector.x*ddx)+(normalvector.y*ddy))/(normalnorm*ddnorm));
+					
+					PointF perpendicularvector = new PointF();
+					perpendicularvector.x = (float)(qrWebPage.getTwo().x-qrWebPage.getOne().x);
+					perpendicularvector.y = (float)(qrWebPage.getTwo().y-qrWebPage.getOne().y);
+					float perpendiculnorm = (float) Math.sqrt(Math.pow(perpendicularvector.x,2)+Math.pow(perpendicularvector.y,2));
+					float beta = (float) Math.acos(((float)(perpendicularvector.x*ddx)+(perpendicularvector.y*ddy))/(perpendiculnorm*ddnorm));
+				
+					
+					
+					ddy = (float) -(ddnorm * (float)Math.cos(beta));
+					ddx = (float) -(ddnorm * (float)Math.cos(theta));
+					if (qrWebPage.getHorizontalScroll() + ddx < qrWebPage.getMaxHorizontalScroll() && qrWebPage.getHorizontalScroll() + ddx > 0) {
+						qrWebPage.setHorizontalScroll((int) (qrWebPage.getHorizontalScroll() + ddx));
+					}
+					if (qrWebPage.getVerticalScroll() + ddy < qrWebPage.getMaxVerticalScroll() && qrWebPage.getVerticalScroll() + ddy > 0) {
+						qrWebPage.setVerticalScroll((int) (qrWebPage.getVerticalScroll() + ddy));
+					}
+				}
+				
+			}
+			tx = event.getX();
+			ty = event.getY();
+			
+		}
 		return false;
 	}
 
@@ -437,6 +507,14 @@ public abstract class LWebView extends WebView {
 
 	public boolean isChangeListenerListEmpty() {
 		return listener.isEmpty();
+	}
+
+	public LWebViewJsParameters getJsParameters() {
+		return jsParameters;
+	}
+
+	public void setJsParameters(LWebViewJsParameters jsParameters) {
+		this.jsParameters = jsParameters;
 	}
 
 }

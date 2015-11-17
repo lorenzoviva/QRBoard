@@ -10,6 +10,7 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 
 import com.example.qrboard.ARLayerView;
+import com.example.qrboard.LWebViewJsParameters;
 import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
 import com.ogc.model.QRUser;
@@ -20,7 +21,7 @@ public class ChatPageWebView extends LWebView{
 	private QRUser user;
 	
 	public ChatPageWebView(ARLayerView arview, QRChatWebPage qrsquare, int width, int height) {
-		super(arview, qrsquare, width, height);
+		super(arview, qrsquare, width, height,new LWebViewJsParameters(true, false, true, false, false,false));
 		this.chat=qrsquare.getChat();
 		this.user = arview.getUser();
 		this.addJavascriptInterface(new JsScollInterface(arview.getContext()), "scrollInterface");
@@ -101,25 +102,10 @@ public class ChatPageWebView extends LWebView{
 
 	@Override
 	public void calculate() {
-		width = 500;
-		height = 500;
+//		width = 500;
+//		height = 500;
 		measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));// View.MeasureSpec.makeMeasureSpec(5000,
-																																						// //
-																																						// View.MeasureSpec.AT_MOST));
-		// Log.d("calculate page dimension:", getMeasuredWidth() + "," +
-		// getMeasuredHeight() ); // //
 		layout(0, 0, width, height);
-	}
-	@Override
-	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {
-
-		String js = "javascript:(function() { " 
-				//	scroll the window
-				+"	document.getElementById('messages').scrollTo(" + scrollX / f + "," + scrollY / f + "); "
-				//	get the clicked object
-				+"	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" 
-				+"})()";
-		loadUrl(js);
 	}
 	
 	public void onClose(){

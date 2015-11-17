@@ -44,6 +44,7 @@ import com.ogc.model.QRUser;
 import com.ogc.model.QRUserMenager;
 import com.ogc.model.special.QRAccessDaniedWebPage;
 import com.ogc.model.special.QRSquareUserRepresentation;
+import com.ogc.model.special.QRUserRepresentation;
 
 public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, OnClickListener {
 
@@ -71,6 +72,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 	private QRExplorerRowFooter qrExplorerRowFooter;
 	private String messageRequest;
 	private ACL focusedACL;
+	QRUser otherUser = null;
 
 	public QRExplorer(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -118,7 +120,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			if (rows.size() * (bounds.right - bounds.left) / 5 - height > 0) {
 				maxScroll = rows.size() * rows.get(0).getSize(bounds) + qrExplorerRowHeader.getHeight(bounds) + qrExplorerRowFooter.getHeight(bounds) - height;
 			}
-			if(bounds!=null && backbutton != null){
+			if (bounds != null && backbutton != null) {
 				int xr = (bounds.right - bounds.left) / 10;
 				int xl = ((bounds.right - bounds.left) * 3) / 10;
 				int yt = ((bounds.bottom - bounds.top)) / 10;
@@ -166,12 +168,12 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			ly = -1;
 			if (ddy < 15) {
 
-				 if (getFocusedQRTouched(event)) {
+				if (getFocusedQRTouched(event)) {
 					edit();
-				}else if (getQRExplorerRowSquareTouched(event) != -1) {
+				} else if (getQRExplorerRowSquareTouched(event) != -1) {
 
 					selectedRow = getQRExplorerRowSquareTouched(event);
-					setFocusedSquare(rows.get(selectedRow).touched(event),rows.get(selectedRow).getAcl());
+					setFocusedSquare(rows.get(selectedRow).touched(event), rows.get(selectedRow).getAcl());
 
 				} else if (qrExplorerRowFooter != null && qrExplorerRowFooter.touched(event) != -1) {
 
@@ -179,7 +181,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 				} else {
 
-					setFocusedSquare(null,null);
+					setFocusedSquare(null, null);
 
 				}
 
@@ -200,6 +202,8 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			JSONObject requestMessageObj = new JSONObject(messageRequest);
 			if (requestMessageObj.has("text")) {
 				setQRSquare(new QRSquare(requestMessageObj.getString("text")));
+			} else if (requestMessageObj.has("QRUser")) {
+				setQRSquare(new QRUserRepresentation(otherUser));
 			}
 			explore();
 		} catch (JSONException e) {
@@ -226,8 +230,13 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 	}
 
 	public void edit() {
-		if(getFocusedSquare() != null && getUser() != null){
-			performAction("edit");
+		if (getFocusedSquare() != null && getUser() != null) {
+			if (!(getFocusedSquare() instanceof QRUserRepresentation)) {
+				performAction("edit");
+			}else{
+				Toast.makeText(getContext(), "You can't edit that!", Toast.LENGTH_SHORT).show();
+
+			}
 		} else {
 			Toast.makeText(getContext(), "You can't edit that, you must be logged in!", Toast.LENGTH_SHORT).show();
 		}
@@ -268,6 +277,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 				} else if (jsonresponse.has("user")) {
 					QRUser me = (GsonHelper.customGson).fromJson(jsonresponse.getString("user"), QRUser.class);
 					setUser(me);
+					otherUser = (GsonHelper.customGson).fromJson(jsonresponse.getString("QRUser"), QRUser.class);
 				}
 			}
 			Type qrsquareUserlistType = new TypeToken<ArrayList<QRSquareUser>>() {
@@ -297,17 +307,14 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 			if (request == 1 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
-					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 1,getFocusedSquare()));
+					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 1, getFocusedSquare()));
 
 				}
 			}
 			if (request == 2 && qrsquareusersAvaliable && qrusermenagersAvaliable && qrsquareusersfromJson.size() == qrusersmenagersfromJson.size()) {
 				for (int i = 0; i < qrsquareusersfromJson.size(); i++) {
-					if (qrsquareusersfromJson.get(i).getIsnew()) {
-						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), null, aclList.get(i), 2,getFocusedSquare()));
-					} else {
-						rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 2,getFocusedSquare()));
-					}
+
+					rows.add(new QRExplorerRow(qrusersmenagersfromJson.get(i), qrsquareusersfromJson.get(i).getUser(), qrsquareusersfromJson.get(i), aclList.get(i), 2, getFocusedSquare()));
 
 				}
 			}
@@ -320,7 +327,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 				}
 			}
-			if(bounds!=null && backbutton != null){
+			if (bounds != null && backbutton != null) {
 				int xr = (bounds.right - bounds.left) / 10;
 				int xl = ((bounds.right - bounds.left) * 3) / 10;
 				int yt = ((bounds.bottom - bounds.top)) / 10;
@@ -503,7 +510,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 	public void setBackButton(Button backButton) {
 		this.backbutton = backButton;
-		if(bounds!=null && backButton != null){
+		if (bounds != null && backButton != null) {
 			int xr = (bounds.right - bounds.left) / 10;
 			int xl = ((bounds.right - bounds.left) * 3) / 10;
 			int yt = ((bounds.bottom - bounds.top)) / 10;
@@ -523,8 +530,8 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 	}
 
 	public void refresh() {
-		if(qrExplorerRowFooter!=null){
-			
+		if (qrExplorerRowFooter != null) {
+
 			try {
 				getArgui().setRefreshExplorer(false);
 				getArgui().setListindex(qrExplorerRowFooter.getCurrentIndex());
@@ -538,9 +545,9 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		}	
-		
+
+		}
+
 	}
 
 }
