@@ -367,6 +367,7 @@ public abstract class LWebView extends WebView {
 		}
 
 		public Rect getRect(String rect) {
+		if (!rect.equals("") && (rect!=null)) {
 			String x = rect.split("x:")[1].split(",")[0];
 			String y = rect.split("y:")[1].split(",")[0];
 			String h = rect.split("h:")[1].split(",")[0];
@@ -381,6 +382,8 @@ public abstract class LWebView extends WebView {
 			} else {
 				return null;
 			}
+		} else
+			return null;
 		}
 
 		@JavascriptInterface
