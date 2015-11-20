@@ -39,6 +39,10 @@ public class BrowserClickEvent{
 		this.pressureTime = pressureTime;
 		this.motionEventAction = eventAction;
 		this.elementBounds = elementBounds;
+		this.windowWidth = w;
+		this.windowHeight = h;
+		this.touchX = touchX;
+		this.touchY = touchY;
 		
 	}
 	public long getPressureTime() {
