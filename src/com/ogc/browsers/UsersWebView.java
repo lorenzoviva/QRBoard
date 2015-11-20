@@ -3,14 +3,13 @@ package com.ogc.browsers;
 import android.util.Log;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.LWebViewJsParameters;
 import com.ogc.model.QRUsersWebPage;
 
 public class UsersWebView extends LWebView{
 	
 
 	public UsersWebView(ARLayerView arview, QRUsersWebPage qrsquare, int width, int height) {
-		super(arview, qrsquare, width, height,new LWebViewJsParameters(false,false,false,true,false,false));
+		super(arview, qrsquare, width, height,new LWebViewJsParameters(false,false,false,true,false,false,false));
 	}
 
 	@Override

@@ -17,10 +17,15 @@ public class QRFreePage extends QRRepresentation{
 		return  "<!DOCTYPE html>"
 				+ "<html>"
 				+ "<head>"
-				+ "<link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>"
+				+ "<style type='text/css'>"
+				+ "@font-face {"
+				+ "font-family: myfont2;"
+				+ "src: url('Impacted2.0.ttf'); }"
+				+ "body {font-family: myfont2;}"
+				+ "</style>"
 				+ "</head>"
 				+ "<body style='margin:0; background-color:#5DB5E0'>"
-				+ "<div style='text-align: center; color: white; font-family: fantasy; font-size: 60px; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;'>THIS<br>QR IS<br>FREE</div>"
+				+ "<div style='text-align: center; font-size: 60px;'>THIS<br>QR IS<br>FREE!</div>"
 				+ "</body>"
 				+ "</html>";
 	}

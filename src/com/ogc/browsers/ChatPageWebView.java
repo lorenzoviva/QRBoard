@@ -10,7 +10,6 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.LWebViewJsParameters;
 import com.ogc.model.QRChat;
 import com.ogc.model.QRChatWebPage;
 import com.ogc.model.QRUser;
@@ -21,7 +20,7 @@ public class ChatPageWebView extends LWebView{
 	private QRUser user;
 	
 	public ChatPageWebView(ARLayerView arview, QRChatWebPage qrsquare, int width, int height) {
-		super(arview, qrsquare, width, height,new LWebViewJsParameters(true, false, true, false, false,false));
+		super(arview, qrsquare, width, height,new LWebViewJsParameters(true, false, true, false, false,false,false));
 		this.chat=qrsquare.getChat();
 		this.user = arview.getUser();
 		this.addJavascriptInterface(new JsScollInterface(arview.getContext()), "scrollInterface");
