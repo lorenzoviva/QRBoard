@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
@@ -24,7 +25,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.LWebViewJsParameters;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.QRWebPage;
 
@@ -49,7 +49,8 @@ public abstract class LWebView extends WebView {
 	private transient float dy;
 	LWebViewJsParameters jsParameters;
 
-	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height, LWebViewJsParameters jsParameters) {
+	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width,
+			int height, LWebViewJsParameters jsParameters) {
 		super(arview.getContext());
 		this.arview = arview;
 		Context context = arview.getContext();
@@ -61,7 +62,8 @@ public abstract class LWebView extends WebView {
 		this.jsParameters = jsParameters;
 
 		// Log.d("TAG rendering : ", qrsquare.toString());
-		ringProgressDialog = ProgressDialog.show(context, "Please wait ...", "loading web page ...", true);
+		ringProgressDialog = ProgressDialog.show(context, "Please wait ...",
+				"loading web page ...", true);
 		ringProgressDialog.setCancelable(true);
 		getSettings().setLoadWithOverviewMode(true);
 		getSettings().setPluginState(WebSettings.PluginState.ON);
@@ -71,7 +73,8 @@ public abstract class LWebView extends WebView {
 		getSettings().setFixedFontFamily("fantasy");
 		setWebChromeClient(new WebChromeClient() {
 
-			public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {
+			public void onShowCustomView(View view,
+					WebChromeClient.CustomViewCallback callback) {
 				Log.d("youtube", "youtube");
 
 			}
@@ -88,53 +91,66 @@ public abstract class LWebView extends WebView {
 		setWebViewClient(new WebViewClient() {
 			private int i = 0;
 
-			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
 
 				switch (errorCode) {
 				case (ERROR_AUTHENTICATION):
-					showRepresentationErrorMessage(fcontext, "User authentication failed on server");
+					showRepresentationErrorMessage(fcontext,
+							"User authentication failed on server");
 					break;
 				case (ERROR_BAD_URL):
 					showRepresentationErrorMessage(fcontext, "Malformed URL");
 					break;
 				case (ERROR_CONNECT):
-					showRepresentationErrorMessage(fcontext, "Failed to connect to the server");
+					showRepresentationErrorMessage(fcontext,
+							"Failed to connect to the server");
 					break;
 				case (ERROR_FAILED_SSL_HANDSHAKE):
-					showRepresentationErrorMessage(fcontext, "Failed to perform SSL handshake");
+					showRepresentationErrorMessage(fcontext,
+							"Failed to perform SSL handshake");
 					break;
 				case (ERROR_FILE):
-					showRepresentationErrorMessage(fcontext, "Generic file error");
+					showRepresentationErrorMessage(fcontext,
+							"Generic file error");
 					break;
 				case (ERROR_FILE_NOT_FOUND):
 					showRepresentationErrorMessage(fcontext, "File not found");
 					break;
 				case (ERROR_HOST_LOOKUP):
-					showRepresentationErrorMessage(fcontext, "Server or proxy hostname lookup failed");
+					showRepresentationErrorMessage(fcontext,
+							"Server or proxy hostname lookup failed");
 					break;
 				case (ERROR_IO):
-					showRepresentationErrorMessage(fcontext, "Failed to read or write to the server");
+					showRepresentationErrorMessage(fcontext,
+							"Failed to read or write to the server");
 					break;
 				case (ERROR_PROXY_AUTHENTICATION):
-					showRepresentationErrorMessage(fcontext, "User authentication failed on proxy");
+					showRepresentationErrorMessage(fcontext,
+							"User authentication failed on proxy");
 					break;
 				case (ERROR_REDIRECT_LOOP):
-					showRepresentationErrorMessage(fcontext, "Too many redirects");
+					showRepresentationErrorMessage(fcontext,
+							"Too many redirects");
 					break;
 				case (ERROR_TIMEOUT):
-					showRepresentationErrorMessage(fcontext, "Connection timed out");
+					showRepresentationErrorMessage(fcontext,
+							"Connection timed out");
 					break;
 				case (ERROR_TOO_MANY_REQUESTS):
-					showRepresentationErrorMessage(fcontext, "Too many requests during this load");
+					showRepresentationErrorMessage(fcontext,
+							"Too many requests during this load");
 					break;
 				case (ERROR_UNKNOWN):
 					showRepresentationErrorMessage(fcontext, "Generic error");
 					break;
 				case (ERROR_UNSUPPORTED_AUTH_SCHEME):
-					showRepresentationErrorMessage(fcontext, "Unsupported authentication scheme (not basic or digest)");
+					showRepresentationErrorMessage(fcontext,
+							"Unsupported authentication scheme (not basic or digest)");
 					break;
 				case (ERROR_UNSUPPORTED_SCHEME):
-					showRepresentationErrorMessage(fcontext, "Unsupported URI scheme");
+					showRepresentationErrorMessage(fcontext,
+							"Unsupported URI scheme");
 					break;
 				default:
 					showRepresentationErrorMessage(fcontext, description);
@@ -150,30 +166,32 @@ public abstract class LWebView extends WebView {
 					localURL = url;
 				}
 
-				Log.d("LWebViewClient:" + i, "finished loading page url:" + localURL);// +
-																						// ", Height:"
-																						// +
-																						// computeVertical()
-																						// +
-																						// ",width:"+computeHorizontal()+"] , [content Height: "
-																						// +
-																						// getContentHeight()+
-																						// " ,width:"
-																						// +
-																						// getRight()
-																						// +"]"
-																						// +
-																						// ",[measured Height:"
-																						// +getMeasuredHeight()
-																						// +
-																						// ", width:"
-																						// +
-																						// getMeasuredWidth()
-																						// +
-																						// "]");
+				Log.d("LWebViewClient:" + i, "finished loading page url:"
+						+ localURL);// +
+									// ", Height:"
+									// +
+									// computeVertical()
+									// +
+									// ",width:"+computeHorizontal()+"] , [content Height: "
+									// +
+									// getContentHeight()+
+									// " ,width:"
+									// +
+									// getRight()
+									// +"]"
+									// +
+									// ",[measured Height:"
+									// +getMeasuredHeight()
+									// +
+									// ", width:"
+									// +
+									// getMeasuredWidth()
+									// +
+									// "]");
 				i++;
 				if (i > maxrequest) {
-					showRepresentationErrorMessage(fcontext, "Too many requests during this load");
+					showRepresentationErrorMessage(fcontext,
+							"Too many requests during this load");
 				} else {
 					if (view.getContentHeight() > 0) {
 						finished();
@@ -200,22 +218,27 @@ public abstract class LWebView extends WebView {
 
 	public void showRepresentationErrorMessage(Context context, String error) {
 		ringProgressDialog.dismiss();
-		DialogBuilder.createErrorDialog(context, "An error occurred while tryng to load web page: " + error);
+		DialogBuilder.createErrorDialog(context,
+				"An error occurred while tryng to load web page: " + error);
 		destroy();
 	}
 
 	public void calculate() {
-		measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST));// View.MeasureSpec.makeMeasureSpec(5000,
-																																						// //
-																																						// View.MeasureSpec.AT_MOST));
+		measure(View.MeasureSpec.makeMeasureSpec(width,
+				View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(
+				height, View.MeasureSpec.AT_MOST));// View.MeasureSpec.makeMeasureSpec(5000,
+													// //
+													// View.MeasureSpec.AT_MOST));
 		// Log.d("calculate page dimension:", getMeasuredWidth() + "," +
 		// getMeasuredHeight() ); // //
 		layout(0, 0, width, height);
 	}
 
-	private void notifyListeners(String tagname, String attributes, String parents) {
+	private void notifyListeners(String tagname, String attributes,
+			String parents, int eventAction, Rect elementBounds, int w, int h, float touchX, float touchY) {
 		for (BrowserListener name : listener) {
-			name.onBrowserClickEvent(new BrowserClickEvent(tagname, attributes, parents, pressureTime));
+			name.onBrowserClickEvent(new BrowserClickEvent(tagname, attributes,
+					parents, pressureTime, eventAction, elementBounds,w,  h, touchX, touchY));
 		}
 	}
 
@@ -255,7 +278,8 @@ public abstract class LWebView extends WebView {
 			qrsquare.setHorizontalScroll(0);
 			qrsquare.setVerticalScroll(0);
 		} else {
-			loadData(html, "text/html", "charset=UTF-8");
+			
+			loadDataWithBaseURL("file:///android_asset/",html, "text/html", "charset=UTF-8",null);
 		}
 
 		// loadUrl("https://www.google.it/");
@@ -283,7 +307,9 @@ public abstract class LWebView extends WebView {
 			setVerticalScrollBarEnabled(true);
 			setHorizontalScrollBarEnabled(true);
 			// getDevicePixelRatio();
-			arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
+			arview.setQRSquareScrollable(computeHorizontal()
+					- getMeasuredWidth(), computeVertical()
+					- getMeasuredHeight());
 			arview.invalidate();
 			ringProgressDialog.dismiss();
 
@@ -299,7 +325,8 @@ public abstract class LWebView extends WebView {
 
 	@Override
 	public void draw(Canvas canvas) {
-		arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(), computeVertical() - getMeasuredHeight());
+		arview.setQRSquareScrollable(computeHorizontal() - getMeasuredWidth(),
+				computeVertical() - getMeasuredHeight());
 		canvas.translate(-this.getScrollX(), -this.getScrollY());
 		if (mCustomView == null) {
 			super.draw(canvas);
@@ -317,15 +344,21 @@ public abstract class LWebView extends WebView {
 		}
 
 		@JavascriptInterface
-		public void onclick(final String tagname, final String attributes, final String parents) {
-			Log.d("CLICKED ON:", tagname);
+		public void onclick(final String tagname, final String attributes,
+				final String parents, final int eventAction, final String rect,
+				final int h, final int w,final float touchX, final float touchY) {
+			Log.d("CLICKED ON:", tagname + " " + rect + " h: " + h + " , w: "
+					+ w);
 
 			if (attributes != null) {
 				runOnUIThread(new Runnable() {
 					@Override
 					public void run() {
-						notifyListeners(tagname, attributes, parents);
-						onElementTouched(tagname, attributes, parents);
+
+						notifyListeners(tagname, attributes, parents,	eventAction, getRect(rect),w,h,touchX,touchY);
+						if (eventAction == MotionEvent.ACTION_UP) {
+							onElementTouched(tagname, attributes, parents);
+						}
 
 					}
 				});
@@ -333,14 +366,34 @@ public abstract class LWebView extends WebView {
 			}
 		}
 
+		public Rect getRect(String rect) {
+			String x = rect.split("x:")[1].split(",")[0];
+			String y = rect.split("y:")[1].split(",")[0];
+			String h = rect.split("h:")[1].split(",")[0];
+			String w = rect.split("w:")[1].split(",")[0];
+			if (!x.equals("") && !y.equals("") && !w.equals("")
+					&& !h.equals("")) {
+				int left = Integer.valueOf(x.trim());
+				int top = Integer.valueOf(y.trim());
+				int right = Integer.valueOf(w.trim()) + left;
+				int bottom = Integer.valueOf(h.trim()) + top;
+				return new Rect(left, top, right, bottom);
+			} else {
+				return null;
+			}
+		}
+
 		@JavascriptInterface
-		public void setDevicePixelRatio(final float touchX, final float scrollX, final float touchY, final float scrollY, final float f) {
+		public void setDevicePixelRatio(final float touchX,
+				final float scrollX, final float touchY, final float scrollY,
+				final int eventAction, final float f) {
 			Log.d("CLICKED ON:", touchX + "," + touchY + "," + f);
 
 			runOnUIThread(new Runnable() {
 				@Override
 				public void run() {
-					clickWebPage(touchX, scrollX, touchY, scrollY, f);
+					clickWebPage(touchX, scrollX, touchY, scrollY, eventAction,
+							f);
 				}
 			});
 
@@ -365,31 +418,72 @@ public abstract class LWebView extends WebView {
 		}
 	}
 
-	public void clickWebPage(float touchX, float scrollX, float touchY, float scrollY, float f) {
+	public void clickWebPage(float touchX, float scrollX, float touchY,
+			float scrollY, int eventAction, float f) {
 		// if(!isChangeListenerListEmpty()){
+		boolean actionUP = eventAction == MotionEvent.ACTION_UP;
 
 		String whilecondition = createWhileCondition();
 
 		String js = "javascript:(function() { "
-		// scroll the window
+				// scroll the window
 				+ "	window.scrollTo(" + scrollX / f + "," + scrollY / f + "); "
 				// get the clicked object
-				+ "	var  obj=document.elementFromPoint(" + (touchX / f) + "," + (touchY / f) + ");" + "	var  parents = '';";
-		if (jsParameters.isExecuteOnClick()) {
-			js += "	if (obj.fireEvent) {" + "		obj.fireEvent('onclick');" + "	} else {" + "		var evObj = document.createEvent('Events');" + "		evObj.initEvent('click', true, false);" + "		obj.dispatchEvent(evObj);" + "	}";
+				+ "	var  obj=document.elementFromPoint(" + (touchX / f) + ","
+				+ (touchY / f) + ");" + "	var  parents = '';";
+		if (actionUP && jsParameters.isExecuteOnClick()
+				&& (!jsParameters.isEditPage())) {
+			js += "if (obj.fireEvent) {" + "		obj.fireEvent('onclick');"
+					+ "	} else {"
+					+ "		var evObj = document.createEvent('Events');"
+					+ "		evObj.initEvent('click', true, false);"
+					+ "		obj.dispatchEvent(evObj);" + "	}";
+		} else if (jsParameters.isEditPage()) {
+			js += "	var rect = obj.getBoundingClientRect();"
+					+ "	var rc = ' x:'+ rect.left+', y: '+rect.top+',  w: '+rect.width+',  h: '+rect.height;";
 		}
-		js += "	while(" + whilecondition + "){"
-		// add the courrent object tagName to 'parents' (eg: DIV)
+		js += "	while("
+				+ whilecondition
+				+ "){"
+				// add the courrent object tagName to 'parents' (eg: DIV)
 				+ "		parents += obj.tagName + ' ';"
-				// add all attributes of parent to 'parents' (eg: color<black>)
-				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){" + "			for (i = 0; i < obj.attributes.length; i++) {" + "				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" + "			}" + "		}" + "		parents += ' ';" + "		obj = obj.parentNode;" + "	} " + "	if(obj!=null) {";
-		if (jsParameters.isExecuteOnClick() && jsParameters.isFollowOnClick()) {
-			js += "		if(obj.onclick != null){" + "	 		obj.onclick();" + "		}";
+				// add all attributes of parent to 'parents' (eg:
+				// color<black>)
+				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"
+				+ "			for (i = 0; i < obj.attributes.length; i++) {"
+				+ "				parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';"
+				+ "			}" + "		}" + "		parents += ' ';"
+				+ "		obj = obj.parentNode;" + "	} " + "	if(obj!=null) {";
+		if (actionUP && jsParameters.isExecuteOnClick()
+				&& jsParameters.isFollowOnClick()
+				&& (!jsParameters.isEditPage())) {
+			js += "	if(obj.onclick != null){" + "	 		obj.onclick();" + "		}";
 		}
-		js += "		var att = '';"
+
+		if (jsParameters.isEditPage()) {
+			js += "     if(rect==null){"
+					+ "	 		rect = obj.getBoundingClientRect();"
+					+ "	 		rc = ' x:'+ rect.left+', y: '+rect.top+',  w: '+rect.width+',  h: '+rect.height;"
+					+ " 	}";
+		}
 		// add all attributes to the attribute list
-				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){" + "			for (i = 0; i < obj.attributes.length; i++) {" + "				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';" + "			}" + "		}" + "		window.clickInterface.onclick(obj.tagName,att,parents);" + "	}" + "})()";
+		js += "	var att = '';"
+				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"
+				+ "			for (i = 0; i < obj.attributes.length; i++) {"
+				+ "				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';"
+				+ "			}" + "		}";
+		if (jsParameters.isEditPage()) {
+
+			js += "var h = window.innerHeight;" + "var w = window.innerWidth;"
+					+ "	window.clickInterface.onclick(obj.tagName,att,parents,"
+					+ eventAction + ",rc,h,w,"+touchX+","+touchY+");";
+		} else {
+			js += "	window.clickInterface.onclick(obj.tagName,att,parents,"
+					+ eventAction + ",null,0,0);";
+		}
+		js += "	}" + "})()";
 		loadUrl(js);
+
 		// }
 	}
 
@@ -421,13 +515,20 @@ public abstract class LWebView extends WebView {
 		width = (int) (maxwidth * f);
 	}
 
-	private void getDevicePixelRatio(float touchX, float scrollX, float touchY, float scrollY) {
-		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(" + touchX + "," + scrollX + "," + touchY + "," + scrollY + ",obj);}" + "})()";
+	private void getDevicePixelRatio(float touchX, float scrollX, float touchY,
+			float scrollY, int eventAction) {
+		String js = "javascript:(function(){"
+				+ "var  obj=window.devicePixelRatio;" + "if(obj!=null)"
+				+ " {window.clickInterface.setDevicePixelRatio(" + touchX + ","
+				+ scrollX + "," + touchY + "," + scrollY + "," + eventAction
+				+ ",obj);}" + "})()";
 		loadUrl(js);
 	}
 
 	private void getDevicePixelRatio() {
-		String js = "javascript:(function(){" + "var  obj=window.devicePixelRatio;" + "if(obj!=null)" + " {window.clickInterface.setDevicePixelRatio(obj);}" + "})()";
+		String js = "javascript:(function(){"
+				+ "var  obj=window.devicePixelRatio;" + "if(obj!=null)"
+				+ " {window.clickInterface.setDevicePixelRatio(obj);}" + "})()";
 		loadUrl(js);
 	}
 
@@ -435,9 +536,9 @@ public abstract class LWebView extends WebView {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			pressureTime = event.getEventTime() - event.getDownTime();
 			Log.d("Clicked", "pressureTime:" + pressureTime);
-			if (!jsParameters.isOpenOnNewWindow() || pressureTime < 1000 || dx > 10 || dy > 10) {
-				getDevicePixelRatio(event.getX(), getScrollX(), event.getY(), getScrollY());
-			} else {
+
+			if (jsParameters.isOpenOnNewWindow() && pressureTime > 1000
+					&& dx < 20 && dy < 20) {
 				String url = this.getUrl();
 
 				if (url != null) {
@@ -448,62 +549,86 @@ public abstract class LWebView extends WebView {
 						link = false;
 					}
 					if (link) {
-						getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+						getContext().startActivity(
+								new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 					}
 				}
+			} else if (pressureTime < 1000 && dx < 10 && dy < 10) {
+				getDevicePixelRatio(event.getX(), getScrollX(), event.getY(),
+						getScrollY(), event.getAction());
+				performClick();
+				super.onTouchEvent(event);
 			}
 
-			performClick();
-			super.onTouchEvent(event);
 		}
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			tx = -1;
 			ty = -1;
 			dx = 0;
 			dy = 0;
+			getDevicePixelRatio(event.getX(), getScrollX(), event.getY(),
+					getScrollY(), event.getAction());
+
 		}
 		if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			if(tx!=-1){
+			if (tx != -1) {
 				float ddx = tx - event.getX();
 				float ddy = ty - event.getY();
 				dx += Math.abs(ddx);
 				dy += Math.abs(ddy);
 
-				if (tx != -1) {
-					PointF normalvector = new PointF();
-					normalvector.x = (float)(qrWebPage.getFour().x-qrWebPage.getOne().x);
-					normalvector.y = (float)(qrWebPage.getFour().y-qrWebPage.getOne().y);
-					float normalnorm = (float) Math.sqrt(Math.pow(normalvector.x,2)+Math.pow(normalvector.y,2));
-					float ddnorm =  (float) Math.sqrt(Math.pow(ddx,2)+Math.pow(ddy,2));
-					float theta = (float) Math.acos(((float)(normalvector.x*ddx)+(normalvector.y*ddy))/(normalnorm*ddnorm));
-					
-					PointF perpendicularvector = new PointF();
-					perpendicularvector.x = (float)(qrWebPage.getTwo().x-qrWebPage.getOne().x);
-					perpendicularvector.y = (float)(qrWebPage.getTwo().y-qrWebPage.getOne().y);
-					float perpendiculnorm = (float) Math.sqrt(Math.pow(perpendicularvector.x,2)+Math.pow(perpendicularvector.y,2));
-					float beta = (float) Math.acos(((float)(perpendicularvector.x*ddx)+(perpendicularvector.y*ddy))/(perpendiculnorm*ddnorm));
-				
-					
-					
-					ddy = (float) -(ddnorm * (float)Math.cos(beta));
-					ddx = (float) -(ddnorm * (float)Math.cos(theta));
-					if (qrWebPage.getHorizontalScroll() + ddx < qrWebPage.getMaxHorizontalScroll() && qrWebPage.getHorizontalScroll() + ddx > 0) {
-						qrWebPage.setHorizontalScroll((int) (qrWebPage.getHorizontalScroll() + ddx));
-					}
-					if (qrWebPage.getVerticalScroll() + ddy < qrWebPage.getMaxVerticalScroll() && qrWebPage.getVerticalScroll() + ddy > 0) {
-						qrWebPage.setVerticalScroll((int) (qrWebPage.getVerticalScroll() + ddy));
-					}
+				PointF normalvector = new PointF();
+				normalvector.x = (float) (qrWebPage.getFour().x - qrWebPage
+						.getOne().x);
+				normalvector.y = (float) (qrWebPage.getFour().y - qrWebPage
+						.getOne().y);
+				float normalnorm = (float) Math.sqrt(Math
+						.pow(normalvector.x, 2) + Math.pow(normalvector.y, 2));
+				float ddnorm = (float) Math.sqrt(Math.pow(ddx, 2)
+						+ Math.pow(ddy, 2));
+				float theta = (float) Math
+						.acos(((float) (normalvector.x * ddx) + (normalvector.y * ddy))
+								/ (normalnorm * ddnorm));
+
+				PointF perpendicularvector = new PointF();
+				perpendicularvector.x = (float) (qrWebPage.getTwo().x - qrWebPage
+						.getOne().x);
+				perpendicularvector.y = (float) (qrWebPage.getTwo().y - qrWebPage
+						.getOne().y);
+				float perpendiculnorm = (float) Math.sqrt(Math.pow(
+						perpendicularvector.x, 2)
+						+ Math.pow(perpendicularvector.y, 2));
+				float beta = (float) Math
+						.acos(((float) (perpendicularvector.x * ddx) + (perpendicularvector.y * ddy))
+								/ (perpendiculnorm * ddnorm));
+
+				ddy = (float) -(ddnorm * (float) Math.cos(beta));
+				ddx = (float) (ddnorm * (float) Math.cos(theta));
+				if (qrWebPage.getHorizontalScroll() + ddx < qrWebPage
+						.getMaxHorizontalScroll()
+						&& qrWebPage.getHorizontalScroll() + ddx > 0) {
+					qrWebPage.setHorizontalScroll((int) (qrWebPage
+							.getHorizontalScroll() + ddx));
 				}
-				
+				if (qrWebPage.getVerticalScroll() + ddy < qrWebPage
+						.getMaxVerticalScroll()
+						&& qrWebPage.getVerticalScroll() + ddy > 0) {
+					qrWebPage.setVerticalScroll((int) (qrWebPage
+							.getVerticalScroll() + ddy));
+				}
+				getDevicePixelRatio(event.getX(), getScrollX(), event.getY(),
+						getScrollY(), event.getAction());
+
 			}
 			tx = event.getX();
 			ty = event.getY();
-			
+
 		}
 		return false;
 	}
 
-	public abstract void onElementTouched(String tagname, String attributes, String parents);
+	public abstract void onElementTouched(String tagname, String attributes,
+			String parents);
 
 	public boolean isChangeListenerListEmpty() {
 		return listener.isEmpty();

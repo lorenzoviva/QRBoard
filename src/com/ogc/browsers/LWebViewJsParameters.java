@@ -1,4 +1,4 @@
-package com.example.qrboard;
+package com.ogc.browsers;
 
 public class LWebViewJsParameters {
 	private boolean followOnClick;
@@ -7,13 +7,15 @@ public class LWebViewJsParameters {
 	private boolean followId;
 	private boolean followExternalLinks;
 	private boolean openOnNewWindow;
-	public LWebViewJsParameters(boolean followOnClick, boolean excludeImages, boolean executeOnClick, boolean followId, boolean followExternalLinks,boolean openOnNewWindow) {
+	private boolean editPage;
+	public LWebViewJsParameters(boolean followOnClick, boolean excludeImages, boolean executeOnClick, boolean followId, boolean followExternalLinks,boolean openOnNewWindow,boolean editPage) {
 		this.followOnClick = followOnClick;
 		this.excludeImages = excludeImages;
 		this.executeOnClick = executeOnClick;
 		this.followId = followId;
 		this.followExternalLinks = followExternalLinks;
 		this.openOnNewWindow = openOnNewWindow;
+		this.editPage = editPage;
 	}
 	public boolean isFollowOnClick() {
 		return followOnClick;
@@ -50,6 +52,12 @@ public class LWebViewJsParameters {
 	}
 	public void setOpenOnNewWindow(boolean openOnNewWindow) {
 		this.openOnNewWindow = openOnNewWindow;
+	}
+	public boolean isEditPage() {
+		return editPage;
+	}
+	public void setEditPage(boolean editPage) {
+		this.editPage = editPage;
 	}
 	
 }

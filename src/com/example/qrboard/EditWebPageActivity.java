@@ -2,23 +2,15 @@ package com.example.qrboard;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.widget.ImageButton;
 
 import com.google.gson.GsonHelper;
 import com.google.gson.JsonSyntaxException;
-import com.ogc.graphics.Point;
-import com.ogc.graphics.Quadrilateral;
-import com.ogc.graphics.Utility;
-import com.ogc.model.QRSquare;
 import com.ogc.model.QRWebPage;
 
 public class EditWebPageActivity extends Activity implements InvalidableAcivity {
 	QRWebPageEditorView editor;
-	private ActivityInvalidator invalidator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +25,16 @@ public class EditWebPageActivity extends Activity implements InvalidableAcivity 
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		ImageButton addImageButton = (ImageButton) findViewById(R.id.epw_imgbutton);
+		ImageButton addDivButton = (ImageButton) findViewById(R.id.epw_divbutton);
+		ImageButton addLinkButton = (ImageButton) findViewById(R.id.epw_linkbutton);
+		ImageButton addTextButton = (ImageButton) findViewById(R.id.epw_textbutton);
 		editor = (QRWebPageEditorView) findViewById(R.id.epw_squaresurfaceView);
 		if (square != null) {
-			editor.setup(square);
+			editor.setup(square,addImageButton,addDivButton,addLinkButton,addTextButton);
 		}
-		invalidator = new ActivityInvalidator(this);
+		
+		new ActivityInvalidator(this);
 
 
 	}

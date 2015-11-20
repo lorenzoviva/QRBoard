@@ -6,13 +6,12 @@ import java.net.URL;
 import android.util.Log;
 
 import com.example.qrboard.ARLayerView;
-import com.example.qrboard.LWebViewJsParameters;
 import com.ogc.model.QRWebPage;
 
 public class BrowserWebView extends LWebView {
 
 	public BrowserWebView(ARLayerView arview, QRWebPage qrsquare, int width, int height) {
-		super(arview, qrsquare, width, height,new LWebViewJsParameters(true,true,true,false,true,true));
+		super(arview, qrsquare, width, height,new LWebViewJsParameters(true,true,true,false,true,true,false));
 	}
 
 	@Override
