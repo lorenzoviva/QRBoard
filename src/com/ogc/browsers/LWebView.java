@@ -279,7 +279,7 @@ public abstract class LWebView extends WebView {
 			qrsquare.setVerticalScroll(0);
 		} else {
 			
-			loadDataWithBaseURL("file:///android_asset/",html, "text/html", "charset=UTF-8",null);
+			loadDataWithBaseURL("file:///android_asset/fonts/",html, "text/html", "charset=UTF-8",null);
 		}
 
 		// loadUrl("https://www.google.it/");
@@ -479,7 +479,7 @@ public abstract class LWebView extends WebView {
 					+ eventAction + ",rc,h,w,"+touchX+","+touchY+");";
 		} else {
 			js += "	window.clickInterface.onclick(obj.tagName,att,parents,"
-					+ eventAction + ",null,0,0);";
+					+ eventAction + ",null,0,0,0,0);";
 		}
 		js += "	}" + "})()";
 		loadUrl(js);
