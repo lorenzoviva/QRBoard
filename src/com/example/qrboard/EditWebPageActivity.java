@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.ListView;
 
 import com.google.gson.GsonHelper;
 import com.google.gson.JsonSyntaxException;
@@ -19,10 +20,12 @@ import com.ogc.model.QRWebPage;
 public class EditWebPageActivity extends Activity implements InvalidableAcivity {
 	QRWebPageEditorView editor;
 	private ActivityInvalidator invalidator;
+	private ListView listViewMessages;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		listViewMessages = (ListView) findViewById(R.id.list_view_messages);
 		setContentView(R.layout.activity_edit_web_page);
 		Intent intent = getIntent();
 //		String type = intent.getStringExtra("type");
