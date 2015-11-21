@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,8 +32,8 @@ public class QRWebPageEditorView extends ARLayerView implements
 	private ImageButton addTextButton;
 	private CustomSelector selector = null;
 
-	
-	private float  dx = -1,dy = -1,tx = -1, ty = -1,ddy = -1,ddx = -1;
+	private float dx = -1, dy = -1, tx = -1, ty = -1, ddy = -1, ddx = -1;
+
 	public QRWebPageEditorView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -127,37 +128,53 @@ public class QRWebPageEditorView extends ARLayerView implements
 
 	@Override
 	public void onBrowserClickEvent(BrowserClickEvent event) {
-		Log.d("QRWebPageEditor",
-				"Touched browser element :" + event.getTagname()
-						+ " with attributes :" + event.getAttributes()
-						+ " and parents : " + event.getParents()
-						+ " the pressure time on this element is : "
-						+ event.getPressureTime() + " event : "
-						+ event.getMotionEventAction());
+		Log.d("QRWebPageEditor",event.toString());
 		if (event.getMotionEventAction() == MotionEvent.ACTION_DOWN) {
 			tx = -1;
 			ty = -1;
 			dx = 0;
 			dy = 0;
-		
-		}else if(event.getMotionEventAction() == MotionEvent.ACTION_UP){
-			if(dy<15 && dx <15){
-				if (selector == null && !event.getTagname().equals("") && event.getElementBounds() != null) {
+
+		} else if (event.getMotionEventAction() == MotionEvent.ACTION_UP) {
+			if (dy < 15 && dx < 15) {
+				if (selector == null && !event.getTagname().equals("")
+						&& event.getElementBounds() != null) {
 					selector = new CustomSelector(event);
 				} else {
-					selector = null;
+					if(!event.getTagname().equals("") && event.getElementBounds() != null){
+						selector = new CustomSelector(event);
+					}else{
+						selector = null;
+					}
 				}
 			}
 			tx = -1;
 			ty = -1;
 			dx = 0;
 			dy = 0;
-		}else if(event.getMotionEventAction() == MotionEvent.ACTION_MOVE){
+		} else if (event.getMotionEventAction() == MotionEvent.ACTION_MOVE) {
 			if (tx != -1) {
 				ddx = tx - event.getTouchX();
 				ddy = ty - event.getTouchY();
 				dx += Math.abs(ddx);
 				dy += Math.abs(ddy);
+				if (selector != null) {
+					BrowserClickEvent selectorEvent = selector.getEvent();
+					Rect elementBounds = selectorEvent.getElementBounds();
+						if(event.getAttributes().equals(selectorEvent.getAttributes())){
+							elementBounds= event.getElementBounds();
+							
+						}else{
+							if (selectorEvent.getScrollX() != event.getScrollX() || selectorEvent.getScrollY() != event.getScrollY()) {
+								elementBounds.offset((int)((event.getScrollY()-selectorEvent.getScrollY())),(int)((event.getScrollX()-selectorEvent.getScrollX())));
+							}
+						}
+						selectorEvent.setElementBounds(elementBounds);
+						selectorEvent.setScrollX(event.getScrollX());
+						selectorEvent.setScrollY(event.getScrollY());
+						selector.setEvent(selectorEvent);
+					}
+				
 			}
 			tx = event.getTouchX();
 			ty = event.getTouchY();

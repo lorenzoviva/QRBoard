@@ -14,6 +14,9 @@ public class BrowserClickEvent{
 	int windowHeight;
 	float touchX;
 	float touchY;
+	float scrollX;
+	float scrollY;
+	float f;
 	public String getTagname() {
 		return tagname;
 	}
@@ -32,7 +35,7 @@ public class BrowserClickEvent{
 	public void setParents(String parents) {
 		this.parents = parents;
 	}
-	public BrowserClickEvent(String tagname, String attributes, String parents,long pressureTime, int eventAction,Rect elementBounds, int w, int h, float touchX, float touchY) {
+	public BrowserClickEvent(String tagname, String attributes, String parents,long pressureTime, int eventAction,Rect elementBounds, int w, int h, float touchX, float touchY,	float scrollX,float scrollY,float f) {
 		this.tagname = tagname;
 		this.attributes = attributes;
 		this.parents = parents;
@@ -43,6 +46,8 @@ public class BrowserClickEvent{
 		this.windowHeight = h;
 		this.touchX = touchX;
 		this.touchY = touchY;
+		this.scrollX = scrollX;
+		this.scrollY = scrollY;
 		
 	}
 	public long getPressureTime() {
@@ -87,5 +92,33 @@ public class BrowserClickEvent{
 	}
 	public void setTouchY(float touchY) {
 		this.touchY = touchY;
+	}
+	public float getScrollX() {
+		return scrollX;
+	}
+	public void setScrollX(float scrollX) {
+		this.scrollX = scrollX;
+	}
+	public float getScrollY() {
+		return scrollY;
+	}
+	public void setScrollY(float scrollY) {
+		this.scrollY = scrollY;
+	}
+	public float getF() {
+		return f;
+	}
+	public void setF(float f) {
+		this.f = f;
+	}
+	@Override
+	public String toString() {
+		return "BrowserClickEvent [tagname=" + tagname + ", attributes="
+				+ attributes + ", parents=" + parents + ", pressureTime="
+				+ pressureTime + ", motionEventAction=" + motionEventAction
+				+ ", elementBounds=" + elementBounds + ", windowWidth="
+				+ windowWidth + ", windowHeight=" + windowHeight + ", touchX="
+				+ touchX + ", touchY=" + touchY + ", scrollX=" + scrollX
+				+ ", scrollY=" + scrollY + ", f=" + f + "]";
 	}
 }

@@ -235,10 +235,10 @@ public abstract class LWebView extends WebView {
 	}
 
 	private void notifyListeners(String tagname, String attributes,
-			String parents, int eventAction, Rect elementBounds, int w, int h, float touchX, float touchY) {
+			String parents, int eventAction, Rect elementBounds, int w, int h, float touchX, float touchY,float scrollY,float scrollX, float f) {
 		for (BrowserListener name : listener) {
 			name.onBrowserClickEvent(new BrowserClickEvent(tagname, attributes,
-					parents, pressureTime, eventAction, elementBounds,w,  h, touchX, touchY));
+					parents, pressureTime, eventAction, elementBounds,w,  h, touchX, touchY,scrollX,scrollY,f));
 		}
 	}
 
@@ -346,7 +346,7 @@ public abstract class LWebView extends WebView {
 		@JavascriptInterface
 		public void onclick(final String tagname, final String attributes,
 				final String parents, final int eventAction, final String rect,
-				final int h, final int w,final float touchX, final float touchY) {
+				final int h, final int w,final float touchX, final float touchY,final float scrollX,final float scrollY,final float f) {
 			Log.d("CLICKED ON:", tagname + " " + rect + " h: " + h + " , w: "
 					+ w);
 
@@ -355,7 +355,7 @@ public abstract class LWebView extends WebView {
 					@Override
 					public void run() {
 
-						notifyListeners(tagname, attributes, parents,	eventAction, getRect(rect),w,h,touchX,touchY);
+						notifyListeners(tagname, attributes, parents,	eventAction, getRect(rect),w,h,touchX,touchY,scrollX,scrollY,f);
 						if (eventAction == MotionEvent.ACTION_UP) {
 							onElementTouched(tagname, attributes, parents);
 						}
@@ -367,17 +367,17 @@ public abstract class LWebView extends WebView {
 		}
 
 		public Rect getRect(String rect) {
-		if (!rect.equals("") && (rect!=null)) {
+		if ((rect!=null) &&!rect.equals("")) {
 			String x = rect.split("x:")[1].split(",")[0];
 			String y = rect.split("y:")[1].split(",")[0];
 			String h = rect.split("h:")[1].split(",")[0];
 			String w = rect.split("w:")[1].split(",")[0];
 			if (!x.equals("") && !y.equals("") && !w.equals("")
 					&& !h.equals("")) {
-				int left = Integer.valueOf(x.trim());
-				int top = Integer.valueOf(y.trim());
-				int right = Integer.valueOf(w.trim()) + left;
-				int bottom = Integer.valueOf(h.trim()) + top;
+				int left =(int) Float.parseFloat(x.trim());
+				int top = (int) Float.parseFloat(y.trim());
+				int right = (int) Float.parseFloat(w.trim()) + left;
+				int bottom = (int) Float.parseFloat(h.trim()) + top;
 				return new Rect(left, top, right, bottom);
 			} else {
 				return null;
@@ -479,10 +479,10 @@ public abstract class LWebView extends WebView {
 
 			js += "var h = window.innerHeight;" + "var w = window.innerWidth;"
 					+ "	window.clickInterface.onclick(obj.tagName,att,parents,"
-					+ eventAction + ",rc,h,w,"+touchX+","+touchY+");";
+					+ eventAction + ",rc,h,w,"+touchX+","+touchY+","+scrollX+","+scrollY+"," +f+");";
 		} else {
 			js += "	window.clickInterface.onclick(obj.tagName,att,parents,"
-					+ eventAction + ",null,0,0,0,0);";
+					+ eventAction + ",null,0,0,0,0,"+scrollX+","+scrollY+"," +f+");";
 		}
 		js += "	}" + "})()";
 		loadUrl(js);
