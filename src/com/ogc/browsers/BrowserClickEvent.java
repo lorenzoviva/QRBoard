@@ -17,6 +17,7 @@ public class BrowserClickEvent{
 	float scrollX;
 	float scrollY;
 	float f;
+
 	public String getTagname() {
 		return tagname;
 	}

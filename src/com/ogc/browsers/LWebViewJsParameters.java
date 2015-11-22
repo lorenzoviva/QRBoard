@@ -8,6 +8,8 @@ public class LWebViewJsParameters {
 	private boolean followExternalLinks;
 	private boolean openOnNewWindow;
 	private boolean editPage;
+	private String selectedId;
+	
 	public LWebViewJsParameters(boolean followOnClick, boolean excludeImages, boolean executeOnClick, boolean followId, boolean followExternalLinks,boolean openOnNewWindow,boolean editPage) {
 		this.followOnClick = followOnClick;
 		this.excludeImages = excludeImages;
@@ -16,6 +18,12 @@ public class LWebViewJsParameters {
 		this.followExternalLinks = followExternalLinks;
 		this.openOnNewWindow = openOnNewWindow;
 		this.editPage = editPage;
+	}
+	public String getSelectedId() {
+		return selectedId;
+	}
+	public void setSelectedId(String selectedId) {
+		this.selectedId = selectedId;
 	}
 	public boolean isFollowOnClick() {
 		return followOnClick;

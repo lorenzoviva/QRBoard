@@ -11,8 +11,7 @@ import com.google.gson.JsonSyntaxException;
 import com.ogc.model.QRWebPage;
 
 public class EditWebPageActivity extends Activity implements InvalidableAcivity {
-	QRWebPageEditorView editor;
-	private ActivityInvalidator invalidator;
+	private QRWebPageEditorView editor;
 	private ListView listViewMessages;
 
 	@Override
@@ -33,9 +32,10 @@ public class EditWebPageActivity extends Activity implements InvalidableAcivity 
 		ImageButton addDivButton = (ImageButton) findViewById(R.id.epw_divbutton);
 		ImageButton addLinkButton = (ImageButton) findViewById(R.id.epw_linkbutton);
 		ImageButton addTextButton = (ImageButton) findViewById(R.id.epw_textbutton);
+		ImageButton removeButton = (ImageButton) findViewById(R.id.ewp_removebutton);
 		editor = (QRWebPageEditorView) findViewById(R.id.epw_squaresurfaceView);
 		if (square != null) {
-			editor.setup(square,addImageButton,addDivButton,addLinkButton,addTextButton);
+			editor.setup(square,addImageButton,addDivButton,addLinkButton,addTextButton,removeButton);
 		}
 		
 		new ActivityInvalidator(this);

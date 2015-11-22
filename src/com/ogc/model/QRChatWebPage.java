@@ -62,7 +62,8 @@ public class QRChatWebPage extends QRWebPage {
 		paint.setColor(Color.BLACK);
 
 		if (webview == null) {
-			webview = new ChatPageWebView(arview, this, 500, 500);
+			float density = arview.getContext().getResources().getDisplayMetrics().density;
+			webview = new ChatPageWebView(arview, this, (int)(density*250), (int)(density*250));
 
 		} else {
 			int w = webview.getMeasuredWidth();

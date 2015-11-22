@@ -45,6 +45,15 @@
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
                 android:src="@drawable/text32" />
+
+            <ImageButton
+                android:id="@+id/ewp_removebutton"
+                android:layout_width="@+dimen/option_buttons"
+                android:layout_height="@+dimen/option_buttons"
+                android:contentDescription="@string/brush"
+                android:src="@drawable/removeicon"
+                android:visibility="invisible" />
+
         </LinearLayout>
     </ScrollView>
 

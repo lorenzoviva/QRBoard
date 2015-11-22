@@ -17,14 +17,10 @@ public class CustomSelector {
 
 	public void draw(Canvas canvas, QRWebPage square) {
 		Rect r = new Rect(event.getElementBounds());
-		int left = (int) ((square.getThree().x - square.getTwo().x) * ((float) r.left / (float) (event
-				.getWindowWidth())));
-		int top = (int) ((square.getFour().y - square.getThree().y) * ((float) r.top / (float) (event
-				.getWindowHeight())));
-		int right = (int) ((square.getThree().x - square.getTwo().x) * ((float) (r.right + r.left) / (float) (event
-				.getWindowWidth())));
-		int bottom = (int) ((square.getFour().y - (int) square.getThree().y) * ((float) (r.bottom + r.top) / (float) (event
-				.getWindowHeight())));
+		int left = (int) ((((double) square.getThree().x - (double) square.getTwo().x) * ((double) r.left ))/ (double) (event.getWindowWidth()));
+		int top = (int) ((((double) square.getFour().y - (double) square.getThree().y) * ((double) r.top ))/ (double) (event.getWindowHeight()));
+		int right = (int) ((((double) square.getThree().x - (double) square.getTwo().x) * ((double) (r.right ))) / (double) (event.getWindowWidth()));
+		int bottom = (int) ((((double) square.getFour().y - (double) square.getThree().y) * ((double) (r.bottom))) / (double) (event.getWindowHeight()));
 		r.set(left, top, right, bottom);
 		r.offset((int) square.getTwo().x, (int) square.getTwo().y);
 

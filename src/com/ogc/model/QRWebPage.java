@@ -12,11 +12,13 @@ import android.view.MotionEvent;
 import com.example.qrboard.ARLayerView;
 import com.ogc.browsers.BrowserWebView;
 import com.ogc.browsers.LWebView;
+import com.ogc.browsers.LWebViewJsParameters;
 
 public class QRWebPage extends QRSquare {
 
 	private String html;
 	protected transient LWebView webview = null;
+	private String selectedId = "";
 
 	public QRWebPage(){
 		
@@ -44,9 +46,13 @@ public class QRWebPage extends QRSquare {
 		paint.setColor(Color.BLACK);
 
 		if (webview == null) {
-			webview = new BrowserWebView(arview, this, 500, 500);
+			float density = arview.getContext().getResources().getDisplayMetrics().density;
+			
+			webview = new BrowserWebView(arview, this, (int) (250*density), (int) (250*density));
 		} else {
-
+			if(!selectedId.equals("") && webview.getJsParameters()!=null &&  webview.getJsParameters().getSelectedId()!=null && !webview.getJsParameters().getSelectedId().equals("") && !webview.getJsParameters().getSelectedId().equals(selectedId)){
+				webview.select(selectedId);
+			}
 			// webview.layout(0, 0, 500, 500);
 			int w = webview.getMeasuredWidth();
 			int h = webview.getMeasuredHeight();
@@ -115,5 +121,14 @@ public class QRWebPage extends QRSquare {
 	}
 	public void setWebview(LWebView webview) {
 		this.webview = webview;
+	}
+	public void setJsParameters(LWebViewJsParameters jsParameters) {
+		if(webview!=null){
+			webview.setJsParameters(jsParameters);
+		}
+		
+	}
+	public void select(String selectedId) {
+		this.selectedId = selectedId;
 	}
 }
