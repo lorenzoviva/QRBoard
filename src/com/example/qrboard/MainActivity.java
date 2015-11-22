@@ -25,8 +25,6 @@ import com.ogc.dbutility.JSONParser;
 
 public class MainActivity extends Activity {
 	TextView tv;
-	EditText fn;
-	EditText ln;
 	JSONParser jParser = new JSONParser();
 	JSONObject json;
 
@@ -35,9 +33,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		tv = (TextView) findViewById(R.id.main_text_view);
-		tv.setText("lel");
-		fn = (EditText) findViewById(R.id.edit_name);
-		ln = (EditText) findViewById(R.id.edit_last_name);
+		tv.setText("MonKey");
 	}
 
 	public void scanNow(View view) {

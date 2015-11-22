@@ -4,7 +4,7 @@
     <string name="app_name">QRBoard</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="scanButtonText">scan now</string>
+    <string name="scanButtonText">SCAN NOW</string>
     <string name="app_picker_name">Applications</string>
     <string name="bookmark_picker_name">Bookmarks</string>
     <string name="button_add_calendar">Add to calendar</string>

@@ -1,38 +1,69 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.example.qrboard.MainActivity" 
-    >
-	<EditText 
-	    android:id = "@+id/edit_name"
-	    android:layout_width="wrap_content"
+    tools:context="com.example.qrboard.MainActivity" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"/>
-	<EditText 
-	    android:id = "@+id/edit_last_name"
-	    android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"/>
+        android:layout_above="@+id/main_text_view"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/splash_icon" />
+
+
+    <!--
+         <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/main_text_view"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray" />
+    -->
+
     <TextView
         android:id="@+id/main_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_above="@+id/button_background"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/hello_world"
+        android:textSize="80sp" />
+
+    <View
+        android:id="@+id/button_background"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#5DB5E0"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
     
+	<Button
+        android:id="@+id/button1"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="30dp"
+        android:fontFamily="sans-serif-thin"
+        android:onClick="scanNow"
+        android:scaleType="fitXY"
+        android:text="@string/scanButtonText"
+        android:textSize="50sp"
+        android:textColor="#5DB5E0"
+        android:background="@drawable/buttonshape"
+        android:shadowColor="#3D3D3D"
+		android:shadowDx="0"
+		android:shadowDy="0"
+		android:shadowRadius="2" />
 
-    <Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/scanButtonText"
-    android:onClick="scanNow"
-    />
-
-    
-
-</LinearLayout>
+</RelativeLayout>
