@@ -19,7 +19,24 @@ public class QRSquareUserRepresentation extends QRRepresentation {
 		if (squareuser.getIsnew()) {
 			html = "ADD YOUR FRIEND";
 		} else {
-			html = "Role name : " + squareuser.getRole().getName() + " <br> Date : " + squareuser.getDate();
+			html = "<!DOCTYPE html>"
+					+ "<html>"
+					+ "<head>"
+					+ "<style type='text/css'>"
+					+ "@font-face {"
+					+ "font-family: myfont;"
+					+ "src: url('OpenSans-Light.ttf'); }"
+					+ "body {font-family: myfont;}"
+					+ "</style>"
+					+ "</head>"
+					+ "<body style='margin:0; background-color:#FFFFFF'>"
+					+ "<div style='text-align: center; font-size: 32px; color:#000000'><b>Role:</b><br>"
+					+ squareuser.getRole().getName()
+					+"<br><b>Creation date:</b><br>"
+					+ squareuser.getDate()
+					+"</div>"
+					+ "</body>"
+					+ "</html>";
 		}
 		return html;
 	}
