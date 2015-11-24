@@ -1,41 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="wrap_content"
+    	android:layout_height="wrap_content">
+
+<RelativeLayout
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="wrap_content" >
+	
+    
+    	
+	    <TextView
+	        android:id="@+id/signupfirstnametextview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	
+	        android:text="@string/signupfirstnametext" />
+	 	<EditText 
+	 	    android:id="@+id/signupfirstnameedittext"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	 
+	        android:inputType="textPersonName"
+	         android:layout_below="@+id/signupfirstnametextview"/>
+	 	 <TextView
+	        android:id="@+id/signuplastnametextview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/signuplastnametext"
+	         android:layout_below="@+id/signupfirstnameedittext" />
+	 	<EditText 
+	 	    android:id="@+id/signuplastnameedittext"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:inputType="textPersonName"
+	        android:layout_below="@+id/signuplastnametextview"/>
+	 	
+	 	<TextView
+	        android:id="@+id/password_textview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/password"
+	         android:layout_below="@+id/signuplastnameedittext" />
+	 	<EditText 
+	 	    android:id="@+id/password_edit_text"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:inputType="textPassword"
+	        android:layout_below="@+id/password_textview"/>
+	 	
+	 	 <CheckBox
+	         android:id="@+id/useQRPassword_checkbox"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@+id/password_edit_text"
+	         android:text="@string/useQRPassword" />
+		
+	 	 <TextView
+	 	     android:id="@+id/tips_login_textview"
+	 	     android:layout_width="fill_parent"
+	 	     android:layout_height="wrap_content"
+	 	     android:layout_below="@+id/useQRPassword_checkbox"
+	 	     android:text="@string/tips_login"
+	 	     android:visibility="invisible" />
+	 	 
+	     <Button
+	        android:id="@+id/signupokbutton"
+	        android:layout_width="100dp"
+	        android:layout_height="wrap_content"
+	        android:text="@string/button_ok"
+	        android:layout_marginTop="5dp"
+	        android:layout_below="@+id/tips_login_textview"
+	        />
 
-    <TextView
-        android:id="@+id/signupfirstnametextview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-
-        android:text="@string/signupfirstnametext" />
- 	<EditText 
- 	    android:id="@+id/signupfirstnameedittext"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
- 
-        android:inputType="textPersonName"
-         android:layout_below="@+id/signupfirstnametextview"/>
- 	 <TextView
-        android:id="@+id/signuplastnametextview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/signuplastnametext"
-         android:layout_below="@+id/signupfirstnameedittext" />
- 	<EditText 
- 	    android:id="@+id/signuplastnameedittext"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-
-        android:inputType="textPersonName"
-         android:layout_below="@+id/signuplastnametextview"/>
-     <Button
-        android:id="@+id/signupokbutton"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/button_ok"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/signuplastnameedittext"
-        />
+	
      
 </RelativeLayout>
+</ScrollView>    

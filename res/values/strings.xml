@@ -153,5 +153,10 @@
 	<string name="esu_cancel_button_text">cancel</string>
 	<string name="esu_you">You</string>
 	<string name="tipEditWebPage">Select something to start</string>
+	<string name="password">Password</string>
+	<string name="useQRPassword">Use a QRpassword</string>
+	<string name="tips_login">If you choose a QRpassword, everytime you want to login, you\'ll need to frame both QR for user and password. Keep in mind that you can directly use the QR link as password .</string>
+	
+	
 	
 </resources>

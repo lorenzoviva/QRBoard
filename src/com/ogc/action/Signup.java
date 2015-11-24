@@ -34,6 +34,7 @@ public class Signup extends Action {
 	private String password = null;
 	private String firstname = null;
 	private String lastname = null;
+	private boolean useQrPassword = false;
 	
 	ARGUI argui;
 	@Override
@@ -59,6 +60,7 @@ public class Signup extends Action {
 
 	@Override
 	public void addQRParameter(QRSquare qrsquare) {
+		
 		this.password = qrsquare.getText();
 		execute();
 	}
@@ -69,6 +71,15 @@ public class Signup extends Action {
 
 	public void addLastnameParameter(String lastname) {
 		this.lastname = lastname;
+	}
+	
+	public void addPasswordParameter(String passwordtext) {
+		this.password = passwordtext;
+		execute();
+	}
+
+	public void addCheckQRPassword(boolean checkQRPassword) {
+		this.useQrPassword = checkQRPassword;
 	}
 
 	public class QRSquareAction extends AsyncTask<String, String, String> {
