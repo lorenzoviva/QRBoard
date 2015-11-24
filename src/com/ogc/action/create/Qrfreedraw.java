@@ -41,7 +41,7 @@ public class Qrfreedraw extends Action{
 	
 	@Override
 	public int getColor(ARGUI argui) {
-		return 0;
+		return Color.RED;
 	}
 
 	@Override

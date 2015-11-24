@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -40,7 +41,7 @@ public class Qrchat extends Action{
 	}
 	@Override
 	public int getColor(ARGUI argui) {
-		return 0;
+		return Color.GREEN;
 	}
 
 	@Override

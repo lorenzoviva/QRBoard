@@ -162,7 +162,7 @@ public class ARGUI {
 				Paint paint = new Paint();
 				paint.setStyle(Paint.Style.STROKE);
 				paint.setColor(Color.BLACK);
-				float textSize = (float) (radius * 0.2);
+				float textSize = (float) (radius * 0.15);
 				paint.setTextSize(textSize);
 				if (!actions.isEmpty() && actions.size() > 0) {
 					canvas.drawTextOnPath(actions.get(i), path, 0, textSize, paint);

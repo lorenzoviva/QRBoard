@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -60,7 +61,7 @@ public class Qrwebpage extends Action{
 
 	@Override
 	public int getColor(ARGUI argui) {
-		return 0;
+		return Color.YELLOW;
 	}
 
 	public class QRSquareAction extends AsyncTask<String, String, String> {
