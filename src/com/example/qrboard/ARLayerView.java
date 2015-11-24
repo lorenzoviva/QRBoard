@@ -12,6 +12,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -25,8 +26,8 @@ public class ARLayerView extends SurfaceView {
 
 	private ARGUI argui = null;
 
-	private Button removeSquareButton;
-	private Button userButton;
+	private ImageButton removeSquareButton;
+	private ImageButton userButton;
 
 	public void setListIndex(int index) {
 		argui.setListindex(index);
@@ -145,8 +146,8 @@ public class ARLayerView extends SurfaceView {
 	}
 
 	public View getButtonView() {
-		removeSquareButton = new Button(getContext());
-		removeSquareButton.setText("remove square");
+		removeSquareButton = new ImageButton(getContext());
+		removeSquareButton.setImageResource(R.drawable.removesquarebutton);
 		removeSquareButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -154,8 +155,8 @@ public class ARLayerView extends SurfaceView {
 				removeSquare();
 			}
 		});
-		userButton = new Button(getContext());
-		userButton.setText("user");
+		userButton = new ImageButton(getContext());
+		userButton.setImageResource(R.drawable.userbutton);
 		userButton.setOnClickListener(new OnClickListener() {
 
 			@Override
