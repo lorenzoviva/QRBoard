@@ -22,7 +22,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.codebutler.android_websockets.WebSocketClient;
 import com.google.gson.Gson;
@@ -112,8 +111,6 @@ public class ChatActivity extends Activity {
 
 						String message = String.format(Locale.US, "Disconnected! Code: %d Reason: %s", code, reason);
 
-						showToast(message);
-
 						// clear the session id from shared preferences
 						// utils.storeSessionId(null);
 					}
@@ -121,8 +118,6 @@ public class ChatActivity extends Activity {
 					@Override
 					public void onError(Exception error) {
 						Log.e("TAG", "Error! : " + error);
-
-						showToast("Error! : " + error);
 					}
 
 				}, null);
@@ -152,8 +147,6 @@ public class ChatActivity extends Activity {
 			paramap.put("message", string);
 			sendMessageToServer(new JSONObject(paramap).toString());
 			inputMessage.setText("");
-		} else {
-			showToast("please fill the input box before!");
 		}
 	}
 
@@ -205,8 +198,6 @@ public class ChatActivity extends Activity {
 				// number of people online
 				String onlineCount = jObj.getString("onlineCount");
 
-				showToast(name + message + ". Currently " + onlineCount + " people online!");
-
 			} else if (flag.equalsIgnoreCase(TAG_MESSAGE)) {
 				// if the flag is 'message', new message received
 				String fromName = "";
@@ -239,8 +230,6 @@ public class ChatActivity extends Activity {
 				// If the flag is 'exit', somebody left the conversation
 				String name = jObj.getString("name");
 				String message = jObj.getString("message");
-
-				showToast(name + message);
 			}
 
 		} catch (JSONException e) {
@@ -276,18 +265,6 @@ public class ChatActivity extends Activity {
 				}
 			}
 		});
-	}
-
-	private void showToast(final String message) {
-
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-			}
-		});
-
 	}
 
 	/**
