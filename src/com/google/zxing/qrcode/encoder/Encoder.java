@@ -247,7 +247,7 @@ public final class Encoder {
 
   private static Version chooseVersion(int numInputBits, ErrorCorrectionLevel ecLevel) throws WriterException {
     // In the following comments, we use numbers of Version 7-H.
-    for (int versionNum = 1; versionNum <= 40; versionNum++) {
+    for (int versionNum = 2; versionNum <= 40; versionNum++) {
       Version version = Version.getVersionForNumber(versionNum);
       // numBytes = 196
       int numBytes = version.getTotalCodewords();
