@@ -96,19 +96,19 @@ public class Login extends Action {
 					Gson gson = GsonHelper.customGson;
 
 					String jsonstring = jsonresponse.getJSONObject("user").toString();
-					String jsonaction = jsonresponse.getJSONObject("action").toString();
+					String jsonaction = jsonresponse.getString("action");
 					String jsonsquare = jsonresponse.getJSONObject("QRSquare").toString();
-					String jsontype = jsonresponse.getJSONObject("type").toString();
-					String jsonsquareuser = jsonresponse.getJSONObject("QRSquareUser").toString();
+					String jsontype = jsonresponse.getString("type");
 					
 					QRUser fromJson = (QRUser) gson.fromJson(jsonstring, QRUser.class);
 					QRSquare fromJsonSquare;
 					try {
 						fromJsonSquare = (QRSquare) gson.fromJson(jsonsquare, Class.forName(jsontype));
-						QRSquareUser fromJsonSquareUser = (QRSquareUser) gson.fromJson(jsonsquareuser, QRSquareUser.class);
-						
+						QRSquare currentqrsquare = argui.getQRSquare();
+						fromJsonSquare.setShape(currentqrsquare);
 						argui.setUser(fromJson);
 						argui.setUsersquare(fromJsonSquare, jsonaction);
+						argui.setQRSquare(fromJsonSquare, true);
 
 						Log.d("FROM JSON", fromJson.toString());
 						argui.finishAction("Successfully login");
@@ -124,6 +124,7 @@ public class Login extends Action {
 					argui.finishAction("Unable to login");
 				}
 			} catch (JSONException | HttpHostConnectException e) {
+				Log.d("errore login:",e.getMessage());
 				argui.finishAction("Unable to login");
 			}
 
