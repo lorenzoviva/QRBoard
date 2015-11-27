@@ -119,16 +119,15 @@ public class Signup extends Action {
 				if (s) {
 					Gson gson = GsonHelper.customGson;
 					String jsonstring = jsonresponse.getJSONObject("user").toString();
-					String jsonaction = jsonresponse.getJSONObject("action").toString();
+					String jsonaction = jsonresponse.getString("action");
 					String jsonsquare = jsonresponse.getJSONObject("QRSquare").toString();
-					String jsontype = jsonresponse.getJSONObject("type").toString();
-					String jsonsquareuser = jsonresponse.getJSONObject("QRSquareUser").toString();
+					String jsontype = jsonresponse.getString("type");
 
 					QRUser fromJson = (QRUser) gson.fromJson(jsonstring, QRUser.class);
 					QRSquare fromJsonSquare;					
 					try {
 						fromJsonSquare = (QRSquare) gson.fromJson(jsonsquare, Class.forName(jsontype));
-						QRSquareUser fromJsonSquareUser = (QRSquareUser) gson.fromJson(jsonsquareuser, QRSquareUser.class);
+						
 						
 						argui.setUser(fromJson);
 						argui.setUsersquare(fromJsonSquare, jsonaction);
