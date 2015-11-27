@@ -20,6 +20,7 @@ import android.util.Log;
 import com.example.qrboard.ARGUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
+import com.google.gson.JsonSyntaxException;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
 import com.ogc.model.QRInternalWebPage;
@@ -101,15 +102,24 @@ public class Login extends Action {
 					String jsonsquareuser = jsonresponse.getJSONObject("QRSquareUser").toString();
 					
 					QRUser fromJson = (QRUser) gson.fromJson(jsonstring, QRUser.class);
-					QRSquare fromJsonSquare = (QRSquare) gson.fromJson(jsonsquare, QRSquare.class);
-					Type fromJsonType = (Type) gson.fromJson(jsontype, Type.class);
-					QRSquareUser fromJsonSquareUser = (QRSquareUser) gson.fromJson(jsonsquareuser, QRSquareUser.class);
-					
-					argui.setUser(fromJson);
-					argui.setUsersquare(fromJsonSquare, jsonaction);
+					QRSquare fromJsonSquare;
+					try {
+						fromJsonSquare = (QRSquare) gson.fromJson(jsonsquare, Class.forName(jsontype));
+						QRSquareUser fromJsonSquareUser = (QRSquareUser) gson.fromJson(jsonsquareuser, QRSquareUser.class);
+						
+						argui.setUser(fromJson);
+						argui.setUsersquare(fromJsonSquare, jsonaction);
 
-					Log.d("FROM JSON", fromJson.toString());
-					argui.finishAction("Successfully login");
+						Log.d("FROM JSON", fromJson.toString());
+						argui.finishAction("Successfully login");
+					} catch (JsonSyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}else{
 					argui.finishAction("Unable to login");
 				}

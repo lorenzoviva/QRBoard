@@ -14,16 +14,19 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.renderscript.Type;
 import android.util.Log;
 
 import com.example.qrboard.ARGUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
+import com.google.gson.JsonSyntaxException;
 import com.ogc.dbutility.DBConst;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.ACL;
 import com.ogc.model.QRInternalWebPage;
 import com.ogc.model.QRSquare;
+import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
 import com.ogc.model.special.QRSignupPage;
 import com.ogc.model.special.QRSignupPasswordPage;
@@ -53,7 +56,6 @@ public class Signup extends Action {
 		usersquare.setThree(qrSquare.getThree());
 		usersquare.setFour(qrSquare.getFour());
 		argui.setQRSquare(usersquare,true);
-		argui.setUsersquare(usersquare);
 		DialogBuilder.createSignupDialog(context, this);
 		this.argui = argui;
 	}
@@ -116,13 +118,30 @@ public class Signup extends Action {
 				s = jsonresponse.getBoolean("success");
 				if (s) {
 					Gson gson = GsonHelper.customGson;
-					
-					String jsonstring = jsonresponse.getJSONObject("QRUser").toString();
+					String jsonstring = jsonresponse.getJSONObject("user").toString();
+					String jsonaction = jsonresponse.getJSONObject("action").toString();
+					String jsonsquare = jsonresponse.getJSONObject("QRSquare").toString();
+					String jsontype = jsonresponse.getJSONObject("type").toString();
+					String jsonsquareuser = jsonresponse.getJSONObject("QRSquareUser").toString();
+
 					QRUser fromJson = (QRUser) gson.fromJson(jsonstring, QRUser.class);
-					argui.setUser(fromJson);
-					
-					Log.d("FROM JSON", fromJson.toString());
-					argui.finishAction("Successfully signup");
+					QRSquare fromJsonSquare;					
+					try {
+						fromJsonSquare = (QRSquare) gson.fromJson(jsonsquare, Class.forName(jsontype));
+						QRSquareUser fromJsonSquareUser = (QRSquareUser) gson.fromJson(jsonsquareuser, QRSquareUser.class);
+						
+						argui.setUser(fromJson);
+						argui.setUsersquare(fromJsonSquare, jsonaction);
+
+						Log.d("FROM JSON", fromJson.toString());
+						argui.finishAction("Successfully signup");
+					} catch (JsonSyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
 				}else{
 					argui.finishAction("Unable to signup");
 
