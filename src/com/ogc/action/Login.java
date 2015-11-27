@@ -92,7 +92,7 @@ public class Login extends Action {
 				if (s) {
 					Gson gson = GsonHelper.customGson;
 
-					String jsonstring = jsonresponse.getJSONObject("QRUser").toString();
+					String jsonstring = jsonresponse.getJSONObject("user").toString();
 					QRUser fromJson = (QRUser) gson.fromJson(jsonstring, QRUser.class);
 					argui.setUser(fromJson);
 
