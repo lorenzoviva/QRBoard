@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.renderscript.Type;
 import android.util.Log;
 
 import com.example.qrboard.ARGUI;
@@ -23,6 +24,7 @@ import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
 import com.ogc.model.QRInternalWebPage;
 import com.ogc.model.QRSquare;
+import com.ogc.model.QRSquareUser;
 import com.ogc.model.QRUser;
 import com.ogc.model.QRWebPage;
 import com.ogc.model.special.QRLoginPage;
@@ -92,9 +94,19 @@ public class Login extends Action {
 				if (s) {
 					Gson gson = GsonHelper.customGson;
 
-					String jsonstring = jsonresponse.getJSONObject("QRUser").toString();
+					String jsonstring = jsonresponse.getJSONObject("user").toString();
+					String jsonaction = jsonresponse.getJSONObject("action").toString();
+					String jsonsquare = jsonresponse.getJSONObject("QRSquare").toString();
+					String jsontype = jsonresponse.getJSONObject("type").toString();
+					String jsonsquareuser = jsonresponse.getJSONObject("QRSquareUser").toString();
+					
 					QRUser fromJson = (QRUser) gson.fromJson(jsonstring, QRUser.class);
+					QRSquare fromJsonSquare = (QRSquare) gson.fromJson(jsonsquare, QRSquare.class);
+					Type fromJsonType = (Type) gson.fromJson(jsontype, Type.class);
+					QRSquareUser fromJsonSquareUser = (QRSquareUser) gson.fromJson(jsonsquareuser, QRSquareUser.class);
+					
 					argui.setUser(fromJson);
+					argui.setUsersquare(fromJsonSquare, jsonaction);
 
 					Log.d("FROM JSON", fromJson.toString());
 					argui.finishAction("Successfully login");
@@ -112,11 +124,8 @@ public class Login extends Action {
 
 	@Override
 	public void prepare(ARGUI argui) {
-		argui.setUsersquare(argui.getQRSquare());
 		QRLoginPage qrUserMenager = new QRLoginPage(argui.getQRSquare());
 		argui.setQRSquare((QRInternalWebPage)qrUserMenager, true);
-		
-		
 	}
 	@Override
 	public int getColor(ARGUI argui) {

@@ -31,14 +31,14 @@ public class QRExplorerRowHeader {
 	public QRExplorerRowHeader(int request, View view) {
 		this.request = request;
 		if (request == 3) {
-			qrc = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
-			qrsu = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
-			qrs = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
+			qrc = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.qricon);
+			qrsu = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.qricon);
+			qrs = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.qricon);
 
 		} else {
-			qru = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
-			qrum = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
-			qrsu = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
+			qru = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.usericon);
+			qrum = BitmapFactory.decodeResource(view.getContext().getResources(),  R.drawable.qricon);
+			qrsu = BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.usericon);
 		}
 	}
 	public int getHeight(Rect bounds){

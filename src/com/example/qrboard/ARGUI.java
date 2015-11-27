@@ -273,10 +273,6 @@ public class ARGUI {
 				}
 				this.actions.add(actions[i]);
 			}
-			if (usersquare != null && usersquare.equals(qrsquare)) {
-				this.useractions = action;
-			}
-
 		}
 	}
 
@@ -374,19 +370,19 @@ public class ARGUI {
 
 	}
 
-	public void setUsersquare(QRSquare usersquare) {
+	public void setUsersquare(QRSquare usersquare, String useractions) {
 		this.usersquare = usersquare;
-		this.useractions = "";
-		for (int i = 0; i < actions.size(); i++) {
-			if (!actions.get(i).equals("login")) {
-				this.useractions += actions.get(i) + ",";
-			} else {
-				this.useractions += "users,links,edit,logout,";
-			}
+		this.useractions = useractions;
+//		for (int i = 0; i < actions.size(); i++) {
+//			if (!actions.get(i).equals("login")) {
+//				this.useractions += actions.get(i) + ",";
+//			} else {
+//				this.useractions += "users,links,edit,logout,";
+//			}
 
-		}
-		if (useractions.endsWith(",")) {
-			useractions = useractions.substring(0, useractions.length() - 1);
+//		}
+		if (this.useractions.endsWith(",")) {
+			this.useractions = this.useractions.substring(0, this.useractions.length() - 1);
 		}
 	}
 
