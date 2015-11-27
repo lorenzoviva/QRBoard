@@ -96,7 +96,6 @@ public class Signup extends Action {
 			paramap.put("lastname", lastname);
 			paramap.put("text", usersquare.getText());
 			paramap.put("password", password);
-			paramap.put("useQrPassword", useQrPassword);
 
 			JSONObject paramjson = new JSONObject(paramap);
 
