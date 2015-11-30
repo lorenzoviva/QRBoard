@@ -1,4 +1,4 @@
-package com.ogc.model;
+package com.ogc.browsers;
 
 import java.util.List;
 import com.example.qrboard.R;
@@ -38,11 +38,12 @@ public class AttributeListAdapter extends BaseAdapter {
 		QRAttribute qrAttribute = attributes.get(position);
 		convertView = mInflater.inflate(R.layout.list_item_attribute, null);
 		TextView lblProperty = (TextView) convertView.findViewById(R.id.li_property);
-		TextView lblAttribute = (TextView) convertView.findViewById(R.id.li_attribute);
-		TextView lblInfo = (TextView) convertView.findViewById(R.id.li_info);
-		lblProperty.setText(qrAttribute.getProperty());
-		lblAttribute.setText(qrAttribute.getAttribute());
-		lblInfo.setText(qrAttribute.getInfo());
+//		TextView lblAttribute = (TextView) convertView.findViewById(R.id.li_attribute);
+//		TextView lblInfo = (TextView) convertView.findViewById(R.id.li_info);
+		lblProperty.setText(qrAttribute.getName());
+//		lblAttribute.setText(qrAttribute.getAttribute());
+//		lblInfo.setText(qrAttribute.getInfo());
+		
 		return convertView;
 	}
 

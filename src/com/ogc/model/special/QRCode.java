@@ -27,7 +27,6 @@ public class QRCode extends QRSquare {
 		super(text);
 		Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
 		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-
 		// create qr code matrix
 		QRCodeWriter writer = new QRCodeWriter();
 		try {

@@ -1,4 +1,4 @@
-package com.ogc.model;
+package com.example.qrboard;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +15,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.qrboard.R;
+import com.ogc.model.QRChat;
+import com.ogc.model.QRMessage;
+import com.ogc.model.QRUser;
 
 public class MessagesListAdapter extends BaseAdapter {
 

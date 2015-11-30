@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -51,6 +52,10 @@ public abstract class LWebView extends WebView {
 	private transient float dx;
 	private transient float dy;
 	LWebViewJsParameters jsParameters;
+	public boolean disableMove = false;
+
+
+
 
 	public LWebView(ARLayerView arview, QRWebPage qrsquare, int width,
 			int height, LWebViewJsParameters jsParameters) {
@@ -222,11 +227,11 @@ public abstract class LWebView extends WebView {
 		layout(0, 0, width, height);
 	}
 
-	private void notifyListeners(String tagname, String attributes,
+	private void notifyListeners(String html, String tagname, String attributes,
 			String parents, int eventAction, Rect elementBounds, int w, int h,
 			float touchX, float touchY, float scrollY, float scrollX, float f) {
 		for (BrowserListener name : listener) {
-			name.onBrowserClickEvent(new BrowserClickEvent(tagname, attributes,
+			name.onBrowserClickEvent(new BrowserClickEvent(html,tagname, attributes,
 					parents, pressureTime, eventAction, elementBounds, w, h,
 					touchX, touchY, scrollX, scrollY, f));
 		}
@@ -269,8 +274,7 @@ public abstract class LWebView extends WebView {
 			qrsquare.setVerticalScroll(0);
 		} else {
 			Document doc = Jsoup.parse(html);
-			doc.head()
-					.append("<meta name='viewport' content='user-scalable=no, width=device-width, target-densitydpi=device-dpi'>");
+//			doc.head().append("<meta name='viewport' content='user-scalable=no, width=device-width, target-densitydpi=device-dpi'>");
 			loadDataWithBaseURL("file:///android_asset/fonts/", doc.html(),
 					"text/html", "charset=UTF-8", null);
 		}
@@ -345,20 +349,20 @@ public abstract class LWebView extends WebView {
 		}
 
 		@JavascriptInterface
-		public void onclick(final String tagname, final String attributes,
+		public void onclick(final String html,final String tagname, final String attributes,
 				final String parents, final int eventAction, final String rect,
 				final int h, final int w, final float touchX,
 				final float touchY, final float scrollX, final float scrollY,
 				final float f) {
 			Log.d("CLICKED ON:", tagname + " " + rect + " h: " + h + " , w: "
-					+ w);
+					+ w + " , f: " +f );
 
 			if (attributes != null) {
 				runOnUIThread(new Runnable() {
 					@Override
 					public void run() {
 
-						notifyListeners(tagname, attributes, parents,
+						notifyListeners(html,tagname, attributes, parents,
 								eventAction, getRect(rect), w, h, touchX,
 								touchY, scrollX, scrollY, f);
 						if (eventAction == MotionEvent.ACTION_UP) {
@@ -481,22 +485,33 @@ public abstract class LWebView extends WebView {
 				+ "				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';"
 				+ "			}" + "		}";
 		if (jsParameters.isEditPage()) {
-			if (jsParameters.getSelectedId() != null
-					&& !jsParameters.getSelectedId().equals("")) {
-				js += "    obj = document.getElementById('"
-						+ jsParameters.getSelectedId()
-						+ "');"
-						+ "	   if(obj!=null){"
-						+ "	   		rect = obj.getBoundingClientRect();"
-						+ "	   		rc = ' x:'+ rect.left+', y: '+rect.top+',  w: '+rect.width+',  h: '+rect.height;"
-						+ "     }";
+//			if (jsParameters.getSelectedId() != null && !jsParameters.getSelectedId().equals("") && !jsParameters.getSelectedId().toLowerCase().equals("body") && eventAction == MotionEvent.ACTION_MOVE) {
+//				js += "    obj = document.getElementById('"+ jsParameters.getSelectedId()+ "');"
+//						+ "	   if(obj!=null){"
+////						+ "	   		rect = obj.getBoundingClientRect();"
+////						+ "			obj.style.position = 'absolute';"
+////						+ "			obj.style.left = rect.left+ "+qrsquare.getHorizontalScroll() +";"
+////						+ "			obj.style.top = rect.top+ "+qrsquare.getVerticalScroll() +";"
+////						+ "			obj.style.width = rect.width;"
+////						+ "			obj.style.height = rect.height;"
+//						+ "	   		rc = ' x:'+ rect.left+', y: '+rect.top+',  w: '+rect.width+',  h: '+rect.height;"
+//						+ "     }";
+//			}
+			
+
+			if(jsParameters.getSelectedId() != null && !jsParameters.getSelectedId().equals("") && !jsParameters.getSelectedId().toLowerCase(Locale.ROOT).startsWith("body") && eventAction == MotionEvent.ACTION_MOVE){
+				Log.d("SELECTEDID", jsParameters.getSelectedId());
+				clickSelected(jsParameters.getSelectedId(),touchX,touchY,scrollX,scrollY,eventAction);
+				return;
+			}else{
+				js += "var h = window.innerHeight;" + "var w = window.innerWidth;"
+				+ "	window.clickInterface.onclick(document.getElementsByTagName('html')[0].innerHTML,obj.tagName,att,parents,"
+				+ eventAction + ",rc,h,w," + touchX + "," + touchY + ","
+				+ scrollX + "," + scrollY + "," + f + ");";
 			}
-			js += "var h = window.innerHeight;" + "var w = window.innerWidth;"
-					+ "	window.clickInterface.onclick(obj.tagName,att,parents,"
-					+ eventAction + ",rc,h,w," + touchX + "," + touchY + ","
-					+ scrollX + "," + scrollY + "," + f + ");";
+			
 		} else {
-			js += "	window.clickInterface.onclick(obj.tagName,att,parents,"
+			js += "	window.clickInterface.onclick(document.getElementsByTagName('html')[0].innerHTML,obj.tagName,att,parents,"
 					+ eventAction + ",null,0,0,0,0," + scrollX + "," + scrollY
 					+ "," + f + ");";
 		}
@@ -610,10 +625,8 @@ public abstract class LWebView extends WebView {
 								/ (normalnorm * ddnorm));
 
 				PointF perpendicularvector = new PointF();
-				perpendicularvector.x = (float) (qrWebPage.getTwo().x - qrWebPage
-						.getOne().x);
-				perpendicularvector.y = (float) (qrWebPage.getTwo().y - qrWebPage
-						.getOne().y);
+				perpendicularvector.x = (float) (qrWebPage.getTwo().x - qrWebPage.getOne().x);
+				perpendicularvector.y = (float) (qrWebPage.getTwo().y - qrWebPage.getOne().y);
 				float perpendiculnorm = (float) Math.sqrt(Math.pow(
 						perpendicularvector.x, 2)
 						+ Math.pow(perpendicularvector.y, 2));
@@ -623,15 +636,16 @@ public abstract class LWebView extends WebView {
 
 				ddy = (float) -(ddnorm * (float) Math.cos(beta));
 				ddx = (float) (ddnorm * (float) Math.cos(theta));
-				if (qrWebPage.getHorizontalScroll() + ddx < qrWebPage
+				if (!disableMove && qrWebPage.getHorizontalScroll() + ddx < qrWebPage
 						.getMaxHorizontalScroll()
-						&& qrWebPage.getHorizontalScroll() + ddx > 0) {
+						&& qrWebPage.getHorizontalScroll() + ddx >= 0) {
 					qrWebPage.setHorizontalScroll((int) (qrWebPage
 							.getHorizontalScroll() + ddx));
 				}
-				if (qrWebPage.getVerticalScroll() + ddy < qrWebPage
+				if (!disableMove && qrWebPage.getVerticalScroll() + ddy < qrWebPage
 						.getMaxVerticalScroll()
-						&& qrWebPage.getVerticalScroll() + ddy > 0) {
+						&& qrWebPage.getVerticalScroll() + ddy >= 0) {
+					
 					qrWebPage.setVerticalScroll((int) (qrWebPage
 							.getVerticalScroll() + ddy));
 				}
@@ -660,15 +674,78 @@ public abstract class LWebView extends WebView {
 	public void setJsParameters(LWebViewJsParameters jsParameters) {
 		this.jsParameters = jsParameters;
 	}
+	public void setDisableMove(boolean disableMove) {
+		this.disableMove = disableMove;
+	}
 
+	public void clickSelected(String selectedId,float touchX,float touchY,float scrollX,float scrollY, int eventAction){
+		String js = "javascript:(function(){"
+				+ "var  pr = window.devicePixelRatio;"
+				+ "var  obj = document.getElementById('"+selectedId+ "');"
+				+ "if(pr!=null && obj!=null){"
+				+ "		var tagname = obj.tagName;"
+				+ "		var rect = obj.getBoundingClientRect();"
+				+ "	 	var rc = ' x:'+ rect.left+', y: '+rect.top+',  w: '+rect.width+',  h: '+rect.height;"
+				+ "		var h = window.innerHeight;"
+				+ "		var w = window.innerWidth;"
+				+ "		var att = '';"
+				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"
+				+ "			for (i = 0; i < obj.attributes.length; i++) {"
+				+ "				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';"
+				+ "			}"
+				+ "		}"
+				+ " 	var parents = '';"
+				+ "		while(obj.parentNode!=null){"
+				// add the courrent object tagName to 'parents' (eg: DIV)
+				+ "			parents += obj.tagName + ' ';"
+				// add all attributes of parent to 'parents' (eg:
+				// color<black>)
+				+ "			if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"
+				+ "				for (i = 0; i < obj.attributes.length; i++) {"
+				+ "					parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';"
+				+ "				}"
+				+ "			}"
+				+ "			parents += ' ';"
+				+ "			obj = obj.parentNode;"
+				+ "		}"
+				+ "		window.clickInterface.onclick(document.getElementsByTagName('html')[0].innerHTML,tagname,att,parents,"+ eventAction + ",rc,h,w," + touchX + "," + touchY + ","+ scrollX + "," + scrollY + ",pr);"
+				+ "}"
+				+ "})()";
+		loadUrl(js);	
+	}
 	public void select(String selectedId) {
 		String js = "javascript:(function(){"
-				+ "var  obj = window.devicePixelRatio;"
-				+ "var  selected = document.getElementById('"+selectedId+ "');"
-				+ "if(obj!=null && selected!=null){"
-				+ " 	var touchX = (selected.getBoundingClientRect().right- selected.getBoundingClientRect().left)/2;"
-				+ " 	var touchY = (selected.getBoundingClientRect().bottom- selected.getBoundingClientRect().top)/2;"
-				+ "		window.clickInterface.setDevicePixelRatio( touchX ,"+ getScrollX() +", touchY ," + getScrollY() + "," + MotionEvent.ACTION_UP+ ",obj);"
+				+ "var  pr = window.devicePixelRatio;"
+				+ "var  obj = document.getElementById('"+selectedId+ "');"
+				+ "if(pr!=null && obj!=null){"
+				+ "		var tagname = obj.tagName;"
+				+ "		var rect = obj.getBoundingClientRect();"
+				+ " 	var touchX = (rect.right-rect.left)*pr/2;"
+				+ " 	var touchY = (rect.bottom-rect.top)*pr/2;"
+				+ "	 	var rc = ' x:'+ rect.left+', y: '+rect.top+',  w: '+rect.width+',  h: '+rect.height;"
+				+ "		var h = window.innerHeight;"
+				+ "		var w = window.innerWidth;"
+				+ "		var att = '';"
+				+ "		if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"
+				+ "			for (i = 0; i < obj.attributes.length; i++) {"
+				+ "				att += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';"
+				+ "			}"
+				+ "		}"
+				+ " 	var parents= '';"
+				+ "		while(obj.parentNode!=null){"
+				// add the courrent object tagName to 'parents' (eg: DIV)
+				+ "			parents += obj.tagName + ' ';"
+				// add all attributes of parent to 'parents' (eg:
+				// color<black>)
+				+ "			if(!(obj instanceof HTMLDocument) && obj.hasAttributes()){"
+				+ "				for (i = 0; i < obj.attributes.length; i++) {"
+				+ "					parents += obj.attributes[i].name + '<' + obj.getAttribute(obj.attributes[i].name) + '>';"
+				+ "				}"
+				+ "			}"
+				+ "			parents += ' ';"
+				+ "			obj = obj.parentNode;"
+				+ "		}"
+				+ "		window.clickInterface.onclick(document.getElementsByTagName('html')[0].innerHTML,tagname,att,parents,1,rc,h,w,touchX , touchY ,"+ getScrollX() + "," + getScrollY() + ",pr);"
 				+ "}"
 				+ "})()";
 		loadUrl(js);		

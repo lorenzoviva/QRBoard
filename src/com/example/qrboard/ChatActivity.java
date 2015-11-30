@@ -1,7 +1,6 @@
 package com.example.qrboard;
 
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -15,7 +14,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +25,6 @@ import com.codebutler.android_websockets.WebSocketClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.ogc.dbutility.DBConst;
-import com.ogc.model.MessagesListAdapter;
 import com.ogc.model.QRChat;
 import com.ogc.model.QRMessage;
 import com.ogc.model.QRUser;

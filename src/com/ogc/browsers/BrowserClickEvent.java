@@ -10,14 +10,21 @@ public class BrowserClickEvent{
 	private long pressureTime;
 	private int motionEventAction;
 	private Rect elementBounds;
-	int windowWidth;
-	int windowHeight;
-	float touchX;
-	float touchY;
-	float scrollX;
-	float scrollY;
-	float f;
+	private int windowWidth;
+	private int windowHeight;
+	private float touchX;
+	private float touchY;
+	private float scrollX;
+	private float scrollY;
+	private float f;
+	private String html;
 
+	public String getHtml() {
+		return html;
+	}
+	public void setHtml(String html) {
+		this.html = html;
+	}
 	public String getTagname() {
 		return tagname;
 	}
@@ -36,7 +43,7 @@ public class BrowserClickEvent{
 	public void setParents(String parents) {
 		this.parents = parents;
 	}
-	public BrowserClickEvent(String tagname, String attributes, String parents,long pressureTime, int eventAction,Rect elementBounds, int w, int h, float touchX, float touchY,	float scrollX,float scrollY,float f) {
+	public BrowserClickEvent(String html,String tagname, String attributes, String parents, long pressureTime, int eventAction,Rect elementBounds, int w, int h, float touchX, float touchY,	float scrollX,float scrollY,float f) {
 		this.tagname = tagname;
 		this.attributes = attributes;
 		this.parents = parents;
@@ -49,6 +56,8 @@ public class BrowserClickEvent{
 		this.touchY = touchY;
 		this.scrollX = scrollX;
 		this.scrollY = scrollY;
+		this.f = f;
+		this.html = html;
 		
 	}
 	public long getPressureTime() {
