@@ -29,6 +29,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.qrboard.ARLayerView;
+import com.ogc.browsers.utils.BrowserClickEvent;
 import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.QRWebPage;
 

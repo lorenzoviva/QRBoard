@@ -10,6 +10,7 @@ import com.example.qrboard.ChatActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.ogc.model.QRChat;
+import com.ogc.model.QRChatWebPage;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRUser;
 
@@ -63,7 +64,11 @@ public class Chat extends Action{
 		this.argui = argui;
 		this.user = argui.getUser();
 		this.context = context;
-		qrSquare = (QRChat) argui.getQRSquare();
+		if(argui.getQRSquare() instanceof QRChat){
+			qrSquare = (QRChat) argui.getQRSquare();
+		}else{
+			qrSquare = ((QRChatWebPage) argui.getQRSquare()).getChat();
+		}
 		execute();
 		
 	}

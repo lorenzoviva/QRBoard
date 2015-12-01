@@ -1,6 +1,6 @@
 package com.example.qrboard;
 
-import com.ogc.browsers.BrowserClickEvent;
+import com.ogc.browsers.utils.BrowserClickEvent;
 import com.ogc.model.QRWebPage;
 
 import android.graphics.Canvas;

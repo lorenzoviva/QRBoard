@@ -1,22 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/ourblue"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:padding="@dimen/container_padding"
     tools:context="com.example.qrboard.EditWebPageActivity" >
 
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@drawable/container_dark_background"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp" >
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/container_padding" >
 
             <ImageButton
                 android:id="@+id/epw_imgbutton"
@@ -24,21 +26,21 @@
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
                 android:src="@drawable/img32" />
-            
+
             <ImageButton
                 android:id="@+id/epw_divbutton"
                 android:layout_width="@+dimen/option_buttons"
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
                 android:src="@drawable/div32" />
-            
+
             <ImageButton
                 android:id="@+id/epw_linkbutton"
                 android:layout_width="@+dimen/option_buttons"
                 android:layout_height="@+dimen/option_buttons"
                 android:contentDescription="@string/brush"
                 android:src="@drawable/link32" />
-            
+
             <ImageButton
                 android:id="@+id/epw_textbutton"
                 android:layout_width="@+dimen/option_buttons"
@@ -53,54 +55,65 @@
                 android:contentDescription="@string/brush"
                 android:src="@drawable/removeicon"
                 android:visibility="invisible" />
-
         </LinearLayout>
     </ScrollView>
 
-    <GridLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:rowCount="10" >
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:rowCount="2" >
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="fill"
+            android:gravity="fill"
             android:orientation="vertical"
             android:padding="5dp" >
 
             <com.example.qrboard.QRWebPageEditorView
                 android:id="@+id/epw_squaresurfaceView"
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent" />
-
+                android:layout_height="match_parent"
+                android:layout_gravity="fill" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="92dp"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_gravity="end"
+            android:background="@drawable/container_dark_background"
+            android:orientation="vertical"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:shadowColor="#242424"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/ewp_select_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="80dp"
                 android:text="@string/tipEditWebPage"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white" />
 
             <ListView
-                android:id="@+id/list_view_messages"
+                android:id="@+id/ewp_attribute_list"
                 android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="fill_parent"
                 android:background="@null"
                 android:divider="@null"
-                android:stackFromBottom="true"
-                android:transcriptMode="alwaysScroll" >
+                android:stackFromBottom="false" >
+
             </ListView>
-            
         </LinearLayout>
-    </GridLayout>
+    </LinearLayout>
 
 </LinearLayout>

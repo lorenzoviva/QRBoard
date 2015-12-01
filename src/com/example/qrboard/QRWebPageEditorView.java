@@ -1,5 +1,6 @@
 package com.example.qrboard;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.jsoup.Jsoup;
@@ -13,15 +14,21 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.ogc.browsers.BrowserClickEvent;
 import com.ogc.browsers.BrowserListener;
 import com.ogc.browsers.LWebViewJsParameters;
+import com.ogc.browsers.attrubutes.QRAttribute;
+import com.ogc.browsers.elements.QRElement;
+import com.ogc.browsers.utils.AttributeListAdapter;
+import com.ogc.browsers.utils.BrowserClickEvent;
 import com.ogc.graphics.Point;
 import com.ogc.graphics.Quadrilateral;
 import com.ogc.graphics.Utility;
@@ -41,6 +48,9 @@ public class QRWebPageEditorView extends ARLayerView implements
 	private String action = "";
 	private static int offset = 10;
 	private float dx = -1, dy = -1, tx = -1, ty = -1, ddy = -1, ddx = -1;
+	private ListView listViewMessages;
+	private TextView selectTextView;
+	private AttributeListAdapter adapter;
 
 	public QRWebPageEditorView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -56,7 +66,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 
 	public void setup(QRWebPage qrsquare, ImageButton addImageButton,
 			ImageButton addDivButton, ImageButton addLinkButton,
-			ImageButton addTextButton, ImageButton removeButton) {
+			ImageButton addTextButton, ImageButton removeButton, ListView listViewMessages, TextView selectTextView) {
 		this.qrsquare = qrsquare;
 		document = Jsoup.parse(qrsquare.getHtml());
 
@@ -71,6 +81,8 @@ public class QRWebPageEditorView extends ARLayerView implements
 		this.addLinkButton.setOnClickListener(this);
 		this.addTextButton.setOnClickListener(this);
 		this.removeButton.setOnClickListener(this);
+		this.listViewMessages = listViewMessages;
+		this.selectTextView = selectTextView;
 	}
 
 	@Override
@@ -170,7 +182,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 //			qrsquare.getWebview().setDisableMove(false);
 			jsParameters.setSelectedId("");//selectedId
 			qrsquare.setJsParameters(jsParameters);
-			selector = null;
+			setSelector(null);
 		}
 		action = "";
 	}
@@ -203,12 +215,11 @@ public class QRWebPageEditorView extends ARLayerView implements
 							&& !event.getAttributes().equals("")
 							&& event.getAttributes().matches(".*id<.+>.*") && !event.getTagname().toLowerCase().equals("body")) {
 						
-						selector = new CustomSelector(event);
 						if (!event.getTagname().toLowerCase(Locale.ROOT)
 								.contains("body")) {
-							removeButton.setVisibility(VISIBLE);
+							setSelector(new CustomSelector(event));
 						} else {
-							removeButton.setVisibility(INVISIBLE);
+							setSelector(null);
 						}
 						selectedId = event.getAttributes().split("id<")[1]
 								.split(">")[0];
@@ -222,12 +233,12 @@ public class QRWebPageEditorView extends ARLayerView implements
 								&& !event.getAttributes().equals("")
 								&& event.getAttributes().matches(".*id<.+>.*") && !event.getTagname().toLowerCase().equals("body")) {
 	
-							selector = new CustomSelector(event);
+							
 							if (!event.getTagname().toLowerCase(Locale.ROOT)
 									.contains("body")) {
-								removeButton.setVisibility(VISIBLE);
+								setSelector(new CustomSelector(event));
 							} else {
-								removeButton.setVisibility(INVISIBLE);
+								setSelector(null);
 							}
 							selectedId = event.getAttributes().split("id<")[1]
 									.split(">")[0];
@@ -235,8 +246,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 							newParameters.setSelectedId(selectedId);
 							qrsquare.setJsParameters(newParameters);
 						} else {
-							removeButton.setVisibility(INVISIBLE);
-							selector = null;
+							setSelector(null);
 						}
 					}
 				}
@@ -394,12 +404,11 @@ public class QRWebPageEditorView extends ARLayerView implements
 							.getWindowWidth(), 0, 0, selector.getEvent()
 							.getScrollX(), selector.getEvent().getScrollY(),
 					selector.getEvent().getF());
-			selector = new CustomSelector(ce);
+			setSelector(new CustomSelector(ce));
 		}
 		Log.d("QRWPE", "added element : " + appendElement.toString()
 				+ " new HTML: " + document.html());
 
-		removeButton.setVisibility(VISIBLE);
 		selectedId = id;
 		// Log.d("QRWPE", "new html : " + document.html());
 		qrsquare.setHtml(document.html());
@@ -426,17 +435,73 @@ public class QRWebPageEditorView extends ARLayerView implements
 			addElement("div");
 			Log.d("WEB PAGE EDITOR", "clicked on addTextButton");
 		} else if (v.getId() == removeButton.getId()) {
-			removeButton.setVisibility(INVISIBLE);
 			document.getElementById(selectedId).remove();
 			Log.d("QRWPE", "removed element : " + selectedId + " new HTML: "
 					+ document.html());
 			qrsquare.setHtml(document.html());
 			qrsquare.setWebview(null);
-			selector = null;
+			setSelector(null);
 			selectedId = "";
 
 		}
 
+	}
+
+	public CustomSelector getSelector() {
+		return selector;
+	}
+
+	public void setSelector(CustomSelector selector) {
+		
+		if(selector!=null){ 
+			BrowserClickEvent event = selector.getEvent();
+			
+			if( event != null && !event.getTagname().equals("")&& event.getElementBounds() != null
+					&& !event.getAttributes().equals("")&& event.getAttributes().matches(".*id<.+>.*") && !event.getTagname().toLowerCase().equals("body")) {
+				removeButton.setVisibility(VISIBLE);
+				selectTextView.setVisibility(INVISIBLE);
+				listViewMessages.setVisibility(VISIBLE);
+				String tagname = selector.getEvent().getTagname();
+				final String id =  event.getAttributes().split("id<")[1].split(">")[0];
+				Element el = document.getElementById(id);
+				try {
+					QRElement qrel = QRElement.getQRElement(tagname);
+					List<QRAttribute> elatt= qrel.getAttributes(el);
+					adapter = new AttributeListAdapter(getContext(),elatt);
+					listViewMessages.setAdapter(adapter);
+					final QRWebPageEditorView fa = this;
+					listViewMessages.setOnItemClickListener(new OnItemClickListener() {
+
+						@Override
+						public void onItemClick(AdapterView<?> parent,
+								View view, int position, long viewid) {
+							adapter.onTouch(position,fa,id);
+							
+						}
+					});
+				} catch (InstantiationException | IllegalAccessException
+						| ClassNotFoundException e) {
+					Log.d("QRWebPageEditorView", "ERROR, you selected a tag that cant be managed");
+				}
+				
+				
+			}else{
+				removeButton.setVisibility(INVISIBLE);
+				selectTextView.setVisibility(VISIBLE);
+				listViewMessages.setVisibility(INVISIBLE);
+				selector = null;
+			}
+		}else{
+			removeButton.setVisibility(INVISIBLE);
+			selectTextView.setVisibility(VISIBLE);
+			listViewMessages.setVisibility(INVISIBLE);
+		}
+		this.selector = selector;
+	}
+	public void edit(String html,String id){
+		Element el = document.getElementById(id);
+		el.html(html);
+		stopResize(qrsquare.getWebview().getJsParameters());
 	}
 
 }

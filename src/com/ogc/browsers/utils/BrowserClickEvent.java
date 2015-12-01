@@ -1,4 +1,4 @@
-package com.ogc.browsers;
+package com.ogc.browsers.utils;
 
 import android.graphics.Rect;
 

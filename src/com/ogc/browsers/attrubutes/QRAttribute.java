@@ -1,4 +1,8 @@
-package com.ogc.browsers;
+package com.ogc.browsers.attrubutes;
+
+import org.jsoup.nodes.Element;
+
+import com.example.qrboard.QRWebPageEditorView;
 
 import android.content.Context;
 import android.view.View;
@@ -10,8 +14,13 @@ public abstract class QRAttribute {
 	private String property;
 	private Object attribute;
 	private Object info;
+	private Element element;
 	
-	
+	public QRAttribute(Element element) {
+		this.element = element;
+	}
+	public abstract void onTouch(QRWebPageEditorView fa, String id);
+	public abstract void onEdit(String html);
 	public abstract View getView(Context context);
 	public Object getAttribute() {
 		return attribute;
@@ -43,6 +52,13 @@ public abstract class QRAttribute {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public Element getElement() {
+		return element;
+	}
+	public void setElement(Element element) {
+		this.element = element;
+	}
+	 
 
 
 }

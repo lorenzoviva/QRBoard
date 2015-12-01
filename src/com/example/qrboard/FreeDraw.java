@@ -35,7 +35,7 @@ import com.google.zxing.Result;
 import com.ogc.dbutility.DBConst;
 import com.ogc.dbutility.JSONParser;
 import com.ogc.dialog.DialogBuilder;
-import com.ogc.dialog.TextDialog;
+import com.ogc.dialog.FreeDrawTextDialog;
 import com.ogc.dialog.TextSizeDialog;
 import com.ogc.model.QRFreeDraw;
 import com.ogc.model.QRSquare;
@@ -54,7 +54,7 @@ public class FreeDraw extends Activity {
 	private ImageButton confirmTextButton;
 	private ImageButton discardTextButton;
 	private BrushSizeDialog brushDialog;
-	private TextDialog textDialog;
+	private FreeDrawTextDialog textDialog;
 	private TextSizeDialog textSizeDialog;
 
 	@Override
@@ -190,7 +190,7 @@ public class FreeDraw extends Activity {
 
 	public void openTextDialog() {
 		if (textDialog == null || !textDialog.isShowing()) {
-			textDialog = new TextDialog(this);
+			textDialog = new FreeDrawTextDialog(this);
 		}
 
 	}

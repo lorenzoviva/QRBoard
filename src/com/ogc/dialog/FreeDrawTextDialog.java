@@ -14,16 +14,16 @@ import android.widget.EditText;
 /**
  * Created by root on 26/06/15.
  */
-public class TextDialog   extends Dialog {
+public class FreeDrawTextDialog   extends Dialog {
     EditText text;
     Button okButton;
     FreeDraw drawwindow;
-    public TextDialog(FreeDraw context) {
+    public FreeDrawTextDialog(FreeDraw context) {
         super(context);
-        setContentView(R.layout.textdialog);
+        setContentView(R.layout.freedraw_textdialog);
         setTitle("Edit text");
-         text = (EditText) this.findViewById(R.id.textdialogtext);
-        okButton  = (Button) this.findViewById(R.id.textdialogbutton);
+         text = (EditText) this.findViewById(R.id.freedraw_textdialogtext);
+        okButton  = (Button) this.findViewById(R.id.freedraw_textdialogbutton);
         text.setText(context.getDrawView().getTextDrawer().getMessage());
 
         drawwindow = context;
