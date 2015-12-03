@@ -1,39 +1,54 @@
 package com.ogc.browsers.attrubutes;
 
-import javax.xml.datatype.Duration;
-
 import org.jsoup.nodes.Element;
+import org.xml.sax.DTDHandler;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.TableLayout.LayoutParams;
 
 import com.example.qrboard.QRWebPageEditorView;
 import com.example.qrboard.R;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TableLayout.LayoutParams;
-import android.widget.TextView;
-import android.widget.Toast;
-
-public class Fontsize extends QRAttribute{
-
-	public Fontsize(Element element){
+public class Bounds extends QRAttribute{
+	private QRWebPageEditorView fa;
+	private String id;
+	public Bounds(Element element) {
 		super(element);
-		setName("Text size");
-		setInfo("To edit text size just resize the selection!");
-		setProperty(".style.fontSize");
-		if(hasStyleAttribute("font-size")){
-			setAttribute(getStyleAttribute("font-size"));
-		}else{
-			setAttribute("");
+		setName("Bounds");
+		setProperty(".size");
+		String attribute = "";
+		if(hasStyle()){
+			if(hasStyleAttribute("left")){
+				attribute += "left :" + getStyleAttribute("left")+"; ";
+			}
+			if(hasStyleAttribute("top")){
+				attribute += "top :" + getStyleAttribute("top")+"; ";
+			}
+			if(hasStyleAttribute("width")){
+				attribute += "width :" + getStyleAttribute("width")+"; ";
+			}
+			if(hasStyleAttribute("height")){
+				attribute += "height :" + getStyleAttribute("height")+"; ";
+			}
 			
 		}
+		setInfo("To edit elements bounds just resize and move the selection");
+		setAttribute(attribute);
 	}
+
 	@Override
 	public void onTouch(QRWebPageEditorView fa, String id){
 		Toast.makeText(fa.getContext(), (CharSequence) getInfo(), Toast.LENGTH_SHORT).show();
 	}
-	
+
+
 	@Override
 	public View getView(Context context) {
 		LinearLayout ll = new LinearLayout(context);
@@ -49,6 +64,10 @@ public class Fontsize extends QRAttribute{
 		TextView value = new TextView(context);
 		name.setText(getName());
 		info.setText((String)getInfo());
+		Drawable drawable = context.getResources().getDrawable(R.drawable.ewpmri);
+		float density = context.getResources().getDisplayMetrics().density;
+		drawable.setBounds(0, 0, (int)(80*density),(int)(80*density));
+		info.setCompoundDrawables(null, null, null, drawable);
 		value.setText(((String)(getAttribute())));
 		name.setBackgroundResource(R.drawable.attribute_name_background);
 		info.setBackgroundResource(R.drawable.attribute_info_background);
@@ -66,6 +85,7 @@ public class Fontsize extends QRAttribute{
 		ll.addView(info,nvp);
 		return ll;
 	}
+
 	@Override
 	public void onEdit(String html) {
 		

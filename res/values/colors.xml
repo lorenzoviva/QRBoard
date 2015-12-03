@@ -14,34 +14,48 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- -->
+-->
 <resources>
-  <color name="contents_text">#ff000000</color>
-  <color name="encode_view">#ffffffff</color>
-  <color name="possible_result_points">#c0ffbd21</color> <!-- Android standard ICS color -->
-  <color name="result_minor_text">#ffc0c0c0</color>
-  <color name="result_points">#c099cc00</color> <!-- Android standard ICS color -->
-  <color name="result_text">#ffffffff</color>
-  <color name="result_view">#b0000000</color>
-  <color name="status_text">#ffffffff</color>
-  <color name="transparent">#00000000</color>
-  <color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
-  <color name="viewfinder_mask">#60000000</color>
-  
-  <!-- Colors for chat page -->
-  <color name="actionbar">#3cb879</color>
-  <color name="body_background">#e8e8e8</color>
-  <color name="body_background_green">#82e783</color>
-  <color name="server_status_bar">#2b2b2b</color>
-  <color name="title_gray">#434343</color>
-  <color name="white">#ffffff</color>
-  <color name="bg_msg_you">#5eb964</color>
-  <color name="bg_msg_from">#e5e7eb</color>
-  <color name="msg_border_color">#a1a1a1</color>
-  <color name="bg_btn_join">#1e6258</color>
-  <color name="bg_msg_input">#e8e8e8</color>
-  <color name="text_msg_input">#626262</color>
-  <color name="lblFromName">#777777</color>
-  <color name="ourblue">#3690f0</color>
-  <color name="ourbluedarker">#1e69de</color>
+
+    <color name="contents_text">#ff000000</color>
+    <color name="encode_view">#ffffffff</color>
+    <color name="possible_result_points">#c0ffbd21</color> <!-- Android standard ICS color -->
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c099cc00</color> <!-- Android standard ICS color -->
+    <color name="result_text">#ffffffff</color>
+    <color name="result_view">#b0000000</color>
+    <color name="status_text">#ffffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
+    <color name="viewfinder_mask">#60000000</color>
+
+    <!-- Colors for chat page -->
+    <color name="actionbar">#3cb879</color>
+    <color name="body_background">#e8e8e8</color>
+    <color name="body_background_green">#82e783</color>
+    <color name="server_status_bar">#2b2b2b</color>
+    <color name="title_gray">#434343</color>
+    <color name="white">#ffffff</color>
+    <color name="bg_msg_you">#5eb964</color>
+    <color name="bg_msg_from">#e5e7eb</color>
+    <color name="msg_border_color">#a1a1a1</color>
+    <color name="bg_btn_join">#1e6258</color>
+    <color name="bg_msg_input">#e8e8e8</color>
+    <color name="text_msg_input">#626262</color>
+    <color name="lblFromName">#777777</color>
+    <color name="ourblue">#3690f0</color>
+    <color name="ourbluedarker">#1e69de</color>
+    
+    
+    <color name="materialcolorpicker__white">#ffffff</color>
+    <color name="materialcolorpicker__red">#f44336</color>
+    <color name="materialcolorpicker__green">#4caf50</color>
+    <color name="materialcolorpicker__blue">#2196f3</color>
+    <color name="materialcolorpicker__grey">#b3b3b3</color>
+    <color name="materialcolorpicker__lightgrey">#d9d9d9</color>
+    <color name="materialcolorpicker__dribble">#ea4c89</color>
+    <color name="materialcolorpicker__dribbledark">#c32361</color>
+    <color name="materialcolorpicker__black">#000000</color>
+    <color name="materialcolorpicker__dialogcolor">#009688</color>
+
 </resources>

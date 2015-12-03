@@ -429,7 +429,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 			addElement("div");
 			Log.d("WEB PAGE EDITOR", "clicked on addDivButton");
 		} else if (v.getId() == addLinkButton.getId()) {
-			addElement("a");
+			addElement("button");
 			Log.d("WEB PAGE EDITOR", "clicked on addLinkButton");
 		} else if (v.getId() == addTextButton.getId()) {
 			addElement("div");
@@ -499,8 +499,10 @@ public class QRWebPageEditorView extends ARLayerView implements
 		this.selector = selector;
 	}
 	public void edit(String html,String id){
+		selectedId = id;
 		Element el = document.getElementById(id);
 		el.html(html);
+		action = "edit";
 		stopResize(qrsquare.getWebview().getJsParameters());
 	}
 

@@ -157,7 +157,10 @@
 	<string name="password">Password</string>
 	<string name="useQRPassword">Use a QRpassword</string>
 	<string name="tips_login">If you choose a QRpassword, everytime you want to login, you\'ll need to frame both QR for user and password. Keep in mind that you can directly use the QR link as password .</string>
-	
-	
+
+    <string name="materialcolorpicker__descLib">Pick a color</string>
+    <string name="materialcolorpicker__errHex" >Hex Code Format incorrect</string>
+    <string name="materialcolorpicker__inputColor">Color: </string>
+    <string name="materialcolorpicker__btnSelectColor">Select</string>
 	
 </resources>
