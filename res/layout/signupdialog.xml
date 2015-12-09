@@ -6,9 +6,8 @@
 
 <RelativeLayout
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
-	
-    
+    android:layout_height="wrap_content"
+    android:padding="6dp" >
     	
 	    <TextView
 	        android:id="@+id/signupfirstnametextview"
@@ -37,23 +36,23 @@
 	        android:layout_below="@+id/signuplastnametextview"/>
 	 	
 	 	<TextView
-	        android:id="@+id/password_textview"
+	        android:id="@+id/signuppassword_textview"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:text="@string/password"
 	         android:layout_below="@+id/signuplastnameedittext" />
 	 	<EditText 
-	 	    android:id="@+id/password_edit_text"
+	 	    android:id="@+id/signuppassword_edit_text"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:inputType="textPassword"
-	        android:layout_below="@+id/password_textview"/>
+	        android:layout_below="@+id/signuppassword_textview"/>
 	 	
 	 	 <CheckBox
 	         android:id="@+id/useQRPassword_checkbox"
 	         android:layout_width="wrap_content"
 	         android:layout_height="wrap_content"
-	         android:layout_below="@+id/password_edit_text"
+	         android:layout_below="@+id/signuppassword_edit_text"
 	         android:text="@string/useQRPassword" />
 		
 	 	 <TextView
@@ -65,15 +64,12 @@
 	 	     android:visibility="invisible" />
 	 	 
 	     <Button
-	        android:id="@+id/signupokbutton"
-	        android:layout_width="100dp"
-	        android:layout_height="wrap_content"
-	        android:text="@string/button_ok"
-	        android:layout_marginTop="5dp"
-	        android:layout_below="@+id/tips_login_textview"
-	        />
-
-	
+	         android:id="@+id/signupokbutton"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@+id/tips_login_textview"
+	         android:layout_marginTop="5dp"
+	         android:text="@string/button_ok" />
      
 </RelativeLayout>
 </ScrollView>    

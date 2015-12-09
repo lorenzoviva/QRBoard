@@ -12,11 +12,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.google.gson.GsonHelper;
 import com.ogc.action.Action;
 import com.ogc.dbutility.DBConst;
@@ -53,7 +57,10 @@ public class Qrwebpage extends Action{
 		// TODO Auto-generated method stub
 		
 	}
-
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actioncreatepage);
+	}
 	@Override
 	public void prepare(ARGUI argui) {
 		
@@ -96,7 +103,11 @@ public class Qrwebpage extends Action{
 				s = jsonresponse.getBoolean("success");
 				if (s) {
 					QRWebPage newsquare = (GsonHelper.customGson).fromJson(jsonresponse.getJSONObject("QRSquare").toString(), QRWebPage.class);
-					argui.openEditWebPageActivity(context,jsonresponse.getJSONObject("QRSquare"));
+					if(qrUser!=null){
+						argui.openEditWebPageActivity(context,jsonresponse.getJSONObject("QRSquare"),qrUser.getId());
+					}else{
+						argui.openEditWebPageActivity(context,jsonresponse.getJSONObject("QRSquare"),-1);
+					}
 				} else {
 					argui.finishAction("Unable to create a web page");
 				}

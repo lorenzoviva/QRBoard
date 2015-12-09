@@ -12,11 +12,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
 import com.ogc.model.QRSquare;
@@ -93,12 +97,15 @@ public class Request extends Action {
 		}
 
 	}
-
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actionrequest);
+	}
 	@Override
 	public void prepare(ARGUI argui) {
 //		QRAccessDaniedWebPage accessDaniedWebPage = new QRAccessDaniedWebPage(argui.getQRSquare().getText());
 //		argui.setQRSquare(accessDaniedWebPage, true);
-		
+//		
 	}
 
 	@Override

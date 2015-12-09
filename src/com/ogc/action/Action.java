@@ -4,9 +4,11 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.ogc.dbutility.JSONParser;
 import com.ogc.model.QRSquare;
 
@@ -20,10 +22,10 @@ public abstract class Action {
 	}
 	public void perform(ARGUI argui, Context context){
 		setState(1);
+		argui.showActionDialog(context);
 	}
-	public Bitmap getIcon(View view){
-		return null;
-	}
+
+	public abstract Bitmap getIcon(View view);
 	public abstract void prepare(ARGUI argui);
 	public static String correctActionName(String string) {
 		if (string.length() > 1) {

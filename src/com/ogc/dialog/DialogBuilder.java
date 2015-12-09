@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import com.ogc.action.Login;
 import com.ogc.action.Signup;
 
 public class DialogBuilder {
@@ -11,7 +12,9 @@ public class DialogBuilder {
 	public static void createSignupDialog(Context context, Signup signup) {
 		new SignupDialog(context, signup);
 	}
-
+	public static void createLoginDialog(Context context, Login login) {
+		new LoginDialog(context, login);
+	}
 	public static void createErrorDialog(Context context, String string) {
 
 		new AlertDialog.Builder(context).setTitle("Error").setMessage(string).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

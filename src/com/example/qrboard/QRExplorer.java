@@ -62,12 +62,11 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 	float ly = -1;// last y coordinate of touch
 	float ddx = -1;// displacement on move
 	float ddy = -1;// displacement on move
-	private Button explorebutton;
+	private Button explorebutton,backbutton,readbutton;
 	private ImageView image;
 	private TextView text;
 	private String actionContext = "";
 	private Action action;
-	private Button backbutton;
 	private QRExplorerRowHeader qrExplorerRowHeader;
 	private QRExplorerRowFooter qrExplorerRowFooter;
 	private String messageRequest;
@@ -94,7 +93,10 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 		explorebutton.setOnClickListener(this);
 
 	}
-
+	public void setReadButton(Button readButton) {
+		this.readbutton = readButton;
+		readbutton.setOnClickListener(this);
+	}
 	public void setEditTextInfo(TextView text) {
 		this.text = text;
 		this.text.setTextColor(Color.WHITE);
@@ -115,6 +117,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+		Log.d("EXPLORER", "Layout widht:" +width + " h:" + height);
 		bounds = new Rect(0, 0, width, height);
 		if (!rows.isEmpty() && qrExplorerRowHeader != null && qrExplorerRowFooter != null) {
 			if (rows.size() * (bounds.right - bounds.left) / 5 - height > 0) {
@@ -136,62 +139,61 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 	}
-
-	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		float tx = event.getX();
-		float ty = event.getY();
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			// Log.d("QRExplorer", "DOWN touch view tx:" + tx + " ty:" + ty +
-			// " dx:" + dx + " dy:" + dy + " lx:" + lx + " ly:" +ly);
-			lx = tx;
-			ly = ty;
-		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			// Log.d("QRExplorer", "MOVE touch view tx:" + tx + " ty:" + ty +
-			// " dx:" + dx + " dy:" + dy + " lx:" + lx + " ly:" +ly);
-			if (lx != -1) {
-				dx = lx - tx;
-				dy = ly - ty;
-				if (scroll + dy > 0 && scroll + dy < maxScroll) {
-					scroll += dy;
-					ddy += Math.abs(dy);
-
+		if(!instructing){
+			float tx = event.getX();
+			float ty = event.getY();
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				// Log.d("QRExplorer", "DOWN touch view tx:" + tx + " ty:" + ty +
+				// " dx:" + dx + " dy:" + dy + " lx:" + lx + " ly:" +ly);
+				lx = tx;
+				ly = ty;
+			} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+				// Log.d("QRExplorer", "MOVE touch view tx:" + tx + " ty:" + ty +
+				// " dx:" + dx + " dy:" + dy + " lx:" + lx + " ly:" +ly);
+				if (lx != -1) {
+					dx = lx - tx;
+					dy = ly - ty;
+					if (scroll + dy > 0 && scroll + dy < maxScroll) {
+						scroll += dy;
+						ddy += Math.abs(dy);
+	
+					}
 				}
-			}
-			lx = tx;
-			ly = ty;
-		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			// Log.d("QRExplorer", "UP touch view tx:" + tx + " ty:" + ty +
-			// " dx:" + dx + " dy:" + dy + " lx:" + lx + " ly:" +ly);
-			lx = -1;
-			ly = -1;
-			if (ddy < 15) {
-
-				if (getFocusedQRTouched(event)) {
-					edit();
-				} else if (getQRExplorerRowSquareTouched(event) != -1) {
-
-					selectedRow = getQRExplorerRowSquareTouched(event);
-					setFocusedSquare(rows.get(selectedRow).touched(event), rows.get(selectedRow).getAcl());
-
-				} else if (qrExplorerRowFooter != null && qrExplorerRowFooter.touched(event) != -1) {
-
-					onQRExplorerRowFooterTouched(event);
-
-				} else {
-
-					setFocusedSquare(null, null);
-
+				lx = tx;
+				ly = ty;
+			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				// Log.d("QRExplorer", "UP touch view tx:" + tx + " ty:" + ty +
+				// " dx:" + dx + " dy:" + dy + " lx:" + lx + " ly:" +ly);
+				lx = -1;
+				ly = -1;
+				if (ddy < 15) {
+	
+					if (getFocusedQRTouched(event)) {
+						edit();
+					} else if (getQRExplorerRowSquareTouched(event) != -1) {
+	
+						selectedRow = getQRExplorerRowSquareTouched(event);
+						setFocusedSquare(rows.get(selectedRow).touched(event), rows.get(selectedRow).getAcl());
+	
+					} else if (qrExplorerRowFooter != null && qrExplorerRowFooter.touched(event) != -1) {
+	
+						onQRExplorerRowFooterTouched(event);
+	
+					} else {
+	
+						setFocusedSquare(null, null);
+	
+					}
+	
+					performClick();
+	
 				}
-
-				performClick();
-
+				ddy = -1;
+	
 			}
-			ddy = -1;
-
 		}
-
 		return true;
 	}
 
@@ -214,10 +216,15 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == explorebutton.getId()) {
-			explore();
-		} else if (v.getId() == backbutton.getId()) {
-			gotoScanActivity();
+		if(!instructing){
+			if (v.getId() == explorebutton.getId()) {
+				explore();
+			} else if (v.getId() == backbutton.getId()) {
+				gotoScanActivity();
+			} else if(v.getId() == readbutton.getId() && getFocusedSquare()!=null) {
+				getArgui().performAction("load", getContext());
+				
+			}
 		}
 	}
 
@@ -389,7 +396,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 			Paint backgroundpaint = new Paint();
 			backgroundpaint.setColor(Color.rgb(200, 200, 200));
-			canvas.drawRect(new RectF(xr - 33, yt - 33, xl + 33, yb + yt), backgroundpaint);
+			canvas.drawRoundRect(new RectF(xr - 33, yt - 33, xl + 33, yb + yt),4,4, backgroundpaint);
 
 			focusedSquare.setOne(new PointF(xr, yb));
 			focusedSquare.setTwo(new PointF(xr, yt));
@@ -398,14 +405,21 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 			setQRSquare(focusedSquare);
 			focusedSquare.draw(canvas, this);
 
-			RelativeLayout.LayoutParams exploreparams = new RelativeLayout.LayoutParams(xl - xr, 100);
+			RelativeLayout.LayoutParams exploreparams = new RelativeLayout.LayoutParams(xl - xr, 60);
 			exploreparams.leftMargin = xr;
 			exploreparams.topMargin = yb + yt;
 			explorebutton.setLayoutParams(exploreparams);
-			RelativeLayout.LayoutParams backparams = new RelativeLayout.LayoutParams(xl - xr, 100);
+			explorebutton.setTextSize(8);
+			RelativeLayout.LayoutParams backparams = new RelativeLayout.LayoutParams(xl - xr, 60);
 			backparams.leftMargin = xr;
-			backparams.topMargin = yb + yt + 120;
+			backparams.topMargin = yb + yt + 60;
 			backbutton.setLayoutParams(backparams);
+			backbutton.setTextSize(8);
+			RelativeLayout.LayoutParams readparams = new RelativeLayout.LayoutParams(xl - xr, 60);
+			readparams.leftMargin = xr;
+			readparams.topMargin = yb + yt + 120;
+			readbutton.setLayoutParams(readparams);
+			readbutton.setTextSize(8);
 
 			RelativeLayout.LayoutParams imageparams = new RelativeLayout.LayoutParams(50, 50);
 			imageparams.leftMargin = xr;
@@ -478,12 +492,13 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 
 	public void setFocusedSquare(QRSquare focusedSquare, ACL focusedACL) {
 		Gson gson = GsonHelper.customGson;
-		if (explorebutton != null) {
+		if (explorebutton != null && readbutton != null) {
 			this.focusedACL = focusedACL;
 			if (focusedSquare == null) {
 				Log.d("QRExplorer", "SETTING FOCUSED SQUARE: null");
 				setQRSquare(null);
 				explorebutton.setVisibility(INVISIBLE);
+				readbutton.setVisibility(INVISIBLE);
 				text.setVisibility(INVISIBLE);
 				image.setVisibility(INVISIBLE);
 			} else {
@@ -493,10 +508,14 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 				setQRSquare(focusedSquare);
 				if (!(focusedSquare instanceof QRSquareUserRepresentation)) {
 					explorebutton.setVisibility(VISIBLE);
+					readbutton.setVisibility(VISIBLE);
+
 				} else {
 					explorebutton.setVisibility(INVISIBLE);
-				}
+					readbutton.setVisibility(INVISIBLE);
 
+				}
+				
 				text.setVisibility(VISIBLE);
 				image.setVisibility(VISIBLE);
 			}
@@ -522,7 +541,7 @@ public class QRExplorer extends ARLayerView implements SurfaceHolder.Callback, O
 		}
 		backbutton.setOnClickListener(this);
 	}
-
+	
 	public void gotoScanActivity() {
 		Intent intent = new Intent(getContext(), ScanActivity.class);
 		intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");

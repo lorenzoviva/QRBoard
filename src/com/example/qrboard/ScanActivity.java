@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,12 +27,13 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 
 import com.codebutler.android_websockets.WebSocketClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.CaptureActivity;
 import com.ogc.action.Action;
 import com.ogc.dbutility.DBConst;
@@ -66,14 +68,25 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 		setContentView(R.layout.activity_scan);
 		arview = (ARLayerView) findViewById(R.id.ar_view);
 		invalidator = new ActivityInvalidator(this);
-
 		this.addContentView(arview.getButtonView(), arview.getButtonViewLayoutParams());
+		resumeState();
 		
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		resumeState();
+		arview.dismissActionDialog();
+	}
+	
 
 	public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
 		
 		if (rawResult.getResultPoints().length == 4) {
+			if(rawResult.getText().contains("%")){
+				rawResult.setText(rawResult.getText().replace("%", "x"));
+			}
 			if (rawResult.getText().startsWith("authentication")) {
 				
 				if(authresult==null || !authresult.getText().equals(result.getText())){
@@ -154,7 +167,24 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 			return 0;
 		}
 	}
-
+	private void saveState(String jsonstring, String type,String text, String actions) {
+		arview.saveState(jsonstring, type, actions, this);
+		
+	}
+	private void resumeState() {
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
+		if(arview.resumeState(this,width,height)){
+			state = 2;
+			Log.d("QRSQUARE", arview.getQRSquare().toString());
+			String text = arview.getQRSquare().getText();
+			result = new Result(text, null, null, null);
+		}
+		
+	}
 	public class QRSquareLoader extends AsyncTask<String, String, String> {
 
 		@SuppressWarnings("deprecation")
@@ -200,8 +230,9 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 								actions = actions.replace("read,", "");
 								fromJson = (QRSquare) gson.fromJson(jsonstring, Class.forName(type));
 							}
-								
 							
+//							jsonstring = gson.toJsonTree(fromJson).toString();
+//							saveState(jsonstring,type,fromJson.getText(),actions);
 							// Log.d("result:",
 							// result.getResultPoints()[0].toString());
 							state = 2;
@@ -209,6 +240,8 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 							arview.setActionContext("");
 							arview.setActions(actions);
 							arview.drawCodeResult(result);
+							jsonstring = gson.toJsonTree(arview.getQRSquare()).toString();
+							saveState(jsonstring,type,fromJson.getText(),actions);
 							Log.d("FROM JSON", fromJson.toString());
 
 						} else {
@@ -216,7 +249,7 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 							QRSquare newsquare = new QRSquare();
 							newsquare.setText(result.getText());
 							state = 2;
-							Log.d("result:", result.getResultPoints()[0].toString());
+//							Log.d("result:", result.getResultPoints()[0].toString());
 							arview.setQRSquare(newsquare);
 							arview.setActionContext("");
 							arview.setActions(actions);
@@ -236,8 +269,11 @@ public class ScanActivity extends CaptureActivity implements InvalidableAcivity{
 			return null;
 		}
 
-	}
+	
+		
 
+	}
+	
 	public class QRSquareAuthenticate extends AsyncTask<String, String, String> {
 		WebSocketClient client;
 

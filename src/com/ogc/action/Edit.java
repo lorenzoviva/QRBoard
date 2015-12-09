@@ -71,6 +71,6 @@ public class Edit extends Action {
 
 	@Override
 	public Bitmap getIcon(View view) {
-		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.edit32x32);
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actionedit);
 	}
 }

@@ -3,6 +3,8 @@ package com.ogc.action.edit;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
 import com.google.gson.GsonHelper;
@@ -39,7 +41,7 @@ public class Qrfreedraw extends Action{
 			argui.setActionContext("");
 			argui.openFreeDrawActivity(new JSONObject(GsonHelper.customGson.toJson(qrSquare)),context);
 		} catch (Exception e) {
-			e.printStackTrace();
+			argui.finishAction("Unable to edit");
 		}
 	}
 
@@ -53,6 +55,9 @@ public class Qrfreedraw extends Action{
 		execute();
 		
 	}
-	
+	@Override
+	public Bitmap getIcon(View view) {
+		return null;
+	}
 
 }

@@ -19,8 +19,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.example.qrboard.ScanActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
@@ -70,7 +72,10 @@ public class Qrfreedraw extends Action{
 		execute();
 		
 	}
-	
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actioncreatecanvas);
+	}
 	public class QRSquareAction extends AsyncTask<String, String, String> {
 
 		@Override

@@ -1,8 +1,16 @@
 package com.example.qrboard;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.conn.HttpHostConnectException;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
@@ -12,6 +20,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -23,16 +32,20 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.GsonHelper;
 import com.ogc.browsers.BrowserListener;
 import com.ogc.browsers.LWebViewJsParameters;
 import com.ogc.browsers.attrubutes.QRAttribute;
 import com.ogc.browsers.elements.QRElement;
 import com.ogc.browsers.utils.AttributeListAdapter;
 import com.ogc.browsers.utils.BrowserClickEvent;
+import com.ogc.dbutility.DBConst;
+import com.ogc.dbutility.JSONParser;
+import com.ogc.dialog.DialogBuilder;
 import com.ogc.graphics.Point;
 import com.ogc.graphics.Quadrilateral;
 import com.ogc.graphics.Utility;
-import com.ogc.model.QRWebPage;
+import com.ogc.model.*;
 
 public class QRWebPageEditorView extends ARLayerView implements
 		BrowserListener, OnClickListener {
@@ -46,12 +59,16 @@ public class QRWebPageEditorView extends ARLayerView implements
 	private CustomSelector selector = null;
 	private String selectedId = "";
 	private String action = "";
+	private String squarejson;
 	private static int offset = 10;
 	private float dx = -1, dy = -1, tx = -1, ty = -1, ddy = -1, ddx = -1;
 	private ListView listViewMessages;
 	private TextView selectTextView;
 	private AttributeListAdapter adapter;
-
+	private ImageButton saveButton;
+	private String type;
+	JSONParser jParser = new JSONParser();
+	long userid = -1;
 	public QRWebPageEditorView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -64,18 +81,21 @@ public class QRWebPageEditorView extends ARLayerView implements
 		super(context);
 	}
 
-	public void setup(QRWebPage qrsquare, ImageButton addImageButton,
+	public void setup(QRWebPage qrsquare,String squarejson,String type, long userid,ImageButton saveButton,ImageButton addImageButton,
 			ImageButton addDivButton, ImageButton addLinkButton,
-			ImageButton addTextButton, ImageButton removeButton, ListView listViewMessages, TextView selectTextView) {
+			ImageButton addTextButton, ImageButton removeButton,  ListView listViewMessages, TextView selectTextView) {
 		this.qrsquare = qrsquare;
 		document = Jsoup.parse(qrsquare.getHtml());
-
+		this.type = type;
+		this.userid = userid;
+		this.saveButton = saveButton;
 		this.addImageButton = addImageButton;
 		this.addDivButton = addDivButton;
 		this.addLinkButton = addLinkButton;
 		this.addTextButton = addTextButton;
 		this.removeButton = removeButton;
-
+		this.squarejson = squarejson;
+		this.saveButton.setOnClickListener(this);
 		this.addImageButton.setOnClickListener(this);
 		this.addDivButton.setOnClickListener(this);
 		this.addLinkButton.setOnClickListener(this);
@@ -83,6 +103,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 		this.removeButton.setOnClickListener(this);
 		this.listViewMessages = listViewMessages;
 		this.selectTextView = selectTextView;
+		
 	}
 
 	@Override
@@ -94,7 +115,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 			qrsquare.setThree(new PointF((getRight() - getLeft() + w) / 2, 0));
 			qrsquare.setFour(new PointF((getRight() - getLeft() + w) / 2, w));
 			qrsquare.draw(canvas, this);
-			if (!qrsquare.getSelectedId().equals("")) {
+			if (qrsquare.getSelectedId() != null && !qrsquare.getSelectedId().equals("")) {
 				listen();
 				qrsquare.draw(canvas, this);
 			}
@@ -189,7 +210,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 
 	@Override
 	public void onBrowserClickEvent(BrowserClickEvent event) {
-		Log.d("QRWebPageEditor", event.toString());
+//		Log.d("QRWebPageEditor", event.toString());
 		if(qrsquare!=null && qrsquare.getWebview()!=null && qrsquare.getWebview().getJsParameters()!=null){
 			LWebViewJsParameters currentParameters = qrsquare.getWebview().getJsParameters();
 			document = Jsoup.parse(event.getHtml());
@@ -200,7 +221,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 				dy = 0;
 				if (selector != null && selector.sameElementTouched(event)) {
 					String directionTouched = selector.getDirectionTouched(event,qrsquare);
-					Log.d("QRWEP", "Clicked on selected square : " + directionTouched);
+//					Log.d("QRWEP", "Clicked on selected square : " + directionTouched);
 					if (!directionTouched.equals("")) {
 						startResize(directionTouched);					
 						tx = event.getTouchX();
@@ -270,11 +291,11 @@ public class QRWebPageEditorView extends ARLayerView implements
 							if (!action.equals("")) {
 								if(action.startsWith("resize")){
 		
-									Log.d("QRWEP", "mooved : " + action.replace("resize ", "") + " ddx:" + ddx +" , ddy:" + ddy);
+//									Log.d("QRWEP", "mooved : " + action.replace("resize ", "") + " ddx:" + ddx +" , ddy:" + ddy);
 									Rect selectedBounds = event.getElementBounds();//selectedEvent.getElementBounds();
 									String js = "javascript:(function(){var obj = document.getElementById('"+selector.getSelectedId()+"'); ";
 									selectedBounds.offset((int)(qrsquare.getHorizontalScroll()/selectedEvent.getF()),(int) (qrsquare.getVerticalScroll()/selectedEvent.getF()));
-									Log.d("QRWEP",selectedBounds.toShortString());
+//									Log.d("QRWEP",selectedBounds.toShortString());
 									ddx = ddx/selectedEvent.getF();
 									ddy = ddy/selectedEvent.getF();
 								
@@ -338,7 +359,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 									}
 									
 									js+=	"})()";
-									Log.d("QRWEP",js);
+//									Log.d("QRWEP",js);
 									qrsquare.getWebview().loadUrl(js);
 									
 									selectedBounds.offset(-(int)(qrsquare.getHorizontalScroll()/selectedEvent.getF()),-(int) (qrsquare.getVerticalScroll()/selectedEvent.getF()));
@@ -406,8 +427,7 @@ public class QRWebPageEditorView extends ARLayerView implements
 					selector.getEvent().getF());
 			setSelector(new CustomSelector(ce));
 		}
-		Log.d("QRWPE", "added element : " + appendElement.toString()
-				+ " new HTML: " + document.html());
+//		Log.d("QRWPE", "added element : " + appendElement.toString()+ " new HTML: " + document.html());
 
 		selectedId = id;
 		// Log.d("QRWPE", "new html : " + document.html());
@@ -423,21 +443,22 @@ public class QRWebPageEditorView extends ARLayerView implements
 		// Clicked on button
 
 		if (v.getId() == addImageButton.getId()) {
-			Log.d("WEB PAGE EDITOR", "clicked on addImageButton");
+//			Log.d("WEB PAGE EDITOR", "clicked on addImageButton");
 			addElement("img");
 		} else if (v.getId() == addDivButton.getId()) {
 			addElement("div");
-			Log.d("WEB PAGE EDITOR", "clicked on addDivButton");
+//			Log.d("WEB PAGE EDITOR", "clicked on addDivButton");
 		} else if (v.getId() == addLinkButton.getId()) {
 			addElement("button");
-			Log.d("WEB PAGE EDITOR", "clicked on addLinkButton");
+//			Log.d("WEB PAGE EDITOR", "clicked on addLinkButton");
 		} else if (v.getId() == addTextButton.getId()) {
 			addElement("div");
-			Log.d("WEB PAGE EDITOR", "clicked on addTextButton");
+//			Log.d("WEB PAGE EDITOR", "clicked on addTextButton");
+		}else if (v.getId() == saveButton.getId()) {
+			save();
 		} else if (v.getId() == removeButton.getId()) {
 			document.getElementById(selectedId).remove();
-			Log.d("QRWPE", "removed element : " + selectedId + " new HTML: "
-					+ document.html());
+//			Log.d("QRWPE", "removed element : " + selectedId + " new HTML: "+ document.html());
 			qrsquare.setHtml(document.html());
 			qrsquare.setWebview(null);
 			setSelector(null);
@@ -446,6 +467,8 @@ public class QRWebPageEditorView extends ARLayerView implements
 		}
 
 	}
+
+	
 
 	public CustomSelector getSelector() {
 		return selector;
@@ -504,6 +527,85 @@ public class QRWebPageEditorView extends ARLayerView implements
 		el.html(html);
 		action = "edit";
 		stopResize(qrsquare.getWebview().getJsParameters());
+	}
+	private void save() {
+		new QRSquareSaver().execute();		
+	}
+	public void createErrorDialog(final String errorMessage) {
+		final Context fcontext = this.getContext();
+		runOnUIThread(new Runnable() {
+
+			@Override
+			public void run() {
+				DialogBuilder.createErrorDialog(fcontext, errorMessage);
+
+			}
+		});
+	}
+	public class QRSquareSaver extends AsyncTask<String, String, String> {
+
+		@SuppressWarnings("deprecation")
+		@Override
+		protected String doInBackground(String... args) {
+			// Getting username and password from user inpu
+				Map<String, Object> paramap = new HashMap<String, Object>();
+				Class qrclass;
+
+				try {
+					qrclass = Class.forName(type);
+				} catch (ClassNotFoundException e1) {
+					qrclass = QRWebPage.class;
+				}
+				//GsonHelper.customGson.toJsonTree(qrsquare, qrclass).toString()
+//				String jsonwebpage = squarejson.replaceFirst(",?\"?html\"?:.*?([^\\\\]\"\\s*,)", ",\"html\":\"" + qrsquare.getHtml()+"\",");
+				JSONObject jsonsquare;
+				try {
+					jsonsquare = new JSONObject(squarejson);
+					jsonsquare.put("html", qrsquare.getHtml());
+					paramap.put("jsonwebpage", jsonsquare);
+					
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
+				paramap.put("type", qrclass.getName());
+				if(userid != -1){
+					paramap.put("userid", userid);
+				}
+				JSONObject paramjson = new JSONObject(paramap);
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("action", "savepage");
+				map.put("parameters", paramjson);
+				JSONObject json = new JSONObject(map);
+				Log.d("request:", json.toString());
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				params.add(new BasicNameValuePair("json", json.toString()));
+
+				JSONObject jsonresponse = null;
+				try {
+					jsonresponse = jParser.makeHttpRequest(DBConst.url_action,
+							"POST", params);
+					boolean s = false;
+					Log.d("Msg", jsonresponse.toString());
+					s = jsonresponse.getBoolean("success");
+					if (s) {
+
+					}
+				} catch (HttpHostConnectException  e) {
+					createErrorDialog("The servers are down! please try again later");
+				} catch (JSONException | NullPointerException e) {
+					if (jsonresponse == null) {
+						createErrorDialog("The servers are down! please try again later");
+					}
+					Log.d("WARNING",
+							"there is some missing information in this qr :"
+									+ e.getMessage());
+				}
+			return null;
+		}
+
 	}
 
 }

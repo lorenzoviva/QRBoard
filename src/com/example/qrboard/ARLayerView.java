@@ -2,6 +2,7 @@ package com.example.qrboard;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,9 +26,17 @@ import com.ogc.model.QRUser;
 public class ARLayerView extends SurfaceView {
 
 	private ARGUI argui = null;
-
 	private ImageButton removeSquareButton;
 	private ImageButton userButton;
+	protected boolean instructing = false;
+
+	public boolean isInstructing() {
+		return instructing;
+	}
+
+	public void setInstructing(boolean instructing) {
+		this.instructing = instructing;
+	}
 
 	public void setListIndex(int index) {
 		argui.setListindex(index);
@@ -40,7 +49,9 @@ public class ARLayerView extends SurfaceView {
 
 		// TODO Auto-generated constructor stub
 	}
-
+	public void dismissActionDialog(){
+		argui.dismissActionDialog();
+	}
 	public ARLayerView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		setWillNotDraw(false);
@@ -81,9 +92,11 @@ public class ARLayerView extends SurfaceView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		argui.onTouch(event, this.getContext());
-		if (event.getAction() == MotionEvent.ACTION_UP) {
-			performClick();
+		if(!instructing){
+			argui.onTouch(event, this.getContext());
+			if (event.getAction() == MotionEvent.ACTION_UP) {
+				performClick();
+			}
 		}
 		invalidate();
 		return true;
@@ -148,6 +161,7 @@ public class ARLayerView extends SurfaceView {
 	public View getButtonView() {
 		removeSquareButton = new ImageButton(getContext());
 		removeSquareButton.setImageResource(R.drawable.removesquarebutton);
+		removeSquareButton.setBackgroundColor(Color.TRANSPARENT);
 		removeSquareButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -157,11 +171,12 @@ public class ARLayerView extends SurfaceView {
 		});
 		userButton = new ImageButton(getContext());
 		userButton.setImageResource(R.drawable.userbutton);
+		userButton.setBackgroundColor(Color.TRANSPARENT);
 		userButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				showUser();
+				goToUserSquare();
 			}
 		});
 		final LinearLayout ll = new LinearLayout(getContext());
@@ -171,10 +186,14 @@ public class ARLayerView extends SurfaceView {
 		return ll;
 	}
 
-	public void showUser() {
+	public void goToUserSquare() {
+		argui.goToUserSquare();
+		centerSquare();
+	}
+	public void centerSquare(){
 		int width = this.getWidth();
 		int height = this.getHeight();
-		argui.showUsers(width, height);
+		argui.centerSquare(width, height);
 	}
 
 	public void performAction(String action) {
@@ -194,6 +213,14 @@ public class ARLayerView extends SurfaceView {
 	public Action getRealAction(String action) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		return argui.getRealAction(action);
+	}
+
+	public void saveState(String jsonstring, String type, String actions,Context context) {
+		argui.saveState(jsonstring, type, actions, context);
+		
+	}
+	public boolean resumeState(Context context, int width, int height){
+		return argui.resumeState(context,width,height);
 	}
 
 }

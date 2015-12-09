@@ -147,20 +147,42 @@
     <string name="btn_send">Send</string>
     <string name="title_activity_explore">ExploreActivity</string>
     <string name="explorer_button_text">Explore</string>
+    <string name="explorer_read_button_text">Read</string>
     <string name="explorer_edit_info_text">Click to edit</string>
     <string name="explorer_back_button_text">Back</string>
     <string name="title_activity_edit_web_page">EditWebPageActivity</string>
     <string name="esu_ok_button_text">ok</string>
 	<string name="esu_cancel_button_text">cancel</string>
-	<string name="esu_you">You</string>
+	<string name="esu_you">Your role:</string>
 	<string name="tipEditWebPage">Select something to start</string>
-	<string name="password">Password</string>
+	<string name="password">Password:</string>
 	<string name="useQRPassword">Use a QRpassword</string>
 	<string name="tips_login">If you choose a QRpassword, everytime you want to login, you\'ll need to frame both QR for user and password. Keep in mind that you can directly use the QR link as password .</string>
-
+	<string name="logintext">Login</string>
     <string name="materialcolorpicker__descLib">Pick a color</string>
     <string name="materialcolorpicker__errHex" >Hex Code Format incorrect</string>
     <string name="materialcolorpicker__inputColor">Color: </string>
     <string name="materialcolorpicker__btnSelectColor">Select</string>
+	<string name="Explorer_instruction_text0">Tap anywhere to continue.</string>
+    <string name="Explorer_instruction_text1">This is the explorer! you can easily navigate through gates and users using this window...</string>
+	<string name="Explorer_instruction_text2">This table on the right</string>
+	<string name="Explorer_instruction_text3">has a row for each user who\'s interacting with the gate you are exploring.</string>
+	<string name="Explorer_instruction_text4">The right column represents the user.</string>
+	<string name="Explorer_instruction_text5">This column represents the user\'s role for this gate.</string>
+	<string name="Explorer_instruction_text6">The leftmost column is the user\'s personal gate he\'s using to login,you can send friendship request by reading this gate.</string>
+	<string name="Explorer_instruction_text7">Selecting one this cell will make the gate focused, depending on your role for the gate two buttons can appear.</string>
+	<string name="Explorer_instruction_text8">The read button will bring you back to the capture window. The focused gate will appear centered in the screen so you will be able to directly interact with it.</string>
+	<string name="Explorer_instruction_text9">This button will open another Explorer window:</string>
+	<string name="Explorer_instruction_text10">If the focused gate was selected from the users column, the next window will contain a row for each gate this user has read or modified</string>
+	<string name="Explorer_instruction_text11">If the focused gate was selected from the gates column, the next window will contain a row for each user that has read or modified the gate.</string>
+	<string name="Explorer_instruction_text12">The read button will just bring you back to the capture window.</string>
+	<string name="Explorer_instruction_text13">Touching the gate focused you can edit it. If the gate is a role selected from the second column, you\'ll need a more important role for edit it. </string>
 	
+	<string name="Ewp_instruction_text0">Tap anywhere to continue.</string>
+    <string name="Ewp_instruction_text1">This is the page editor! you can easily edit pages from this window.</string>
+   	<string name="Ewp_instruction_text2">To select an element just tap on it.</string>
+   	<string name="Ewp_instruction_text3">The first button will save the page. The last will remove the selected element, other buttons adds respectevely an image, a container a button for external links and some text.</string>
+   	<string name="Ewp_instruction_text4">This column let you edit the selected element, adding background, margins,text and much more. Once something has been selected, all their properties will appear in this column. Tap a property to edit it.</string>
+   	
+    
 </resources>

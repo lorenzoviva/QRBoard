@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public final class Result {
 
-  private final String text;
+  private String text;
   private final byte[] rawBytes;
   private ResultPoint[] resultPoints;
   private final BarcodeFormat format;
@@ -59,7 +59,9 @@ public final class Result {
   public String getText() {
     return text;
   }
-
+  public void setText(String text){
+	  this.text = text;
+  }
   /**
    * @return raw bytes encoded by the barcode, if applicable, otherwise {@code null}
    */

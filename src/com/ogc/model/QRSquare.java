@@ -127,12 +127,24 @@ public class QRSquare {
 	public void setAcl(ACL acl) {
 		this.acl = acl;
 	}
-	@Override
-	public String toString() {
-		return "QRSquare [text=" + text + ", creationDate=" + creationDate + ", visit=" + visit + ", acl=" + acl.toString() ;
-	}
+//	@Override
+//	public String toString() {
+//		return "QRSquare [text=" + text + ", creationDate=" + creationDate + ", visit=" + visit + ", acl=" + acl.toString() ;
+//	}
+	
 	public PointF getOne() {
 		return one;
+	}
+	@Override
+	public String toString() {
+		return "QRSquare [text=" + text + ", creationDate=" + creationDate
+				+ ", visit=" + visit + ", acl=" + acl
+				+ ", maxHorizontalScroll=" + maxHorizontalScroll
+				+ ", maxVerticalScroll=" + maxVerticalScroll
+				+ ", horizontalScroll=" + horizontalScroll
+				+ ", verticalScroll=" + verticalScroll + ", one=" + one
+				+ ", two=" + two + ", three=" + three + ", four=" + four
+				+ ", qrsize=" + qrsize + "]";
 	}
 	public void setOne(PointF one) {
 		this.one = one;

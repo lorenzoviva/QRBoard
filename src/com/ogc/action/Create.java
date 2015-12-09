@@ -12,11 +12,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.ogc.action.Request.QRSquareAction;
 import com.ogc.dbutility.DBConst;
 import com.ogc.model.ACL;
@@ -114,5 +118,9 @@ public class Create extends Action {
 			return null;
 		}
 
+	}
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actioncreate);
 	}
 }

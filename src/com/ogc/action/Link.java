@@ -1,9 +1,13 @@
 package com.ogc.action;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.ogc.model.QRSquare;
 import com.ogc.model.QRWebPage;
 
@@ -49,5 +53,8 @@ public class Link extends Action{
 	public int getColor(ARGUI argui) {
 		return Color.BLUE;
 	}
-
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actionlink);
+	}
 }

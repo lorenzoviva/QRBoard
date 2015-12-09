@@ -12,9 +12,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.qrboard.ARGUI;
@@ -136,5 +138,8 @@ public class Qrsquareuserrepresentation extends Action{
 			mainHandler.post(runnable);
 		}
 	}
-
+	@Override
+	public Bitmap getIcon(View view) {
+		return null;
+	}
 }

@@ -1,6 +1,8 @@
 package com.ogc.action.edit;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
 import com.ogc.action.Action;
@@ -16,7 +18,12 @@ public class Qrwebpage extends Action{
 	@Override
 	public void execute() {
 		argui.setActionContext("");
-		argui.openEditWebPageActivity(context,null);
+		if(argui.getUser()!=null){
+			argui.openEditWebPageActivity(context,null,argui.getUser().getId());
+		}else{
+			argui.openEditWebPageActivity(context,null,-1);
+		}
+		
 	}
 	@Override
 	public void perform(ARGUI argui, Context context) {
@@ -41,6 +48,10 @@ public class Qrwebpage extends Action{
 	public void addQRParameter(QRSquare qrsquare) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public Bitmap getIcon(View view) {
+		return null;
 	}
 
 }

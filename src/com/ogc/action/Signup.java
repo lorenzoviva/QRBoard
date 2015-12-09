@@ -12,12 +12,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.renderscript.Type;
 import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.google.gson.JsonSyntaxException;
@@ -38,7 +42,7 @@ public class Signup extends Action {
 	private String firstname = null;
 	private String lastname = null;
 	private boolean useQrPassword = false;
-	
+	private Context context;
 	ARGUI argui;
 	@Override
 	public void execute() {
@@ -58,6 +62,8 @@ public class Signup extends Action {
 		argui.setQRSquare(usersquare,true);
 		DialogBuilder.createSignupDialog(context, this);
 		this.argui = argui;
+		this.context = context;
+		argui.dismissActionDialog();
 	}
 
 	@Override
@@ -131,7 +137,8 @@ public class Signup extends Action {
 						
 						argui.setUser(fromJson);
 						argui.setUsersquare(fromJsonSquare, jsonaction);
-
+						argui.setQRSquare(fromJsonSquare, true);
+						argui.saveState(jsonsquare,jsontype,jsonaction,context);
 						Log.d("FROM JSON", fromJson.toString());
 						argui.finishAction("Successfully signup");
 					} catch (JsonSyntaxException e) {
@@ -153,7 +160,10 @@ public class Signup extends Action {
 		}
 
 	}
-
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actionsignup);
+	}
 	@Override
 	public void prepare(ARGUI argui) {
 		QRSignupPage signupPage = new QRSignupPage(argui.getQRSquare());

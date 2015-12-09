@@ -12,16 +12,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.renderscript.Type;
 import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
+import com.example.qrboard.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.google.gson.JsonSyntaxException;
 import com.ogc.dbutility.DBConst;
+import com.ogc.dialog.DialogBuilder;
 import com.ogc.model.ACL;
 import com.ogc.model.QRInternalWebPage;
 import com.ogc.model.QRSquare;
@@ -36,7 +41,7 @@ public class Login extends Action {
 	private QRWebPage usersquare;
 	private String password;
 	private ARGUI argui;
-	
+	private Context context;
 	@Override
 	public void execute() {
 		super.execute();
@@ -53,11 +58,16 @@ public class Login extends Action {
 		usersquare.setThree(qrSquare.getThree());
 		usersquare.setFour(qrSquare.getFour());
 		argui.setQRSquare(usersquare, true);
+		DialogBuilder.createLoginDialog(context, this);
 		this.argui = argui;
-		
+		this.context=context;
+		argui.dismissActionDialog();
 		
 	}
-
+	public void addPasswordParameter(String passwordtext){
+		this.password = passwordtext;
+		execute();
+	}
 	@Override
 	public void addQRParameter(QRSquare qrsquare) {
 		this.password = qrsquare.getText();
@@ -109,7 +119,7 @@ public class Login extends Action {
 						argui.setUser(fromJson);
 						argui.setUsersquare(fromJsonSquare, jsonaction);
 						argui.setQRSquare(fromJsonSquare, true);
-
+						argui.saveState(jsonsquare,jsontype,jsonaction,context);
 						Log.d("FROM JSON", fromJson.toString());
 						argui.finishAction("Successfully login");
 					} catch (JsonSyntaxException e) {
@@ -141,5 +151,9 @@ public class Login extends Action {
 	@Override
 	public int getColor(ARGUI argui) {
 		return Color.GREEN;
+	}
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actionlogin);
 	}
 }

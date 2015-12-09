@@ -1,50 +1,269 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.qrboard.ExploreActivity" >
-    
-<com.example.qrboard.QRExplorer android:id="@+id/qr_explorer"
-               android:layout_width="fill_parent"
-               android:layout_height="fill_parent"/>
 
-<Button
-    android:id="@+id/explorerbutton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentLeft="true"
-    android:layout_marginBottom="72dp"
-    android:layout_marginLeft="50dp"
-    android:text="@string/explorer_button_text" 
-    android:visibility="invisible"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-<TextView
-    android:id="@+id/explorereditifo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_above="@+id/explorerbutton"
-    android:layout_alignRight="@+id/explorerbutton"
-    android:text="@string/explorer_edit_info_text"
-    android:textAppearance="?android:attr/textAppearanceSmall" 
-    android:visibility="invisible"/>
+        <com.example.qrboard.QRExplorer
+            android:id="@+id/qr_explorer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
 
-<ImageView
-    android:id="@+id/explorereditifoimage"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_above="@+id/explorerbutton"
-    android:layout_alignLeft="@+id/explorerbutton"
-    android:src="@drawable/abc_ic_commit_search_api_mtrl_alpha"
-    android:visibility="invisible" />
+        <Button
+            android:id="@+id/explorerbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="72dp"
+            android:layout_marginLeft="50dp"
+            android:text="@string/explorer_button_text"
+            android:visibility="invisible" />
 
-<Button
-    android:id="@+id/explorequitbutton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentLeft="true"
-    android:layout_marginLeft="20dp"
-    android:text="@string/explorer_back_button_text" />
+        <TextView
+            android:id="@+id/explorereditifo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/explorerbutton"
+            android:layout_alignRight="@+id/explorerbutton"
+            android:text="@string/explorer_edit_info_text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="invisible" />
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/explorereditifoimage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/explorerbutton"
+            android:layout_alignLeft="@+id/explorerbutton"
+            android:src="@drawable/abc_ic_commit_search_api_mtrl_alpha"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/explorequitbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/explorer_back_button_text" />
+
+        <Button
+            android:id="@+id/explorereadbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/explorequitbutton"
+            android:layout_alignLeft="@+id/explorequitbutton"
+            android:text="@string/explorer_read_button_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/explore_instruction_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#a31f1f1f" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <Space
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.4" />
+
+            <TextView
+                android:id="@+id/explorer_instructiontextView1"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:gravity="center_horizontal"
+                android:text="@string/Explorer_instruction_text1"
+                android:textColor="@color/white" />
+
+            <Space
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.4" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.1" />
+
+            <TextView
+                android:id="@+id/explorer_instructiontextView2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_weight="0.3"
+                android:gravity="center_horizontal"
+                android:text="@string/Explorer_instruction_text2"
+                android:textColor="@color/white"
+                android:visibility="invisible" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.6" />
+        </LinearLayout>
+
+        
+        
+        
+        <TextView
+            android:id="@+id/explorer_instructiontextView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text3"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text4"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text5"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text6"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text7"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text8"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text9"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text10"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text11"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text12"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text13"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/explorer_instructiontextView0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:gravity="center_horizontal"
+            android:text="@string/Explorer_instruction_text0"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+</FrameLayout>

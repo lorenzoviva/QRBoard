@@ -175,13 +175,13 @@ public abstract class LWebView extends WebView {
 					localURL = url;
 				}
 
-				Log.d("LWebViewClient:" + i, "finished loading page url:"
-						+ localURL + ", Height:" + computeVertical()
-						+ ",width:" + computeHorizontal()
-						+ "] , [content Height: " + getContentHeight()
-						+ " ,width:" + getRight() + "]" + ",[measured Height:"
-						+ getMeasuredHeight() + ", width:" + getMeasuredWidth()
-						+ "]");
+//				Log.d("LWebViewClient:" + i, "finished loading page url:"
+//						+ localURL + ", Height:" + computeVertical()
+//						+ ",width:" + computeHorizontal()
+//						+ "] , [content Height: " + getContentHeight()
+//						+ " ,width:" + getRight() + "]" + ",[measured Height:"
+//						+ getMeasuredHeight() + ", width:" + getMeasuredWidth()
+//						+ "]");
 				i++;
 				if (i > maxrequest) {
 					showRepresentationErrorMessage(fcontext,
@@ -301,13 +301,13 @@ public abstract class LWebView extends WebView {
 	}
 
 	public void finished() {
-		Log.d("LWebView", "finished loading page url:"
-				+ localURL + ", Height:" + computeVertical()
-				+ ",width:" + computeHorizontal()
-				+ "] , [content Height: " + getContentHeight()
-				+ " ,width:" + getRight() + "]" + ",[measured Height:"
-				+ getMeasuredHeight() + ", width:" + getMeasuredWidth()
-				+ "]");
+//		Log.d("LWebView", "finished loading page url:"
+//				+ localURL + ", Height:" + computeVertical()
+//				+ ",width:" + computeHorizontal()
+//				+ "] , [content Height: " + getContentHeight()
+//				+ " ,width:" + getRight() + "]" + ",[measured Height:"
+//				+ getMeasuredHeight() + ", width:" + getMeasuredWidth()
+//				+ "]");
 		if (getMeasuredHeight() > 0 && getMeasuredWidth() > 0) {
 			setVerticalScrollBarEnabled(true);
 			setHorizontalScrollBarEnabled(true);
@@ -355,8 +355,8 @@ public abstract class LWebView extends WebView {
 				final int h, final int w, final float touchX,
 				final float touchY, final float scrollX, final float scrollY,
 				final float f) {
-			Log.d("CLICKED ON:", tagname + " " + rect + " h: " + h + " , w: "
-					+ w + " , f: " +f );
+//			Log.d("CLICKED ON:", tagname + " " + rect + " h: " + h + " , w: "
+//					+ w + " , f: " +f );
 
 			if (attributes != null) {
 				runOnUIThread(new Runnable() {
@@ -372,7 +372,7 @@ public abstract class LWebView extends WebView {
 
 					}
 				});
-				Log.d("ATTRIBUTES:", attributes);
+//				Log.d("ATTRIBUTES:", attributes);
 			}
 		}
 
@@ -400,7 +400,7 @@ public abstract class LWebView extends WebView {
 		public void setDevicePixelRatio(final float touchX,
 				final float scrollX, final float touchY, final float scrollY,
 				final int eventAction, final float f) {
-			Log.d("CLICKED ON:", touchX + "," + touchY + "," + f);
+//			Log.d("CLICKED ON:", touchX + "," + touchY + "," + f);
 
 			runOnUIThread(new Runnable() {
 				@Override
@@ -501,7 +501,7 @@ public abstract class LWebView extends WebView {
 			
 
 			if(jsParameters.getSelectedId() != null && !jsParameters.getSelectedId().equals("") && !jsParameters.getSelectedId().toLowerCase(Locale.ROOT).startsWith("body") && eventAction == MotionEvent.ACTION_MOVE){
-				Log.d("SELECTEDID", jsParameters.getSelectedId());
+//				Log.d("SELECTEDID", jsParameters.getSelectedId());
 				clickSelected(jsParameters.getSelectedId(),touchX,touchY,scrollX,scrollY,eventAction);
 				return;
 			}else{
@@ -570,7 +570,7 @@ public abstract class LWebView extends WebView {
 	public boolean onTouchEvent(MotionEvent event, QRWebPage qrWebPage) {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			pressureTime = event.getEventTime() - event.getDownTime();
-			Log.d("Clicked", "pressureTime:" + pressureTime);
+//			Log.d("Clicked", "pressureTime:" + pressureTime);
 
 			if (jsParameters.isOpenOnNewWindow() && pressureTime > 1000
 					&& dx < 20 && dy < 20) {

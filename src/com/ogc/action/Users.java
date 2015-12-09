@@ -15,12 +15,16 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.example.qrboard.ARGUI;
 import com.example.qrboard.ExploreActivity;
+import com.example.qrboard.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonHelper;
 import com.google.gson.reflect.TypeToken;
@@ -121,7 +125,10 @@ public class Users extends Action {
 //		argui.setQRSquare((QRInternalWebPage)qrUserMenager, true);
 
 	}
-
+	@Override
+	public Bitmap getIcon(View view) {
+		return BitmapFactory.decodeResource(view.getContext().getResources(), R.drawable.actionusers);
+	}
 	@Override
 	public int getColor(ARGUI argui) {
 		// TODO Auto-generated method stub
